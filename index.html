@@ -334,7 +334,7 @@ async function loadNewsFeed() {
   container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Cross-checking network footprints...</span></div>';
   
   let processedArticles = [];
-  const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','near','show','with','out','into','back']);
+  const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','near','show','with','out','into','back','how','why']);
 
   // Download all 12 feeds in parallel vectors
   const promises = MASTER_CHANNELS.map(async (channel) => {
@@ -382,7 +382,7 @@ async function loadNewsFeed() {
     let matchedCluster = null;
 
     for (let cluster of clusterMap) {
-      // Look for a minimum of 2 matching diagnostic keywords (e.g., 'max', 'monaco')
+      // Look for a minimum of 2 matching core keywords
       const sharedTokens = art.tokens.filter(t => cluster.tokens.includes(t));
       if (sharedTokens.length >= 2) {
         matchedCluster = cluster;
@@ -394,7 +394,6 @@ async function loadNewsFeed() {
       if (!matchedCluster.sources.includes(art.source)) {
         matchedCluster.sources.push(art.source);
       }
-      // Keep track of the freshest timestamp for correct sorting
       if (art.timestamp > matchedCluster.timestamp) {
         matchedCluster.timestamp = art.timestamp;
         matchedCluster.representativeTitle = art.title;
@@ -411,16 +410,35 @@ async function loadNewsFeed() {
     }
   });
 
-  // Sort clusters chronologically: Newest updates first at the top
+  // Sort clusters chronologically: Newest updates first
   clusterMap.sort((a, b) => b.timestamp - a.timestamp);
 
-  // STRICT REQUIREMENT FILTER: Adjusted to exactly 4 verification sources
-  const consensusThreshold = 4;
+  // DYNAMIC CONSENSUS CASCADING THRESHOLD (Excluding Single Sources)
+  let dynamicThreshold = 4;
+  const maxClusterSize = clusterMap.reduce((max, item) => item.sources.length > max ? item.sources.length : max, 0);
+  
+  if (maxClusterSize >= 4) {
+    dynamicThreshold = 4;
+  } else if (maxClusterSize === 3) {
+    dynamicThreshold = 3;
+  } else if (maxClusterSize === 2) {
+    dynamicThreshold = 2;
+  } else {
+    dynamicThreshold = 2; // Strict guard: Never drop down to single-source articles (1)
+  }
+
+  // Update UI badge to reflect the engine's current adaptive filter level
+  const nodeBadge = document.getElementById('source-node-count');
+  if (nodeBadge) {
+    nodeBadge.textContent = maxClusterSize >= 4 ? "4+ Source Match" : `${dynamicThreshold}-Node Wire`;
+    nodeBadge.style.background = dynamicThreshold >= 3 ? 'var(--epl-green)' : 'var(--ig-blue)';
+  }
+
   let consensusHtml = "";
   let validatedTicker = [];
 
   clusterMap.forEach(item => {
-    if (item.sources.length < consensusThreshold) return; // Discard elements failing the 4-source test
+    if (item.sources.length < dynamicThreshold) return; 
 
     validatedTicker.push(item.representativeTitle);
 
@@ -438,7 +456,7 @@ async function loadNewsFeed() {
         <div class="wire-content">
           <p class="wire-headline">${formattedHeadline}</p>
           <div class="wire-meta-row" style="margin-top: 4px;">
-            <span class="consensus-count-badge">${item.sources.length} Sources Match</span>
+            <span class="consensus-count-badge" style="background:${item.sources.length >= 3 ? 'var(--epl-green)' : 'var(--bg-raised)'; color:${item.sources.length >= 3 ? '#000' : 'var(--txt-secondary)'}">${item.sources.length} Sources Match</span>
             ${sourceBadges}
           </div>
         </div>
@@ -450,7 +468,7 @@ async function loadNewsFeed() {
       <div class="empty-state">
         <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
         No cross-network sports consensus found within 72h.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Waiting for a story to break across at least 4 distinct platforms simultaneously.</span>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">All matching layers are currently under a 2-source threshold.</span>
       </div>`;
     buildTicker(["Monitoring sports grids for concurrent breaking events..."]);
   } else {
