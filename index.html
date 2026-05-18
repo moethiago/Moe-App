@@ -49,7 +49,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .section-label{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--txt-muted);margin:18px 0 10px}
 .section-label:first-child{margin-top:0}
 
-/* Live Match Containers Refactored for Zero Clipping */
+/* Feed Dashboard Specific Styles */
+.welcome-header{margin-bottom:14px}
+.welcome-header h2{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff}
+.welcome-header p{font-size:12px;color:var(--txt-secondary)}
+
+.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.mini-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:12px;display:flex;flex-direction:column;gap:4px}
+.mini-lbl{font-size:9px;text-transform:uppercase;font-weight:600;letter-spacing:1px;color:var(--txt-secondary)}
+.mini-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:#fff}
+
+.feed-wire-item{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
+.feed-wire-item:last-child{border-bottom:none}
+.feed-tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:2px 5px;border-radius:3px;text-transform:uppercase;flex-shrink:0;margin-top:2px}
+.feed-text{font-size:12px;line-height:1.4;color:var(--txt-primary)}
+
+/* Match Styles */
 .live-match-box{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:10px;overflow:hidden}
 .live-match-box:last-child{border-bottom:none}
 .live-team-row{display:flex;align-items:center;justify-content:space-between;font-size:14px;width:100%}
@@ -61,7 +76,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .live-status-pill.upcoming-game{background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border)}
 .live-match-events{font-size:11px;color:var(--txt-muted);font-family:'DM Sans',sans-serif;padding-top:4px;border-top:1px dashed var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* F1 Layout Structure */
+/* F1 Display */
 .f1-countdown-card{padding:16px;display:flex;flex-direction:column;gap:14px;background:linear-gradient(145deg, var(--bg-card), var(--bg-void))}
 .f1-cd-label{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--f1-red);margin-bottom:4px;display:flex;align-items:center;gap:4px}
 .f1-cd-title{font-size:18px;font-weight:700;color:#fff;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
@@ -71,7 +86,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .f1-cd-num{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:#fff;line-height:1;display:block}
 .f1-cd-lbl{font-size:9px;color:var(--txt-muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px}
 
-/* Nutrition Panel Layout Styles */
+/* Nutrition Layout */
 .macro-grid {display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
 .macro-card {background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--r-md);padding:12px;text-align:center}
 .macro-val {font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:#fff}
@@ -117,10 +132,38 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
   </nav>
 
   <div id="scroll-wrap">
+    
     <div class="tab-panel active" id="panel-feed">
-      <p class="section-label">🚨 System Stream</p>
-      <div class="card" style="padding:16px;color:var(--txt-secondary);font-size:13px;">
-        Welcome back, Moe. Feed activity pipeline tracking properly. Use navigation matrix to explore live entries.
+      <div class="welcome-header">
+        <h2>System Terminal</h2>
+        <p>Live Overview Metrics</p>
+      </div>
+
+      <div class="mini-grid">
+        <div class="mini-card" style="border-left: 3px solid var(--f1-red);" onclick="switchTab('sports')">
+          <span class="mini-lbl">F1 Canadian GP</span>
+          <span class="mini-val" id="mini-f1-time">00d 00h</span>
+        </div>
+        <div class="mini-card" style="border-left: 3px solid var(--purple);" onclick="switchTab('nutrition')">
+          <span class="mini-lbl">Macro Budget</span>
+          <span class="mini-val">165g Pro</span>
+        </div>
+      </div>
+
+      <p class="section-label">📢 Activity Wire Feed</p>
+      <div class="card">
+        <div class="feed-wire-item">
+          <span class="feed-tag" style="background:rgba(232,0,45,0.1); color:var(--f1-red);">F1</span>
+          <div class="feed-text">Canadian Grand Prix track structures preparing countdown locks for May 24th setup.</div>
+        </div>
+        <div class="feed-wire-item">
+          <span class="feed-tag" style="background:rgba(56,211,106,0.1); color:var(--epl-green);">EPL</span>
+          <div class="feed-text">Man City arrives at Vitality Stadium. Kickoff scheduled for 21:30 lock.</div>
+        </div>
+        <div class="feed-wire-item">
+          <span class="feed-tag" style="background:rgba(167,139,250,0.1); color:var(--purple);">NUT</span>
+          <div class="feed-text">Nutrition database synced successfully. Remainder allowances stable.</div>
+        </div>
       </div>
     </div>
 
@@ -139,10 +182,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <p class="section-label" style="margin:0;">⚽ Premier League Matches Today</p>
-      </div>
-      
+      <p class="section-label">⚽ Premier League Matches Today</p>
       <div class="card">
         <div class="live-match-box">
           <div class="live-meta-row">
@@ -253,11 +293,16 @@ function startF1Timer() {
       const hEl = document.getElementById('cd-hours');
       const mEl = document.getElementById('cd-mins');
       const sEl = document.getElementById('cd-secs');
+      const miniEl = document.getElementById('mini-f1-time');
 
       if (dEl) dEl.textContent = String(daysVal).padStart(2, '0');
       if (hEl) hEl.textContent = String(hoursVal).padStart(2, '0');
       if (mEl) mEl.textContent = String(minsVal).padStart(2, '0');
       if (sEl) sEl.textContent = String(secsVal).padStart(2, '0');
+      
+      if (miniEl) {
+        miniEl.textContent = daysVal + "d " + hoursVal + "h remaining";
+      }
     } catch(e) {}
   };
   process();
