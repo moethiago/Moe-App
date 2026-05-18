@@ -68,7 +68,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .wire-headline strong{font-weight:600;color:#fff}
 .wire-meta-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .outlet-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,0.04);color:var(--txt-secondary);border:1px solid var(--border-hi);text-transform:uppercase}
-.consensus-count-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--purple);color:#000;text-transform:uppercase;margin-right:4px}
 .verified-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--epl-green);color:#000;text-transform:uppercase;margin-right:4px}
 .classification-badge{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;padding:1px 5px;border-radius:2px;background:rgba(255,255,255,0.02);color:var(--txt-muted);border:1px solid var(--border);margin-left:auto;text-transform:uppercase}
 
@@ -152,7 +151,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>MATRIX OVERHAUL</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>NORMALIZED RE-ENGINE</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -179,15 +178,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Matrix Pipeline Active</span>
-          <span class="consensus-desc">Junk auto-deleted. Wire bifurcated cleanly:</span>
+          <span class="consensus-title">Normalized Classifiers</span>
+          <span class="consensus-desc">Sanitized text processing logic operating actively:</span>
         </div>
         <span class="consensus-badge" id="consensus-summary-badge">Ready</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Matrix sequence initiated...</span>
+          <span class="ticker-item">🏁 Stream synchronization protocol online...</span>
         </div>
       </div>
 
@@ -201,7 +200,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 
       <p class="section-label">📊 General Sport Context</p>
       <div class="card" id="context-posts">
-        <div class="empty-state">Awaiting data sequence updates...</div>
+        <div class="empty-state">Awaiting context matrix synchronization...</div>
       </div>
     </div>
 
@@ -295,9 +294,9 @@ const KEY_ENTITIES = [
   "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix"
 ];
 
-// Structural Classifier Targets
-const CRITICAL_REGEX = /\b(official|confirmed|signs|signed|statement|done deal|extends|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished)\b/i;
-const JUNK_REGEX = /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick-off time|undercard|ufc|boxing|fight|live commentary|live stream)\b/i;
+// Normalized Regex Engine Targets (Standard strings, boundary expressions bypassed)
+const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|undercard|ufc|boxing|fight|live commentary|live stream)/;
+const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|extends|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished)/;
 
 let foodLog = [], setLog = [];
 
@@ -339,7 +338,7 @@ async function loadNewsFeed() {
   const contextContainer = document.getElementById('context-posts');
   if (!criticalContainer || !contextContainer) return;
   
-  criticalContainer.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Parsing matrices...</span></div>';
+  criticalContainer.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Filtering news streams...</span></div>';
   contextContainer.innerHTML = '';
   
   const rawDataPayloads = [];
@@ -366,21 +365,24 @@ async function loadNewsFeed() {
 
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
         
-        // Tier 1 Guard: Instant Delete of Clickbait/Schedules
-        if (JUNK_REGEX.test(originalTitle)) return;
+        // --- NORMALIZATION CORE PIPELINE ---
+        // Strip out typography differences, curly brackets, symbols, and tabs to completely secure the text sequence
+        const sanitizedTitle = originalTitle
+          .toLowerCase()
+          .replace(/[\r\n\t]+/g, " ")
+          .replace(/[\u2018\u2019\u201c\u201d]/g, "'") // Map typographic quotes
+          .replace(/[^a-z0-9\s]/g, " ")              // Convert symbols to spaces to isolate clear characters
+          .trim();
 
-        // Skip titles that are way too short to carry real context
-        if (originalTitle.split(' ').length < 4) return;
+        // Safe rejection rules
+        if (JUNK_KEYWORDS.test(sanitizedTitle)) return;
+        if (sanitizedTitle.split(' ').filter(w => w.length > 0).length < 4) return;
 
         const cleanLink = item.link || "#";
         const itemTimestamp = item.pubDate ? Date.parse(item.pubDate) : Date.now();
         const parsedTime = isNaN(itemTimestamp) ? Date.now() : itemTimestamp;
 
-        const textFootprint = originalTitle.toLowerCase()
-          .replace(/[^a-z0-9\s]/g, '')
-          .split(' ')
-          .filter(word => word.length > 3);
-
+        const textFootprint = sanitizedTitle.split(' ').filter(word => word.length > 3);
         const isF1Source = payload.source.toLowerCase().includes('f1');
 
         let matchedStory = null;
@@ -406,9 +408,9 @@ async function loadNewsFeed() {
             matchedStory.time = parsedTime;
           }
         } else {
-          // Classification Evaluation Lane Assigning
+          // Absolute Structural Lane Mapping
           let classification = "context";
-          if (CRITICAL_REGEX.test(originalTitle)) {
+          if (CRITICAL_KEYWORDS.test(sanitizedTitle)) {
             classification = "critical";
           }
 
@@ -477,7 +479,7 @@ async function loadNewsFeed() {
       indicatorBadge.textContent = `${totalRendered} Stories`;
     }
 
-    criticalContainer.innerHTML = criticalHtml || `<div class="empty-state">No major breaking alerts right now. System tracking cleanly.</div>`;
+    criticalContainer.innerHTML = criticalHtml || `<div class="empty-state">No major breaking updates right now. Filters clean.</div>`;
     contextContainer.innerHTML = contextHtml || `<div class="empty-state">Background wire empty.</div>`;
     buildTicker(tickerArray.length ? tickerArray : ["Awaiting clean news stream..."]);
 
@@ -507,8 +509,10 @@ async function loadFootballScores() {
     
     if (data && data.items) {
       data.items.forEach(item => {
-        if (JUNK_REGEX.test(item.title)) return;
-        if (item.title.split(' ').length < 4) return;
+        if (!item.title) return;
+        const norm = item.title.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+        if (JUNK_KEYWORDS.test(norm)) return;
+        if (norm.split(' ').filter(w=>w.length>0).length < 4) return;
         
         html += `
           <div class="match-card">
