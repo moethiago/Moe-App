@@ -280,7 +280,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 <script>
 const PROXY = "https://corsproxy.io/?url=";
 
-// 12 High-Signal F1 & Football Core Feeds
 const MASTER_CHANNELS = [
   { name: "BBC F1", url: "https://feeds.bbci.co.uk/sport/formula1/rss.xml" },
   { name: "BBC Football", url: "https://feeds.bbci.co.uk/sport/football/rss.xml" },
@@ -336,7 +335,6 @@ async function loadNewsFeed() {
   let processedArticles = [];
   const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','near','show','with','out','into','back','how','why']);
 
-  // Download all 12 feeds in parallel vectors
   const promises = MASTER_CHANNELS.map(async (channel) => {
     try {
       const xml = await fetchRawXML(channel.url);
@@ -349,18 +347,15 @@ async function loadNewsFeed() {
         title = title.trim();
         const lowerTitle = title.toLowerCase();
 
-        // Parse publish time for 72 hour limit
         let timestamp = Date.now();
         if (pubDateStr) {
           const parsed = Date.parse(pubDateStr);
           if (!isNaN(parsed)) timestamp = parsed;
         }
 
-        // Validate 72-hour window limit
         const seventyTwoHoursAgo = Date.now() - (72 * 60 * 60 * 1000);
         if (timestamp < seventyTwoHoursAgo) return;
 
-        // Strip clean tracking terms
         const tokens = lowerTitle
           .replace(/[^a-zA-Z0-9\s]/g, '')
           .split(/\s+/)
@@ -375,14 +370,11 @@ async function loadNewsFeed() {
 
   await Promise.all(promises);
 
-  // Grouping Engine: Connect stories talking about the exact same events
   let clusterMap = [];
 
   processedArticles.forEach(art => {
     let matchedCluster = null;
-
     for (let cluster of clusterMap) {
-      // Look for a minimum of 2 matching core keywords
       const sharedTokens = art.tokens.filter(t => cluster.tokens.includes(t));
       if (sharedTokens.length >= 2) {
         matchedCluster = cluster;
@@ -410,14 +402,14 @@ async function loadNewsFeed() {
     }
   });
 
-  // Sort clusters chronologically: Newest updates first
   clusterMap.sort((a, b) => b.timestamp - a.timestamp);
 
-  // SAFE DYNAMIC THRESHOLD SCOPING (Declared here cleanly so empty feeds won't cause crashes)
+  // COMPLETELY CRASH-PROOFED THRESHOLD COMPUTATION
   let dynamicThreshold = 2; 
   let maxClusterSize = 0;
 
   if (clusterMap.length > 0) {
+    // Fixed: Provided an initial value of 0 to stop reduce from failing on single elements
     maxClusterSize = clusterMap.reduce((max, item) => item.sources.length > max ? item.sources.length : max, 0);
     
     if (maxClusterSize >= 4) {
@@ -429,7 +421,6 @@ async function loadNewsFeed() {
     }
   }
 
-  // Safe UI Badge Updates (Prevents app hanging or clock stalling)
   const nodeBadge = document.getElementById('source-node-count');
   if (nodeBadge) {
     if (maxClusterSize >= 2) {
@@ -445,7 +436,6 @@ async function loadNewsFeed() {
   let validatedTicker = [];
 
   clusterMap.forEach(item => {
-    // Structural Guard: Skip anything under the calculated threshold or any stray single source item
     if (item.sources.length < dynamicThreshold || item.sources.length < 2) return; 
 
     validatedTicker.push(item.representativeTitle);
@@ -487,13 +477,14 @@ async function loadNewsFeed() {
 
 function buildTicker(titles) {
   const tracker = document.getElementById('ticker');
-  if (!titles || !titles.length) return;
+  if (!tracker || !titles || !titles.length) return;
   const cleanStr = titles.slice(0, 10).map(t => `<span class="ticker-item">⚡ Consensus Match: ${t}</span>`).join('');
   tracker.innerHTML = cleanStr + cleanStr + cleanStr;
 }
 
 async function loadFootballScores() {
   const container = document.getElementById('football-scores-container');
+  if (!container) return;
   container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Fetching direct match parameters...</span></div>';
   try {
     const xml = await fetchRawXML(SOCCER_STREAM);
@@ -523,6 +514,7 @@ const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff
 
 function loadF1Data() {
   const container = document.getElementById('f1-standings-body');
+  if (!container) return;
   container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--f1-red)"></div><span>Loading 2026 Grid Metrics...</span></div>';
   
   const current2026Standings = [
@@ -566,11 +558,22 @@ function addFood() {
 function deleteFood(id) { foodLog = foodLog.filter(f => f.id !== id); localStorage.setItem('m_food', JSON.stringify(foodLog)); renderFood(); }
 function renderFood() {
   const totals = foodLog.reduce((a, b) => ({ kcal: a.kcal+b.kcal, prot: a.prot+b.prot, carb: a.carb+b.carb, fat: a.fat+b.fat }), { kcal:0, prot:0, carb:0, fat:0 });
-  document.getElementById('cal-display').textContent = Math.round(totals.kcal);
-  document.getElementById('prot-val').textContent = Math.round(totals.prot) + 'g'; document.getElementById('carb-val').textContent = Math.round(totals.carb) + 'g'; document.getElementById('fat-val').textContent = Math.round(totals.fat) + 'g';
-  document.getElementById('prot-bar').style.width = Math.min((totals.prot/180)*100, 100) + '%'; document.getElementById('carb-bar').style.width = Math.min((totals.carb/280)*100, 100) + '%'; document.getElementById('fat-bar').style.width = Math.min((totals.fat/70)*100, 100) + '%';
-  document.getElementById('cal-ring').style.strokeDashoffset = 314 * (1 - Math.min(totals.kcal / 2500, 1));
+  
+  const calDisp = document.getElementById('cal-display');
+  if (calDisp) calDisp.textContent = Math.round(totals.kcal);
+  
+  if (document.getElementById('prot-val')) {
+    document.getElementById('prot-val').textContent = Math.round(totals.prot) + 'g'; 
+    document.getElementById('carb-val').textContent = Math.round(totals.carb) + 'g'; 
+    document.getElementById('fat-val').textContent = Math.round(totals.fat) + 'g';
+    document.getElementById('prot-bar').style.width = Math.min((totals.prot/180)*100, 100) + '%'; 
+    document.getElementById('carb-bar').style.width = Math.min((totals.carb/280)*100, 100) + '%'; 
+    document.getElementById('fat-bar').style.width = Math.min((totals.fat/70)*100, 100) + '%';
+    document.getElementById('cal-ring').style.strokeDashoffset = 314 * (1 - Math.min(totals.kcal / 2500, 1));
+  }
+  
   const container = document.getElementById('food-list');
+  if(!container) return;
   if(!foodLog.length) { container.innerHTML = `<div class="empty-state">No nutritional intake items logged.</div>`; return; }
   container.innerHTML = foodLog.map(f => `<div class="food-item"><span class="food-item-name">${f.name}</span><span class="food-item-kcal">${f.kcal} kcal</span><span class="food-item-p">${f.prot}g P</span><button class="food-del" onclick="deleteFood(${f.id})">×</button></div>`).join('');
 }
@@ -585,18 +588,30 @@ function addSet() {
 function deleteSet(id) { setLog = setLog.filter(s => s.id !== id); localStorage.setItem('m_sets', JSON.stringify(setLog)); renderSets(); }
 function renderSets() {
   const totalVol = setLog.reduce((a, b) => a + (b.weight * b.reps), 0), uniqueEx = [...new Set(setLog.map(s => s.exercise.toLowerCase()))].length;
-  document.getElementById('wk-sets').textContent = setLog.length; document.getElementById('wk-vol').textContent = totalVol.toLocaleString(); document.getElementById('wk-exs').textContent = uniqueEx;
-  document.getElementById('vol-total-val').textContent = totalVol.toLocaleString() + ' kg';
+  
+  const setsCount = document.getElementById('wk-sets');
+  if (setsCount) {
+    setsCount.textContent = setLog.length; 
+    document.getElementById('wk-vol').textContent = totalVol.toLocaleString(); 
+    document.getElementById('wk-exs').textContent = uniqueEx;
+    document.getElementById('vol-total-val').textContent = totalVol.toLocaleString() + ' kg';
+  }
+  
   const container = document.getElementById('set-list');
+  if(!container) return;
   if(!setLog.length) { container.innerHTML = `<div class="empty-state">Workout list empty.</div>`; return; }
   container.innerHTML = setLog.map(s => `<div class="set-row"><span class="set-exercise">${s.exercise}</span><span class="food-item-kcal">${s.weight}kg × ${s.reps}</span><button class="set-del" onclick="deleteSet(${s.id})">×</button></div>`).join('');
 }
 
 function startClock() {
-  const run = () => { const d = new Date(); document.getElementById('clock').textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); };
+  const run = () => { 
+    const d = new Date(); 
+    const clock = document.getElementById('clock');
+    if (clock) clock.textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); 
+  };
   run(); setInterval(run, 5000);
 }
-function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
+function toast(msg) { const t = document.getElementById('toast'); if(!t)return; t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
 </script>
 </body>
 </html>
