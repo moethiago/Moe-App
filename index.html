@@ -176,9 +176,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
       <div class="consensus-banner">
         <div class="consensus-info">
           <span class="consensus-title">Cross-Network Verified Wire</span>
-          <span class="consensus-desc">Requiring matching multi-source footprints:</span>
+          <span class="consensus-desc">Displaying entries found across multiple providers:</span>
         </div>
-        <span class="consensus-badge" id="source-node-count">Syncing Engine...</span>
+        <span class="consensus-badge" id="source-node-count" style="background:var(--epl-green)">Multi-Sourced</span>
       </div>
 
       <div class="ticker-wrap">
@@ -327,10 +327,10 @@ async function loadNewsFeed() {
   if (!container) return;
   container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Cross-checking network footprints...</span></div>';
   
-  let processedArticles = [];
+  let rawArticles = [];
   const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','latest','news','sport']);
 
-  // Fetch feeds completely asynchronously to avoid execution blocks
+  // Clean, isolated async fetching using settled parameters
   const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
     try {
       const res = await fetch(RSS_API + encodeURIComponent(channel.url));
@@ -341,15 +341,14 @@ async function loadNewsFeed() {
         data.items.slice(0, 6).forEach(item => {
           let title = item.title ? item.title.trim() : '';
           if (!title) return;
-          const lowerTitle = title.toLowerCase();
-
-          // Split headline into comparative string footprints
-          const tokens = lowerTitle
+          
+          // Generate unique matching arrays
+          const tokens = title.toLowerCase()
             .replace(/[^a-zA-Z0-9\s]/g, '')
             .split(/\s+/)
             .filter(t => t.length > 3 && !stopWords.has(t));
 
-          processedArticles.push({
+          rawArticles.push({
             title,
             link: item.link || '#',
             source: channel.name,
@@ -361,34 +360,34 @@ async function loadNewsFeed() {
     } catch(e) {}
   });
 
-  await Promise.all(fetchPromises);
+  await Promise.allSettled(fetchPromises);
 
-  // Cluster algorithm matching system
-  let clusterMap = [];
+  // Linear Clustering (Runs once, no recursive iterations)
+  let clusters = [];
 
-  processedArticles.forEach(art => {
-    let matchedCluster = null;
-    for (let cluster of clusterMap) {
-      const sharedTokens = art.tokens.filter(t => cluster.tokens.includes(t));
-      // Require at least 2 distinct matching terms across providers to match topics
-      if (sharedTokens.length >= 2) {
-        matchedCluster = cluster;
+  rawArticles.forEach(art => {
+    let targetCluster = null;
+    
+    for (let i = 0; i < clusters.length; i++) {
+      const matchCount = art.tokens.filter(t => clusters[i].tokens.includes(t)).length;
+      if (matchCount >= 2) {
+        targetCluster = clusters[i];
         break;
       }
     }
 
-    if (matchedCluster) {
-      if (!matchedCluster.sources.includes(art.source)) {
-        matchedCluster.sources.push(art.source);
+    if (targetCluster) {
+      if (!targetCluster.sources.includes(art.source)) {
+        targetCluster.sources.push(art.source);
       }
-      if (art.timestamp > matchedCluster.timestamp) {
-        matchedCluster.timestamp = art.timestamp;
-        matchedCluster.representativeTitle = art.title;
-        matchedCluster.link = art.link;
+      if (art.timestamp > targetCluster.timestamp) {
+        targetCluster.timestamp = art.timestamp;
+        targetCluster.title = art.title;
+        targetCluster.link = art.link;
       }
     } else {
-      clusterMap.push({
-        representativeTitle: art.title,
+      clusters.push({
+        title: art.title,
         link: art.link,
         tokens: art.tokens,
         sources: [art.source],
@@ -397,35 +396,19 @@ async function loadNewsFeed() {
     }
   });
 
-  clusterMap.sort((a, b) => b.timestamp - a.timestamp);
-
-  // Dynamic Fallback Matrix Configuration (3 Sources down to 2 Sources, completely blocking Single Source noise)
-  let dynamicThreshold = 3; 
-  if (clusterMap.length > 0) {
-    const maxSourcesFound = clusterMap.reduce((max, item) => item.sources.length > max ? item.sources.length : max, 0);
-    // If no stories have 3 sources, but we have 2-source matches, safely fall back to 2
-    if (maxSourcesFound === 2) {
-      dynamicThreshold = 2;
-    }
-  }
-
-  // Update UI badge status cleanly
-  const nodeBadge = document.getElementById('source-node-count');
-  if (nodeBadge) {
-    nodeBadge.textContent = `${dynamicThreshold}+ Source Match`;
-    nodeBadge.style.background = dynamicThreshold >= 3 ? 'var(--epl-green)' : 'var(--ig-blue)';
-  }
+  // Sort linearly by freshest timestamp
+  clusters.sort((a, b) => b.timestamp - a.timestamp);
 
   let consensusHtml = "";
   let validatedTicker = [];
 
-  clusterMap.forEach(item => {
-    // Rigid guardrail: Never print item if it fails the dynamic threshold, or if it is single-sourced
-    if (item.sources.length < dynamicThreshold || item.sources.length < 2) return;
+  clusters.forEach(item => {
+    // Rigid Multi-Source Condition: If it doesn't appear on at least 2 distinct networks, drop it.
+    if (item.sources.length < 2) return;
 
-    validatedTicker.push(item.representativeTitle);
+    validatedTicker.push(item.title);
 
-    let formattedHeadline = item.representativeTitle;
+    let formattedHeadline = item.title;
     KEY_ENTITIES.forEach(entity => {
       const regex = new RegExp(`\\b${entity}\\b`, 'gi');
       formattedHeadline = formattedHeadline.replace(regex, `<strong>$&</strong>`);
@@ -439,21 +422,24 @@ async function loadNewsFeed() {
         <div class="wire-content">
           <p class="wire-headline">${formattedHeadline}</p>
           <div class="wire-meta-row" style="margin-top: 4px;">
-            <span class="consensus-count-badge" style="background:${item.sources.length >= 3 ? 'var(--epl-green)' : 'var(--bg-raised)'; color:${item.sources.length >= 3 ? '#000' : 'var(--txt-secondary)'}">${item.sources.length} Network Verification</span>
+            <span class="consensus-count-badge" style="background:${item.sources.length >= 3 ? 'var(--epl-green)' : 'var(--bg-raised)'; color:${item.sources.length >= 3 ? '#000' : 'var(--txt-secondary)'}">${item.sources.length} Network Trackers</span>
             ${sourceBadges}
           </div>
         </div>
       </div>`;
   });
 
+  const nodeBadge = document.getElementById('source-node-count');
+  if (nodeBadge) nodeBadge.textContent = "Consensus Engine Online";
+
   if (!consensusHtml) {
     container.innerHTML = `
       <div class="empty-state">
         <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
-        No verified multi-source consensus lines right now.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Single source wire traffic ignored by consensus engine.</span>
+        No cross-network matching storylines right now.<br>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Single source noise filtered successfully.</span>
       </div>`;
-    buildTicker(["Wire active. Single source wire items suppressed..."]);
+    buildTicker(["Wire balanced. Single source reports dropped."]);
   } else {
     container.innerHTML = consensusHtml;
     buildTicker(validatedTicker);
