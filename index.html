@@ -349,10 +349,6 @@ async function loadNewsFeed() {
         title = title.trim();
         const lowerTitle = title.toLowerCase();
 
-        // Anti-noise sanity checks
-        if (title.includes('?') || lowerTitle.startsWith('why') || lowerTitle.startsWith('how')) return;
-        if (title.startsWith('"') || title.startsWith("'") || title.startsWith('“')) return;
-
         // Parse publish time for 72 hour limit
         let timestamp = Date.now();
         if (pubDateStr) {
