@@ -202,7 +202,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
       <div class="card" id="feed-posts">
         <div class="f1-api-loading">
           <div class="f1-spinner"></div>
-          <span>Cross-referencing network matrices...</span>
+          <span>Cross-checking network footprints...</span>
         </div>
       </div>
     </div>
@@ -345,12 +345,24 @@ async function loadNewsFeed() {
       items.forEach(item => {
         let title = item.querySelector('title')?.textContent || '';
         const link = item.querySelector('link')?.textContent || '#';
+        const pubDateStr = item.querySelector('pubDate')?.textContent || '';
         title = title.trim();
         const lowerTitle = title.toLowerCase();
 
         // Anti-noise sanity checks
         if (title.includes('?') || lowerTitle.startsWith('why') || lowerTitle.startsWith('how')) return;
         if (title.startsWith('"') || title.startsWith("'") || title.startsWith('“')) return;
+
+        // Parse publish time for 72 hour limit
+        let timestamp = Date.now();
+        if (pubDateStr) {
+          const parsed = Date.parse(pubDateStr);
+          if (!isNaN(parsed)) timestamp = parsed;
+        }
+
+        // Validate 72-hour window limit
+        const seventyTwoHoursAgo = Date.now() - (72 * 60 * 60 * 1000);
+        if (timestamp < seventyTwoHoursAgo) return;
 
         // Strip clean tracking terms
         const tokens = lowerTitle
@@ -359,7 +371,7 @@ async function loadNewsFeed() {
           .filter(t => t.length > 3 && !stopWords.has(t));
 
         if (tokens.length > 0) {
-          processedArticles.push({ title, link, tokens, source: channel.name });
+          processedArticles.push({ title, link, tokens, source: channel.name, timestamp });
         }
       });
     } catch(e) {}
@@ -386,23 +398,33 @@ async function loadNewsFeed() {
       if (!matchedCluster.sources.includes(art.source)) {
         matchedCluster.sources.push(art.source);
       }
+      // Keep track of the freshest timestamp for correct sorting
+      if (art.timestamp > matchedCluster.timestamp) {
+        matchedCluster.timestamp = art.timestamp;
+        matchedCluster.representativeTitle = art.title;
+        matchedCluster.link = art.link;
+      }
     } else {
       clusterMap.push({
         representativeTitle: art.title,
         link: art.link,
         tokens: art.tokens,
-        sources: [art.source]
+        sources: [art.source],
+        timestamp: art.timestamp
       });
     }
   });
 
-  // STRICT REQUIREMENT FILTER: Only show stories found across 3+ completely distinct network channels
-  const consensusThreshold = 3;
+  // Sort clusters chronologically: Newest updates first at the top
+  clusterMap.sort((a, b) => b.timestamp - a.timestamp);
+
+  // STRICT REQUIREMENT FILTER: Adjusted to exactly 4 verification sources
+  const consensusThreshold = 4;
   let consensusHtml = "";
   let validatedTicker = [];
 
   clusterMap.forEach(item => {
-    if (item.sources.length < consensusThreshold) return; // Discard isolated/single network loops
+    if (item.sources.length < consensusThreshold) return; // Discard elements failing the 4-source test
 
     validatedTicker.push(item.representativeTitle);
 
@@ -431,8 +453,8 @@ async function loadNewsFeed() {
     container.innerHTML = `
       <div class="empty-state">
         <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
-        No cross-network sports consensus found.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Waiting for a story to break across at least 3 distinct platforms simultaneously.</span>
+        No cross-network sports consensus found within 72h.<br>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Waiting for a story to break across at least 4 distinct platforms simultaneously.</span>
       </div>`;
     buildTicker(["Monitoring sports grids for concurrent breaking events..."]);
   } else {
