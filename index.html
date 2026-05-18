@@ -265,10 +265,12 @@ const MASTER_CHANNELS = [
 
 const SOCCER_STREAM = "https://feeds.bbci.co.uk/sport/football/rss.xml";
 
+// ADDED BAYERN MUNICH SPECIFIC HIGHLIGHT ENTITIES
 const KEY_ENTITIES = [
   "Hamilton", "Verstappen", "Norris", "Leclerc", "Russell", "Antonelli", "Piastri", "Alonso",
   "Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Real Madrid", "Barcelona", "Bayern",
-  "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix", "Mourinho"
+  "Bayern Munich", "Munich", "Kompany", "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", 
+  "GP", "Grand Prix", "Mourinho"
 ];
 
 // BANNED FLUFF LIST
@@ -467,7 +469,7 @@ async function loadFootballScores() {
     if (data && data.items) {
       data.items.forEach(item => {
         if (!item.title) return;
-        const norm = item.title.toLowerCase().replace(/[^a-z0-9s]/g, " ");
+        const norm = item.title.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
         if (JUNK_KEYWORDS.test(norm)) return;
         if (norm.split(' ').filter(w=>w.length>0).length < 4) return;
         
