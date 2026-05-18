@@ -25,7 +25,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 #header-inner{height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 18px}
 #top-nav{flex-shrink:0;background:rgba(13,15,24,0.97);border-bottom:1px solid var(--border)}
 .nav-inner{height:var(--nav-h);display:flex;align-items:stretch}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--txt-muted);transition:color 0.2s;position:relative}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--txt-muted);transition:color 0.2s;position:relative;z-index:10;}
 .nav-btn.active{color:var(--txt-primary)}
 .nav-btn.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:28px;height:2px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,var(--ig-blue),var(--purple))}
 .nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
@@ -68,13 +68,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .outlet-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(79,156,249,0.06);color:var(--ig-blue);border:1px solid rgba(79,156,249,0.15);text-transform:uppercase}
 .consensus-count-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--epl-green);color:#000;text-transform:uppercase;margin-right:4px}
 
-.match-score-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
-.match-team{display:flex;flex-direction:column;gap:3px}
-.match-team.away{align-items:flex-end}
-.team-name{font-weight:600;font-size:14px;color:var(--txt-primary)}
-.score-box{display:flex;align-items:center;gap:8px;background:var(--bg-raised);border-radius:var(--r-sm);padding:6px 14px;border:1px solid var(--border)}
-.score-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:24px;line-height:1;color:var(--cyan)}
-.score-sep{color:var(--txt-muted);font-size:16px}
 .league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border-hi)}
 .ft-badge{font-size:11px;font-weight:600;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;margin-left:auto}
 .match-card{padding:14px 16px;border-bottom:1px solid var(--border)}
@@ -305,70 +298,97 @@ const KEY_ENTITIES = [
 
 let foodLog = [], setLog = [];
 
+// INSULATED GLOBAL STORAGE LOADER
 document.addEventListener('DOMContentLoaded', () => {
-  try { foodLog = JSON.parse(localStorage.getItem('m_food')) || []; } catch(e){}
-  try { setLog = JSON.parse(localStorage.getItem('m_sets')) || []; } catch(e){}
-  renderFood();
-  renderSets();
-  startClock();
-  loadNewsFeed();
+  try { foodLog = JSON.parse(localStorage.getItem('m_food')) || []; } catch(e){ console.error(e); }
+  try { setLog = JSON.parse(localStorage.getItem('m_sets')) || []; } catch(e){ console.error(e); }
+  
+  // Clean initialization layout renders
+  try { renderFood(); } catch(e){}
+  try { renderSets(); } catch(e){}
+  try { startClock(); } catch(e){}
+  
+  // Safe async pipeline execution that will never block app navigation elements
+  setTimeout(() => {
+    loadNewsFeed().catch(err => console.error("News sync intercepted: ", err));
+  }, 50);
 });
 
 function switchTab(tab) {
-  ['feed','sports','health'].forEach(t => {
-    document.getElementById('panel-' + t).classList.toggle('active', t === tab);
-    document.getElementById('nav-' + t).classList.toggle('active', t === tab);
-  });
-  if (tab === 'sports') { loadFootballScores(); loadF1Data(); }
+  try {
+    ['feed','sports','health'].forEach(t => {
+      const panel = document.getElementById('panel-' + t);
+      const navBtn = document.getElementById('nav-' + t);
+      if (panel) panel.classList.toggle('active', t === tab);
+      if (navBtn) navBtn.classList.toggle('active', t === tab);
+    });
+    if (tab === 'sports') { 
+      loadFootballScores().catch(e => {}); 
+      loadF1Data(); 
+    }
+  } catch(err) {
+    console.error("Tab switch execution error: ", err);
+  }
 }
 
 async function fetchRawXML(targetUrl) {
-  const response = await fetch(PROXY + encodeURIComponent(targetUrl));
-  if (!response.ok) throw new Error("Connection failed");
-  return new DOMParser().parseFromString(await response.text(), "text/xml");
+  try {
+    const response = await fetch(PROXY + encodeURIComponent(targetUrl));
+    if (!response.ok) throw new Error("Proxy connection down or rate limited");
+    const textData = await response.text();
+    return new DOMParser().parseFromString(textData, "text/xml");
+  } catch(e) {
+    // Return empty XML document safely rather than crashing execution threads
+    return new DOMParser().parseFromString("<rss></rss>", "text/xml");
+  }
 }
 
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
+  if (!container) return;
   container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Cross-checking network footprints...</span></div>';
   
   let processedArticles = [];
   const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','near','show','with','out','into','back','how','why']);
 
-  const promises = MASTER_CHANNELS.map(async (channel) => {
-    try {
-      const xml = await fetchRawXML(channel.url);
-      const items = Array.from(xml.querySelectorAll('item')).slice(0, 15);
-      
-      items.forEach(item => {
-        let title = item.querySelector('title')?.textContent || '';
-        const link = item.querySelector('link')?.textContent || '#';
-        const pubDateStr = item.querySelector('pubDate')?.textContent || '';
-        title = title.trim();
-        const lowerTitle = title.toLowerCase();
+  try {
+    const promises = MASTER_CHANNELS.map(async (channel) => {
+      try {
+        const xml = await fetchRawXML(channel.url);
+        if (!xml) return;
+        const items = Array.from(xml.querySelectorAll('item')).slice(0, 10);
+        
+        items.forEach(item => {
+          let title = item.querySelector('title')?.textContent || '';
+          const link = item.querySelector('link')?.textContent || '#';
+          const pubDateStr = item.querySelector('pubDate')?.textContent || '';
+          title = title.trim();
+          if(!title) return;
+          const lowerTitle = title.toLowerCase();
 
-        let timestamp = Date.now();
-        if (pubDateStr) {
-          const parsed = Date.parse(pubDateStr);
-          if (!isNaN(parsed)) timestamp = parsed;
-        }
+          let timestamp = Date.now();
+          if (pubDateStr) {
+            const parsed = Date.parse(pubDateStr);
+            if (!isNaN(parsed)) timestamp = parsed;
+          }
 
-        const seventyTwoHoursAgo = Date.now() - (72 * 60 * 60 * 1000);
-        if (timestamp < seventyTwoHoursAgo) return;
+          const seventyTwoHoursAgo = Date.now() - (72 * 60 * 60 * 1000);
+          if (timestamp < seventyTwoHoursAgo) return;
 
-        const tokens = lowerTitle
-          .replace(/[^a-zA-Z0-9\s]/g, '')
-          .split(/\s+/)
-          .filter(t => t.length > 3 && !stopWords.has(t));
+          const tokens = lowerTitle
+            .replace(/[^a-zA-Z0-9\s]/g, '')
+            .split(/\s+/)
+            .filter(t => t.length > 3 && !stopWords.has(t));
 
-        if (tokens.length > 0) {
-          processedArticles.push({ title, link, tokens, source: channel.name, timestamp });
-        }
-      });
-    } catch(e) {}
-  });
+          if (tokens.length > 0) {
+            processedArticles.push({ title, link, tokens, source: channel.name, timestamp });
+          }
+        });
+      } catch(e) { console.warn(`Channel processing skip: ${channel.name}`); }
+    });
 
-  await Promise.all(promises);
+    await Promise.all(promises);
+  } catch(e) { console.error("Parallel fetch failure bypassed: ", e); }
 
   let clusterMap = [];
 
@@ -404,21 +424,14 @@ async function loadNewsFeed() {
 
   clusterMap.sort((a, b) => b.timestamp - a.timestamp);
 
-  // COMPLETELY CRASH-PROOFED THRESHOLD COMPUTATION
   let dynamicThreshold = 2; 
   let maxClusterSize = 0;
 
   if (clusterMap.length > 0) {
-    // Fixed: Provided an initial value of 0 to stop reduce from failing on single elements
     maxClusterSize = clusterMap.reduce((max, item) => item.sources.length > max ? item.sources.length : max, 0);
-    
-    if (maxClusterSize >= 4) {
-      dynamicThreshold = 4;
-    } else if (maxClusterSize === 3) {
-      dynamicThreshold = 3;
-    } else {
-      dynamicThreshold = 2;
-    }
+    if (maxClusterSize >= 4) { dynamicThreshold = 4; } 
+    else if (maxClusterSize === 3) { dynamicThreshold = 3; } 
+    else { dynamicThreshold = 2; }
   }
 
   const nodeBadge = document.getElementById('source-node-count');
@@ -466,9 +479,9 @@ async function loadNewsFeed() {
       <div class="empty-state">
         <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
         No multi-source cross-network stories found right now.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Single-source updates are being intentionally hidden.</span>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">External feeds are unreachable or quiet. Verification matrix operational.</span>
       </div>`;
-    buildTicker(["Monitoring sports grids for verified multi-network events..."]);
+    buildTicker(["Monitoring network interfaces for verified consensus lines..."]);
   } else {
     container.innerHTML = consensusHtml;
     buildTicker(validatedTicker);
@@ -494,7 +507,6 @@ async function loadFootballScores() {
     items.forEach(item => {
       const title = item.querySelector('title')?.textContent || '';
       const desc = item.querySelector('description')?.textContent || '';
-      
       if(title && !title.toLowerCase().includes("xml") && title.length > 5) {
         html += `
           <div class="match-card">
@@ -506,8 +518,8 @@ async function loadFootballScores() {
           </div>`;
       }
     });
-    container.innerHTML = html || `<div class="empty-state">No active sports wire items streaming currently.</div>`;
-  } catch(e) { container.innerHTML = `<div class="f1-api-error">Failed loading live score stream.</div>`; }
+    container.innerHTML = html || `<div class="empty-state">No football updates available right now.</div>`;
+  } catch(e) { container.innerHTML = `<div class="f1-api-error">Network stream timed out. Try refreshing later.</div>`; }
 }
 
 const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff8700', 'red_bull': '#3671c6', 'alpine': '#0093cc', 'haas': '#b6babd', 'williams': '#64c4ff', 'default': '#8a8fa8' };
@@ -515,7 +527,6 @@ const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff
 function loadF1Data() {
   const container = document.getElementById('f1-standings-body');
   if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--f1-red)"></div><span>Loading 2026 Grid Metrics...</span></div>';
   
   const current2026Standings = [
     { pos: 1, name: "Kimi Antonelli", team: "Mercedes", teamId: "mercedes", pts: 100, wins: 3, num: 12 },
@@ -526,7 +537,8 @@ function loadF1Data() {
     { pos: 6, name: "Oscar Piastri", team: "McLaren", teamId: "mclaren", pts: 43, wins: 0, num: 81 }
   ];
 
-  document.getElementById('f1-standings-round').textContent = "2026 CHAMPIONSHIP STANDINGS";
+  const roundLbl = document.getElementById('f1-standings-round');
+  if (roundLbl) roundLbl.textContent = "2026 CHAMPIONSHIP STANDINGS";
   
   let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">WINS</span><span style="text-align:right">PTS</span></div>';
   
@@ -545,7 +557,7 @@ function loadF1Data() {
       </div>`;
   });
   
-  setTimeout(() => { container.innerHTML = html; }, 200);
+  container.innerHTML = html;
 }
 
 function addFood() {
@@ -566,10 +578,10 @@ function renderFood() {
     document.getElementById('prot-val').textContent = Math.round(totals.prot) + 'g'; 
     document.getElementById('carb-val').textContent = Math.round(totals.carb) + 'g'; 
     document.getElementById('fat-val').textContent = Math.round(totals.fat) + 'g';
-    document.getElementById('prot-bar').style.width = Math.min((totals.prot/180)*100, 100) + '%'; 
-    document.getElementById('carb-bar').style.width = Math.min((totals.carb/280)*100, 100) + '%'; 
-    document.getElementById('fat-bar').style.width = Math.min((totals.fat/70)*100, 100) + '%';
-    document.getElementById('cal-ring').style.strokeDashoffset = 314 * (1 - Math.min(totals.kcal / 2500, 1));
+    if(document.getElementById('prot-bar')) document.getElementById('prot-bar').style.width = Math.min((totals.prot/180)*100, 100) + '%'; 
+    if(document.getElementById('carb-bar')) document.getElementById('carb-bar').style.width = Math.min((totals.carb/280)*100, 100) + '%'; 
+    if(document.getElementById('fat-bar')) document.getElementById('fat-bar').style.width = Math.min((totals.fat/70)*100, 100) + '%';
+    if(document.getElementById('cal-ring')) document.getElementById('cal-ring').style.strokeDashoffset = 314 * (1 - Math.min(totals.kcal / 2500, 1));
   }
   
   const container = document.getElementById('food-list');
@@ -592,9 +604,9 @@ function renderSets() {
   const setsCount = document.getElementById('wk-sets');
   if (setsCount) {
     setsCount.textContent = setLog.length; 
-    document.getElementById('wk-vol').textContent = totalVol.toLocaleString(); 
-    document.getElementById('wk-exs').textContent = uniqueEx;
-    document.getElementById('vol-total-val').textContent = totalVol.toLocaleString() + ' kg';
+    if(document.getElementById('wk-vol')) document.getElementById('wk-vol').textContent = totalVol.toLocaleString(); 
+    if(document.getElementById('wk-exs')) document.getElementById('wk-exs').textContent = uniqueEx;
+    if(document.getElementById('vol-total-val')) document.getElementById('vol-total-val').textContent = totalVol.toLocaleString() + ' kg';
   }
   
   const container = document.getElementById('set-list');
