@@ -132,6 +132,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .headline-control-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;margin-bottom:10px;width:100%}
 .btn-refresh-styled{background:rgba(79,156,249,0.06);border:1px solid rgba(79,156,249,0.25);color:var(--ig-blue);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
 .btn-refresh-styled:active{background:var(--ig-blue);color:#000}
+
+/* DYNAMIC ENTITY TOGGLE STYLES */
+.filter-scroll-container{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;margin-bottom:4px;scrollbar-width:none}
+.filter-scroll-container::-webkit-scrollbar{display:none}
+.filter-pill{background:var(--bg-raised);border:1px solid var(--border);color:var(--txt-secondary);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:6px 12px;border-radius:20px;cursor:pointer;white-space:nowrap;transition:all 0.15s}
+.filter-pill.active{background:linear-gradient(135deg,var(--ig-blue),var(--purple));color:#fff;border-color:transparent}
+
+/* F1 COUNTDOWN COMPONENT STYLES */
+.f1-countdown-card{padding:14px 16px;display:flex;align-items:center;justify-content:between;gap:12px;background:linear-gradient(145deg, var(--bg-card), var(--bg-void))}
+.f1-cd-left{flex:1;min-width:0}
+.f1-cd-label{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--f1-red);margin-bottom:2px;display:flex;align-items:center;gap:4px}
+.f1-cd-title{font-size:15px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f1-cd-meta{font-size:11px;color:var(--txt-secondary);margin-top:2px;font-family:'JetBrains Mono',monospace}
+.f1-cd-timer{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:16px;color:var(--txt-primary);background:var(--bg-raised);border:1px solid var(--border-hi);padding:6px 12px;border-radius:6px;text-align:center;min-width:105px}
 </style>
 </head>
 <body>
@@ -176,12 +190,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
         <p class="section-label" style="margin:0;">🚨 BREAKING NEWS</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
+
+      <div class="filter-scroll-container" id="feed-filter-bar">
+        <span class="filter-pill active" onclick="setFeedFilter('ALL')">ALL WIRE</span>
+        <span class="filter-pill" onclick="setFeedFilter('F1')">FORMULA 1</span>
+        <span class="filter-pill" onclick="setFeedFilter('FOOTBALL')">FOOTBALL</span>
+        <span class="filter-pill" onclick="setFeedFilter('KSA')">KSA DATA</span>
+      </div>
+
       <div class="card" id="critical-posts">
         <div class="f1-api-loading"><div class="f1-spinner"></div><span>Parsing and cross-checking streams...</span></div>
       </div>
     </div>
 
     <div class="tab-panel" id="panel-sports">
+      <div class="card f1-countdown-card">
+        <div class="f1-cd-left">
+          <div class="f1-cd-label"><span class="pulse-dot" style="background:var(--f1-red)"></span>UP NEXT SESSION</div>
+          <div class="f1-cd-title" id="f1-next-track">Monaco Grand Prix</div>
+          <div class="f1-cd-meta" id="f1-next-session">QUALIFYING • MONACO CIRCUIT</div>
+        </div>
+        <div class="f1-cd-timer" id="f1-countdown-clock">00:00:00</div>
+      </div>
+
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <p class="section-label" style="margin:0;">⚽ Live Football Matrix</p>
         <button class="btn-refresh-styled" style="color:var(--epl-green);border-color:rgba(56,211,106,0.3);background:rgba(56,211,106,0.1);" onclick="loadFootballScores()">REFRESH</button>
@@ -267,7 +298,6 @@ const MASTER_CHANNELS = [
 
 const SOCCER_STREAM = "https://feeds.bbci.co.uk/sport/football/rss.xml";
 
-// EXPANDED KEY ENTITIES MATRIX TO INCLUDE PRIMARY SAUDI ARABIAN GEOPOLITICAL/ECONOMIC ENTITIES WITH THE BASEBALL METRIC SYSTEM
 const KEY_ENTITIES = [
   "Hamilton", "Verstappen", "Norris", "Leclerc", "Russell", "Antonelli", "Piastri", "Alonso",
   "Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Real Madrid", "Barcelona", "Bayern",
@@ -276,23 +306,35 @@ const KEY_ENTITIES = [
   "Saudi Pro League", "SPL", "Saudi Arabia", "KSA", "Riyadh", "Jeddah", "NEOM", "Aramco", "Vision 2030"
 ];
 
-// BANNED FLUFF LIST
 const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|hints at|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|build up|undercard|ufc|boxing|fight|live commentary|live stream|outage|chants|promise bans|admits error|admits to mistakes|told to sack|key questions)/;
 
-// EXPANDED CRITICAL ACTIONS TO INCLUDE NATIONAL/REGIONAL BREAKING DEFINITIONS
 const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft|cup champions|trophy|clinch|decree|launch|launches|approves|approved|unveiled|unveils|signing|agreement|inaugurates|inaugurated|deal)/;
 
 let foodLog = [], setLog = [];
 let tickerPosition = 0;
 let tickerAnimationId = null;
 
+// RUNTIME STATES FOR HIGHLIGHT TOGGLES AND CACHED EVENTS
+let parsedStoriesCache = [];
+let currentFeedFilter = "ALL";
+
+// DYNAMIC HARDCODED F1 2026 CALENDAR STATE FOR THE COUNTDOWN ENGINE
+const UPCOMING_F1_SESSIONS = [
+  { title: "Monaco Grand Prix", session: "QUALIFYING", location: "MONACO CIRCUIT", dateStr: "2026-05-23T16:00:00Z" },
+  { title: "Monaco Grand Prix", session: "MAIN RACE", location: "MONACO CIRCUIT", dateStr: "2026-05-24T15:00:00Z" },
+  { title: "Canadian Grand Prix", session: "MAIN RACE", location: "CIRCUIT GILLES VILLENEUVE", dateStr: "2026-06-07T21:00:00Z" }
+];
+
 document.addEventListener('DOMContentLoaded', () => {
   try { foodLog = JSON.parse(localStorage.getItem('m_food')) || []; } catch(e){}
+  try { setLog = JSON.parse(localStorage.getItem('m_sets')) || []; } catch(e){}
+  try { renderFood(); } catch(e){}
   try { setLog = JSON.parse(localStorage.getItem('m_sets')) || []; } catch(e){}
   try { renderFood(); } catch(e){}
   try { renderSets(); } catch(e){}
   startClock();
   startTickerEngine();
+  startF1CountdownEngine();
   setTimeout(() => { loadNewsFeed(); }, 100);
 });
 
@@ -320,6 +362,64 @@ function switchTab(tab) {
   } catch(err){}
 }
 
+// LIVE COUNTDOWN ENGINE
+function startF1CountdownEngine() {
+  const trackEl = document.getElementById('f1-next-track');
+  const sessEl = document.getElementById('f1-next-session');
+  const clockEl = document.getElementById('f1-countdown-clock');
+  
+  const updateTimer = () => {
+    const now = Date.now();
+    let currentSession = null;
+    
+    for (let target of UPCOMING_F1_SESSIONS) {
+      if (Date.parse(target.dateStr) > now) {
+        currentSession = target;
+        break;
+      }
+    }
+    
+    if (!currentSession) {
+      if (clockEl) clockEl.textContent = "00:00:00";
+      return;
+    }
+    
+    if (trackEl) trackEl.textContent = currentSession.title;
+    if (sessEl) sessEl.textContent = `${currentSession.session} • ${currentSession.location}`;
+    
+    const diff = Date.parse(currentSession.dateStr) - now;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    if (clockEl) {
+      clockEl.textContent = 
+        String(hours).padStart(2, '0') + ':' + 
+        String(minutes).padStart(2, '0') + ':' + 
+        String(seconds).padStart(2, '0');
+    }
+  };
+  
+  updateTimer();
+  setInterval(updateTimer, 1000);
+}
+
+// SET ENTITY FEED FILTER ACTION
+function setFeedFilter(filterType) {
+  currentFeedFilter = filterType;
+  
+  // Update visual state of button track UI
+  const container = document.getElementById('feed-filter-bar');
+  if (container) {
+    const targetPills = container.getElementsByClassName('filter-pill');
+    for (let pill of targetPills) {
+      pill.classList.toggle('active', pill.getAttribute('onclick').includes(`'${filterType}'`));
+    }
+  }
+  
+  renderCachedNewsFeed();
+}
+
 async function loadNewsFeed() {
   const criticalContainer = document.getElementById('critical-posts');
   if (!criticalContainer) return;
@@ -339,7 +439,7 @@ async function loadNewsFeed() {
   });
 
   await Promise.allSettled(fetchPromises);
-  const uniqueStories = [];
+  parsedStoriesCache = [];
 
   try {
     rawDataPayloads.forEach(payload => {
@@ -349,13 +449,8 @@ async function loadNewsFeed() {
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
         const sanitizedTitle = originalTitle.toLowerCase().replace(/[\r\n\t]+/g, " ").replace(/[\u2018\u2019\u201c\u201d]/g, "'").replace(/[^a-z0-9\s]/g, " ").trim();
 
-        // 1. Drop fluff keywords immediately
         if (JUNK_KEYWORDS.test(sanitizedTitle)) return;
-        
-        // 2. Strict bottleneck validation
         if (!CRITICAL_KEYWORDS.test(sanitizedTitle)) return;
-
-        // 3. Length safety check
         if (sanitizedTitle.split(' ').filter(w => w.length > 0).length < 4) return;
 
         const cleanLink = item.link || "#";
@@ -365,7 +460,7 @@ async function loadNewsFeed() {
         const isF1Source = payload.source.toLowerCase().includes('f1');
 
         let matchedStory = null;
-        for (let story of uniqueStories) {
+        for (let story of parsedStoriesCache) {
           if (story.isF1 !== isF1Source) continue;
           let overlapCount = 0;
           textFootprint.forEach(word => { if (story.signature.includes(word)) overlapCount++; });
@@ -376,7 +471,7 @@ async function loadNewsFeed() {
           if (!matchedStory.sources.includes(payload.source)) matchedStory.sources.push(payload.source);
           if (parsedTime > matchedStory.time) matchedStory.time = parsedTime;
         } else {
-          uniqueStories.push({ 
+          parsedStoriesCache.push({ 
             title: originalTitle, 
             link: cleanLink, 
             sources: [payload.source], 
@@ -388,35 +483,54 @@ async function loadNewsFeed() {
       });
     });
 
-    uniqueStories.sort((a, b) => b.time - a.time);
-
-    let criticalHtml = "";
-    let tickerArray = [];
-
-    uniqueStories.forEach(story => {
-      tickerArray.push(story.title);
-      let parsedHeadlineText = story.title;
-      KEY_ENTITIES.forEach(entity => {
-        if (!entity) return;
-        const searchRegex = new RegExp(`\\b${entity}\\b`, 'gi');
-        parsedHeadlineText = parsedHeadlineText.replace(searchRegex, `<strong>$&</strong>`);
-      });
-
-      criticalHtml += `
-        <div class="wire-item" onclick="window.open('${story.link}','_blank')">
-          <span class="wire-bullet">•</span>
-          <div class="wire-content">
-            <p class="wire-headline">${parsedHeadlineText}</p>
-          </div>
-        </div>`;
-    });
-
-    criticalContainer.innerHTML = criticalHtml || `<div class="empty-state">No daily wire items match criteria currently.</div>`;
-    buildTicker(tickerArray.length ? tickerArray : ["Awaiting live parameters update streams..."]);
+    parsedStoriesCache.sort((a, b) => b.time - a.time);
+    renderCachedNewsFeed();
 
   } catch(err) {
     criticalContainer.innerHTML = `<div class="f1-api-error">Pipeline routing error.</div>`;
   }
+}
+
+// RE-RENDER SYSTEM BOUND TO CURRENT MATRIX SELECTION VIA PERSISTED SCOPE
+function renderCachedNewsFeed() {
+  const criticalContainer = document.getElementById('critical-posts');
+  if (!criticalContainer) return;
+
+  let criticalHtml = "";
+  let tickerArray = [];
+
+  parsedStoriesCache.forEach(story => {
+    const rawLowerTitle = story.title.toLowerCase();
+    
+    // Dynamic bottleneck filters for highlights bar matching
+    const matchesF1 = story.isF1 || rawLowerTitle.includes('gp') || rawLowerTitle.includes('grand prix');
+    const matchesFootball = rawLowerTitle.includes('arsenal') || rawLowerTitle.includes('liverpool') || rawLowerTitle.includes('united') || rawLowerTitle.includes('chelsea') || rawLowerTitle.includes('city') || rawLowerTitle.includes('madrid') || rawLowerTitle.includes('barcelona') || rawLowerTitle.includes('bayern') || rawLowerTitle.includes('football') || rawLowerTitle.includes('soccer') || rawLowerTitle.includes('spl');
+    const matchesKSA = rawLowerTitle.includes('ksa') || rawLowerTitle.includes('saudi') || rawLowerTitle.includes('riyadh') || rawLowerTitle.includes('jeddah') || rawLowerTitle.includes('neom') || rawLowerTitle.includes('aramco') || rawLowerTitle.includes('nassr') || rawLowerTitle.includes('hilal') || rawLowerTitle.includes('ittihad') || rawLowerTitle.includes('ahli');
+
+    if (currentFeedFilter === "F1" && !matchesF1) return;
+    if (currentFeedFilter === "FOOTBALL" && !matchesFootball) return;
+    if (currentFeedFilter === "KSA" && !matchesKSA) return;
+
+    tickerArray.push(story.title);
+    let parsedHeadlineText = story.title;
+    
+    KEY_ENTITIES.forEach(entity => {
+      if (!entity) return;
+      const searchRegex = new RegExp(`\\b${entity}\\b`, 'gi');
+      parsedHeadlineText = parsedHeadlineText.replace(searchRegex, `<strong>$&</strong>`);
+    });
+
+    criticalHtml += `
+      <div class="wire-item" onclick="window.open('${story.link}','_blank')">
+        <span class="wire-bullet">•</span>
+        <div class="wire-content">
+          <p class="wire-headline">${parsedHeadlineText}</p>
+        </div>
+      </div>`;
+  });
+
+  criticalContainer.innerHTML = criticalHtml || `<div class="empty-state">No daily wire items match filter parameters.</div>`;
+  buildTicker(tickerArray.length ? tickerArray : ["Awaiting live parameters update streams..."]);
 }
 
 function buildTicker(titles) {
