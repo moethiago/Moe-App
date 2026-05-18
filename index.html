@@ -13,8 +13,8 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--t);max-width:480px;margin:0 auto;position:relative}
-#topnav{position:fixed;top:0;left:50%;Moe’s App:translateX(-50%);width:100%;max-width:480px;background:#0f0f0f;border-bottom:1px solid var(--bd);display:flex;z-index:100;padding-top:env(safe-area-inset-top)}
-.nb{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 2px 8px;cursor:pointer;border:none;background:none;color:var(--t3);font-family:'Syne',sans-serif;font-size:8px;font-weight:600;letter-spacing:.3px;text-Moe’s App:uppercase;transition:color .2s;gap:3px}
+#topnav{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#0f0f0f;border-bottom:1px solid var(--bd);display:flex;z-index:100;padding-top:env(safe-area-inset-top)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 2px 8px;cursor:pointer;border:none;background:none;color:var(--t3);font-family:'Syne',sans-serif;font-size:8px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;transition:color .2s;gap:3px}
 .nb.active{color:var(--g)}.nb svg{width:18px;height:18px}
 #app{position:fixed;top:calc(54px + env(safe-area-inset-top));bottom:env(safe-area-inset-bottom);left:50%;transform:translateX(-50%);width:100%;max-width:480px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .tab{display:none;padding-bottom:32px}.tab.active{display:block}
@@ -154,7 +154,7 @@ canvas{width:100%!important}
 <!-- HOME TAB -->
 <div id="tab-home" class="tab active">
   <div class="ph">
-    <div><div class="pt">Transform ⬛</div><div class="ps" id="homeday">Day — of 180</div></div>
+    <div><div class="pt">Moe's App ⬛</div><div class="ps" id="homeday">Day — of 180</div></div>
     <div style="text-align:right"><div style="font-size:10px;color:var(--t2)" id="homedate"></div><div style="font-size:14px;font-weight:800;color:var(--g)" id="homeGoalLabel">Goal: 67kg</div></div>
   </div>
   <div id="qcard"><button id="qref" onclick="refreshQuote()">🔄</button><div id="qtext"></div><div id="qauth"></div></div>
