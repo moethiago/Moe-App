@@ -40,16 +40,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .logo span{-webkit-text-fill-color:var(--f1-red)}
 .header-right{display:flex;align-items:center;gap:10px}
 .hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
-.hdr-live{background:rgba(232,0,45,0.12);color:var(--f1-red);border:1px solid rgba(232,0,45,0.3);display:flex;align-items:center;gap:5px}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--f1-red);animation:pulse 1.4s ease-in-out infinite}
+.hdr-live{background:rgba(56,211,106,0.1);color:var(--epl-green);border:1px solid rgba(56,211,106,0.3);display:flex;align-items:center;gap:5px}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--epl-green);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .hdr-time{color:var(--txt-secondary);font-size:12px;font-family:'JetBrains Mono',monospace}
 
-.consensus-banner{background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.2);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.consensus-banner{background:rgba(56,211,106,0.02);border:1px solid rgba(56,211,106,0.15);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .consensus-info{display:flex;flex-direction:column;gap:1px}
-.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase}
+.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--epl-green);letter-spacing:1px;text-transform:uppercase}
 .consensus-desc{font-size:11px;color:var(--txt-secondary)}
-.consensus-badge{background:var(--purple);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.consensus-badge{background:var(--epl-green);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
 
 .card{background:var(--bg-card);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
 .card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
@@ -66,7 +66,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .wire-headline strong{font-weight:600;color:#fff}
 .wire-meta-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .outlet-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,0.04);color:var(--txt-secondary);border:1px solid var(--border-hi);text-transform:uppercase}
-.consensus-count-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--epl-green);color:#000;text-transform:uppercase;margin-right:4px}
+.consensus-count-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--ig-blue);color:#000;text-transform:uppercase;margin-right:4px}
+.verified-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--epl-green);color:#000;text-transform:uppercase;margin-right:4px}
 
 .league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border-hi)}
 .ft-badge{font-size:11px;font-weight:600;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;margin-left:auto}
@@ -137,8 +138,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .headline-control-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;margin-bottom:10px;width:100%}
-.btn-refresh-styled{background:rgba(232,0,45,0.08);border:1px solid rgba(232,0,45,0.25);color:var(--f1-red);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
-.btn-refresh-styled:active{background:var(--f1-red);color:#fff}
+.btn-refresh-styled{background:rgba(56,211,106,0.06);border:1px solid rgba(56,211,106,0.25);color:var(--epl-green);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.btn-refresh-styled:active{background:var(--epl-green);color:#000}
 </style>
 </head>
 <body>
@@ -148,7 +149,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>CONSENSUS ACTIVE</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>VERIFIED MODE</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -175,27 +176,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Cross-Network Aggregator</span>
-          <span class="consensus-desc">Deduplicating matched updates into single titles:</span>
+          <span class="consensus-title">Hard News Pipeline</span>
+          <span class="consensus-desc">Rumors, columns, and transfer gossip filtered out:</span>
         </div>
-        <span class="consensus-badge" id="consensus-summary-badge">Syncing</span>
+        <span class="consensus-badge" id="consensus-summary-badge">Analyzing</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Scanning structural feed arrays...</span>
+          <span class="ticker-item">🏁 Evaluating clean data nodes...</span>
         </div>
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🔥 Consolidated Network Matrix</p>
+        <p class="section-label" style="margin:0;">🔥 Confirmed News Wire</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
 
       <div class="card" id="feed-posts">
         <div class="f1-api-loading">
           <div class="f1-spinner"></div>
-          <span>Building network cross-references...</span>
+          <span>Parsing verified networks...</span>
         </div>
       </div>
     </div>
@@ -290,20 +291,21 @@ const KEY_ENTITIES = [
   "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix"
 ];
 
+// Aggressive match pattern to trash columns, gossip summaries, rumors, and dynamic trade claims
+const SPECULATION_BLACKLIST = /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|targets|target|swap|weighs up|closely monitoring|interested in)\b/i;
+
+// Absolute certainty phrases that instantly verify an article even if tracked on only 1 network
+const CONFIRMED_WHITELIST = /\b(official|confirmed|signs|signed|statement|done deal|extends|contract|ruled out|apologises|apologizes|sacked|appointed)\b/i;
+
 let foodLog = [], setLog = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   try { foodLog = JSON.parse(localStorage.getItem('m_food')) || []; } catch(e){}
   try { setLog = JSON.parse(localStorage.getItem('m_sets')) || []; } catch(e){}
-  
   try { renderFood(); } catch(e){}
   try { renderSets(); } catch(e){}
-  
   startClock();
-  
-  setTimeout(() => {
-    loadNewsFeed();
-  }, 100);
+  setTimeout(() => { loadNewsFeed(); }, 100);
 });
 
 function startClock() {
@@ -311,12 +313,8 @@ function startClock() {
     try {
       const d = new Date();
       const clockEl = document.getElementById('clock');
-      if (clockEl) {
-        clockEl.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-      }
-    } catch(err) {
-      console.error(err);
-    }
+      if (clockEl) clockEl.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    } catch(err){}
   };
   runClock();
   setInterval(runClock, 2000);
@@ -330,23 +328,17 @@ function switchTab(tab) {
       if (panel) panel.classList.toggle('active', t === tab);
       if (navBtn) navBtn.classList.toggle('active', t === tab);
     });
-    if (tab === 'sports') { 
-      loadFootballScores(); 
-      loadF1Data(); 
-    }
-  } catch(err) {
-    console.error(err);
-  }
+    if (tab === 'sports') { loadFootballScores(); loadF1Data(); }
+  } catch(err){}
 }
 
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
   if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Acquiring network payloads...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Scrutinizing headlines...</span></div>';
   
   const rawDataPayloads = [];
 
-  // Stage 1: Safe Fetch Collection
   const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
     try {
       const res = await fetch(RSS_API + encodeURIComponent(channel.url));
@@ -355,14 +347,11 @@ async function loadNewsFeed() {
       if (data && data.items && Array.isArray(data.items)) {
         rawDataPayloads.push({ source: channel.name, items: data.items });
       }
-    } catch(e) {
-      console.warn("Network node bypass");
-    }
+    } catch(e){}
   });
 
   await Promise.allSettled(fetchPromises);
 
-  // Stage 2: Post-Processing Consensus & Best Title Match Engine
   const uniqueStories = [];
 
   try {
@@ -371,26 +360,26 @@ async function loadNewsFeed() {
         if (!item || !item.title) return;
 
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
+        
+        // RULE 1: Blacklist Verification Pass (Trash the speculation immediately)
+        if (SPECULATION_BLACKLIST.test(originalTitle)) return;
+
         const cleanLink = item.link || "#";
         const itemTimestamp = item.pubDate ? Date.parse(item.pubDate) : Date.now();
         const parsedTime = isNaN(itemTimestamp) ? Date.now() : itemTimestamp;
 
-        // Clean text footprint to compare similarity (lowercase, strip out filler punctuation)
         const textFootprint = originalTitle.toLowerCase()
           .replace(/[^a-z0-9\s]/g, '')
           .split(' ')
-          .filter(word => word.length > 3); // match only meaningful words
+          .filter(word => word.length > 3);
 
-        // Cross-check if this matches any story we already saved
         let matchedStory = null;
         for (let story of uniqueStories) {
-          // Count word matches between current title and target story signature
           let overlapCount = 0;
           textFootprint.forEach(word => {
             if (story.signature.includes(word)) overlapCount++;
           });
 
-          // If 3 or more significant words match, treat it as a duplicate story node
           if (overlapCount >= 3 || (textFootprint.length <= 3 && overlapCount >= 2)) {
             matchedStory = story;
             break;
@@ -398,20 +387,16 @@ async function loadNewsFeed() {
         }
 
         if (matchedStory) {
-          // Cross-reference matched story: update network tracking metrics
           if (!matchedStory.sources.includes(payload.source)) {
             matchedStory.sources.push(payload.source);
           }
-          // RULE: Automatically select the BEST title variant (longest title contains best detail)
           if (originalTitle.length > matchedStory.title.length) {
             matchedStory.title = originalTitle;
           }
-          // Preserve freshest timestamp variant
           if (parsedTime > matchedStory.time) {
             matchedStory.time = parsedTime;
           }
         } else {
-          // Initialize a brand-new unique narrative record
           uniqueStories.push({
             title: originalTitle,
             link: cleanLink,
@@ -423,43 +408,44 @@ async function loadNewsFeed() {
       });
     });
 
-    // Chronological baseline sort
-    uniqueStories.sort((a, b) => b.time - a.time);
+    // RULE 2: Hard News Core Verification Filter
+    // Keeps stories only if they possess definite words OR have multi-network corroboration
+    const verifiedStories = uniqueStories.filter(story => {
+      const standardTitle = story.title.toLowerCase();
+      const hasHardProof = CONFIRMED_WHITELIST.test(standardTitle);
+      const hasConsensus = story.sources.length >= 2;
+      return hasHardProof || hasConsensus;
+    });
 
-  } catch(engineException) {
-    console.error(engineException);
-    container.innerHTML = `<div class="f1-api-error">Consensus structural exception handled safely.</div>`;
-    return;
-  }
+    verifiedStories.sort((a, b) => b.time - a.time);
 
-  // Stage 3: Render Matrix Generation
-  try {
+    // Render Matrix Output
     let finalHtml = "";
     let tickerArray = [];
-    let highConsensusCount = 0;
+    let absoluteVerificationCount = 0;
 
-    const presentationOutput = uniqueStories.slice(0, 15);
+    const presentationOutput = verifiedStories.slice(0, 15);
 
     presentationOutput.forEach(story => {
       tickerArray.push(story.title);
       let parsedHeadlineText = story.title;
 
-      // Entity Bold Highlight Pass
       KEY_ENTITIES.forEach(entity => {
         if (!entity) return;
         const searchRegex = new RegExp(`\\b${entity}\\b`, 'gi');
         parsedHeadlineText = parsedHeadlineText.replace(searchRegex, `<strong>$&</strong>`);
       });
 
-      // Render out sources badge layout strings dynamically
       const sourceBadgesHtml = story.sources.map(src => `<span class="outlet-tag">${src}</span>`).join('');
       
-      // Consensus tracker layout logic
       let consensusIndicator = "";
       if (story.sources.length > 1) {
-        highConsensusCount++;
         consensusIndicator = `<span class="consensus-count-badge">${story.sources.length} NETWORKS</span>`;
+      } else if (CONFIRMED_WHITELIST.test(story.title.toLowerCase())) {
+        consensusIndicator = `<span class="verified-badge">VERIFIED</span>`;
       }
+      
+      absoluteVerificationCount++;
 
       finalHtml += `
         <div class="wire-item" onclick="window.open('${story.link}','_blank')">
@@ -474,22 +460,21 @@ async function loadNewsFeed() {
         </div>`;
     });
 
-    // Update banner indicator badge safely
     const indicatorBadge = document.getElementById('consensus-summary-badge');
     if (indicatorBadge) {
-      indicatorBadge.textContent = highConsensusCount > 0 ? `${highConsensusCount} Clusters` : "Synced";
+      indicatorBadge.textContent = absoluteVerificationCount > 0 ? `${absoluteVerificationCount} Verified` : "Filtered";
     }
 
     if (!finalHtml) {
-      container.innerHTML = `<div class="empty-state">No current matching headlines returned.</div>`;
-      buildTicker(["Matrix clear."]);
+      container.innerHTML = `<div class="empty-state">No hard verifiable stories found on the wires right now.</div>`;
+      buildTicker(["Awaiting verified bulletins..."]);
     } else {
       container.innerHTML = finalHtml;
       buildTicker(tickerArray);
     }
 
-  } catch(domException) {
-    container.innerHTML = `<div class="f1-api-error">Pipeline DOM rendering safely aborted.</div>`;
+  } catch(engineException) {
+    container.innerHTML = `<div class="f1-api-error">Pipeline processing error. Clock preserved.</div>`;
   }
 }
 
@@ -513,7 +498,10 @@ async function loadFootballScores() {
     let html = "";
     
     if (data && data.items) {
-      data.items.slice(0, 5).forEach(item => {
+      // Apply the exact same strict anti-gossip filter to football briefs
+      const realBriefs = data.items.filter(item => !SPECULATION_BLACKLIST.test(item.title));
+      
+      realBriefs.slice(0, 5).forEach(item => {
         html += `
           <div class="match-card">
             <div class="match-header"><span class="league-badge">FOOTBALL BRIEFING</span><span class="ft-badge">LIVE NODE</span></div>
@@ -524,8 +512,8 @@ async function loadFootballScores() {
           </div>`;
       });
     }
-    container.innerHTML = html || `<div class="empty-state">No football updates available right now.</div>`;
-  } catch(e) { container.innerHTML = `<div class="f1-api-error">Network stream offline. Try refreshing later.</div>`; }
+    container.innerHTML = html || `<div class="empty-state">No confirmed football updates available.</div>`;
+  } catch(e) { container.innerHTML = `<div class="f1-api-error">Network stream offline.</div>`; }
 }
 
 function loadF1Data() {
@@ -546,7 +534,6 @@ function loadF1Data() {
     if (roundLbl) roundLbl.textContent = "2026 CHAMPIONSHIP STANDINGS";
     
     let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">WINS</span><span style="text-align:right">PTS</span></div>';
-    
     const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff8700', 'red_bull': '#3671c6', 'alpine': '#0093cc', 'haas': '#b6babd', 'williams': '#64c4ff', 'default': '#8a8fa8' };
 
     current2026Standings.forEach(d => {
@@ -563,7 +550,6 @@ function loadF1Data() {
           <span class="f1-pts">${d.pts}</span>
         </div>`;
     });
-    
     container.innerHTML = html;
   } catch(e){}
 }
