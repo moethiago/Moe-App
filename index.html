@@ -25,12 +25,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 #header-inner{height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 18px}
 #top-nav{flex-shrink:0;background:rgba(13,15,24,0.97);border-bottom:1px solid var(--border)}
 .nav-inner{height:var(--nav-h);display:flex;align-items:stretch}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--txt-muted);transition:color 0.2s;position:relative;z-index:10;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--txt-muted);transition:color 0.2s;position:relative;z-index:1000;}
 .nav-btn.active{color:var(--txt-primary)}
 .nav-btn.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:28px;height:2px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,var(--ig-blue),var(--purple))}
-.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .nav-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.nav-label{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.nav-label{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;pointer-events:none}
 #scroll-wrap{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #scroll-wrap::-webkit-scrollbar{display:none}
 .tab-panel{display:none;padding:14px;padding-bottom:30px}
@@ -271,8 +271,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 <div id="toast"></div>
 
 <script>
-// Fixed: Explicit secure https scheme definition to comply with GitHub Pages mixed-content constraints
-const PROXY = "https://api.allorigins.win/raw?url=";
+// Primary Proxy Matrix
+const PRIMARY_PROXY = "https://api.allorigins.win/raw?url=";
+const BACKUP_PROXY = "https://corsproxy.io/?url=";
 
 const MASTER_CHANNELS = [
   { name: "BBC F1", url: "https://feeds.bbci.co.uk/sport/formula1/rss.xml" },
@@ -299,6 +300,7 @@ const KEY_ENTITIES = [
 
 let foodLog = [], setLog = [];
 
+// CRITICAL FIX: Setup the interface immediately. Zero blocking network interactions inside DOMContentLoaded.
 document.addEventListener('DOMContentLoaded', () => {
   try { foodLog = JSON.parse(localStorage.getItem('m_food')) || []; } catch(e){}
   try { setLog = JSON.parse(localStorage.getItem('m_sets')) || []; } catch(e){}
@@ -307,10 +309,10 @@ document.addEventListener('DOMContentLoaded', () => {
   try { renderSets(); } catch(e){}
   try { startClock(); } catch(e){}
   
-  // Non-blocking deferred load sequence to guarantee instantaneous tab setup response 
+  // Asynchronously spawn network tracking off the main initialization sequence
   setTimeout(() => {
-    loadNewsFeed().catch(err => console.log("Feed setup handled cleanly"));
-  }, 100);
+    loadNewsFeed().catch(err => {});
+  }, 200);
 });
 
 function switchTab(tab) {
@@ -326,19 +328,26 @@ function switchTab(tab) {
       loadF1Data(); 
     }
   } catch(err) {
-    console.error(err);
+    console.error("Tab Navigation Error: ", err);
   }
 }
 
 async function fetchRawXML(targetUrl) {
+  // Insulated fallback matrix logic to bypass frozen sockets
   try {
-    // Uses the reliable AllOrigins secure pipeline
-    const response = await fetch(PROXY + encodeURIComponent(targetUrl));
-    if (!response.ok) throw new Error("CORS validation required");
+    const response = await fetch(PRIMARY_PROXY + encodeURIComponent(targetUrl));
+    if (!response.ok) throw new Error();
     const textData = await response.text();
     return new DOMParser().parseFromString(textData, "text/xml");
   } catch(e) {
-    return new DOMParser().parseFromString("<rss></rss>", "text/xml");
+    try {
+      const backupResponse = await fetch(BACKUP_PROXY + encodeURIComponent(targetUrl));
+      if (!backupResponse.ok) throw new Error();
+      const textData = await backupResponse.text();
+      return new DOMParser().parseFromString(textData, "text/xml");
+    } catch(err) {
+      return new DOMParser().parseFromString("<rss></rss>", "text/xml");
+    }
   }
 }
 
@@ -351,10 +360,11 @@ async function loadNewsFeed() {
   const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','near','show','with','out','into','back','how','why']);
 
   try {
-    const promises = MASTER_CHANNELS.map(async (channel) => {
+    // Process channels individually to avoid Promise.all batch clogging
+    for (const channel of MASTER_CHANNELS) {
       try {
         const xml = await fetchRawXML(channel.url);
-        const items = Array.from(xml.querySelectorAll('item')).slice(0, 8);
+        const items = Array.from(xml.querySelectorAll('item')).slice(0, 5);
         
         items.forEach(item => {
           let title = item.querySelector('title')?.textContent || '';
@@ -383,9 +393,7 @@ async function loadNewsFeed() {
           }
         });
       } catch(e) {}
-    });
-
-    await Promise.all(promises);
+    }
   } catch(e) {}
 
   let clusterMap = [];
@@ -477,7 +485,7 @@ async function loadNewsFeed() {
       <div class="empty-state">
         <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
         No multi-source cross-network stories found right now.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">External data cross-checking completed. Engine active.</span>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">External feeds quiet or unreachable. Engine online.</span>
       </div>`;
     buildTicker(["Monitoring network interfaces for verified consensus lines..."]);
   } else {
@@ -499,7 +507,7 @@ async function loadFootballScores() {
   container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Fetching direct match parameters...</span></div>';
   try {
     const xml = await fetchRawXML(SOCCER_STREAM);
-    const items = Array.from(xml.querySelectorAll('item')).slice(0, 8);
+    const items = Array.from(xml.querySelectorAll('item')).slice(0, 6);
     let html = "";
     
     items.forEach(item => {
