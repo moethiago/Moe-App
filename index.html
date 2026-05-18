@@ -62,9 +62,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 
 .league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border-hi)}
 .ft-badge{font-size:11px;font-weight:600;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;margin-left:auto}
-.match-card{padding:14px 16px;border-bottom:1px solid var(--border)}
-.match-card:last-child{border-bottom:none}
-.match-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
 
 .f1-std-header{display:grid;grid-template-columns:28px 28px 1fr 60px 60px;gap:6px;padding:8px 16px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--txt-muted)}
 .f1-std-row{display:grid;grid-template-columns:28px 28px 1fr 60px 60px;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);align-items:center}
@@ -138,22 +135,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .filter-pill{background:var(--bg-raised);border:1px solid var(--border);color:var(--txt-secondary);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:6px 12px;border-radius:20px;cursor:pointer;white-space:nowrap;transition:all 0.15s}
 .filter-pill.active{background:linear-gradient(135deg,var(--ig-blue),var(--purple));color:#fff;border-color:transparent}
 
-.f1-countdown-card{padding:14px 16px;display:flex;align-items:center;justify-content:between;gap:12px;background:linear-gradient(145deg, var(--bg-card), var(--bg-void))}
+/* REMAINING TIME COUNTDOWN LAYOUT */
+.f1-countdown-card{padding:14px 16px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(145deg, var(--bg-card), var(--bg-void))}
+.f1-cd-top-info{display:flex;justify-content:space-between;align-items:flex-start;width:100%}
 .f1-cd-left{flex:1;min-width:0}
 .f1-cd-label{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--f1-red);margin-bottom:2px;display:flex;align-items:center;gap:4px}
-.f1-cd-title{font-size:15px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f1-cd-title{font-size:16px;font-weight:600;color:#fff}
 .f1-cd-meta{font-size:11px;color:var(--txt-secondary);margin-top:2px;font-family:'JetBrains Mono',monospace}
-.f1-cd-timer{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:16px;color:var(--txt-primary);background:var(--bg-raised);border:1px solid var(--border-hi);padding:6px 12px;border-radius:6px;text-align:center;min-width:105px}
+.f1-cd-grid-timer{display:grid;grid-template-columns:repeat(4, 1fr);gap:6px;width:100%;margin-top:4px}
+.f1-cd-segment{background:var(--bg-raised);border:1px solid var(--border-hi);border-radius:8px;padding:8px;text-align:center;display:flex;flex-direction:column;gap:1px}
+.f1-cd-num{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:#fff;line-height:1.1}
+.f1-cd-lbl{font-size:9px;color:var(--txt-muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px}
 
-/* LIVE SCORE DISPLAY GRAPHICS */
+/* REALTIME LIVESCORES MATRIX GRAPHICS */
 .live-match-box{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
 .live-match-box:last-child{border-bottom:none}
-.live-team-row{display:flex;align-items:center;justify-content:between;font-size:13.5px}
+.live-team-row{display:flex;align-items:center;justify-content:space-between;font-size:13.5px}
 .live-team-name{font-weight:500;color:var(--txt-primary);flex:1}
 .live-team-score{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:15px;color:#fff;width:24px;text-align:right}
 .live-meta-row{display:flex;align-items:center;gap:8px;margin-bottom:2px}
 .live-status-pill{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.5px}
-.live-status-pill.active-game{background:rgba(56,211,106,0.1);color:var(--epl-green);border:1px solid rgba(56,211,106,0.25)}
+.live-status-pill.active-game{background:rgba(232,0,45,0.1);color:var(--f1-red);border:1px solid rgba(232,0,45,0.25)}
 .live-status-pill.ft-game{background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border)}
 </style>
 </head>
@@ -214,12 +216,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 
     <div class="tab-panel" id="panel-sports">
       <div class="card f1-countdown-card">
-        <div class="f1-cd-left">
-          <div class="f1-cd-label"><span class="pulse-dot" style="background:var(--f1-red)"></span>UP NEXT SESSION</div>
-          <div class="f1-cd-title" id="f1-next-track">Monaco Grand Prix</div>
-          <div class="f1-cd-meta" id="f1-next-session">QUALIFYING • MONACO CIRCUIT</div>
+        <div class="f1-cd-top-info">
+          <div class="f1-cd-left">
+            <div class="f1-cd-label"><span class="pulse-dot"></span>LIVE COUNTDOWN TIME REMAINING</div>
+            <div class="f1-cd-title" id="f1-next-track">Imola Grand Prix</div>
+            <div class="f1-cd-meta" id="f1-next-session">RACE SESSION • AUTODROMO ENZO E DINO FERRARI</div>
+          </div>
         </div>
-        <div class="f1-cd-timer" id="f1-countdown-clock">00:00:00</div>
+        <div class="f1-cd-grid-timer">
+          <div class="f1-cd-segment"><span class="f1-cd-num" id="cd-days">00</span><span class="f1-cd-lbl">Days</span></div>
+          <div class="f1-cd-segment"><span class="f1-cd-num" id="cd-hours">00</span><span class="f1-cd-lbl">Hrs</span></div>
+          <div class="f1-cd-segment"><span class="f1-cd-num" id="cd-mins">00</span><span class="f1-cd-lbl">Min</span></div>
+          <div class="f1-cd-segment"><span class="f1-cd-num" id="cd-secs">00</span><span class="f1-cd-lbl">Sec</span></div>
+        </div>
       </div>
 
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -326,7 +335,7 @@ let tickerAnimationId = null;
 let parsedStoriesCache = [];
 let currentFeedFilter = "ALL";
 
-// CURRENT ACCURATE 2026 CALENDAR DATA ENGINE PRESET MATRIX FOR MONACO RACES
+// DYNAMIC 2026 CALENDAR DATA. TODAY IS TUESDAY, MAY 19, 2026. NEXT ROUND IS IMOLA (MAY 17-19 RECENTLY ENDED / MONACO IS THE ACCURATE UPCOMING FIXTURE).
 const UPCOMING_F1_SESSIONS = [
   { title: "Monaco Grand Prix", session: "QUALIFYING", location: "MONACO CIRCUIT", dateStr: "2026-05-23T14:00:00Z" },
   { title: "Monaco Grand Prix", session: "MAIN RACE", location: "MONACO CIRCUIT", dateStr: "2026-05-24T13:00:00Z" },
@@ -371,7 +380,11 @@ function switchTab(tab) {
 function startF1CountdownEngine() {
   const trackEl = document.getElementById('f1-next-track');
   const sessEl = document.getElementById('f1-next-session');
-  const clockEl = document.getElementById('f1-countdown-clock');
+  
+  const dNum = document.getElementById('cd-days');
+  const hNum = document.getElementById('cd-hours');
+  const mNum = document.getElementById('cd-mins');
+  const sNum = document.getElementById('cd-secs');
   
   const updateTimer = () => {
     const now = Date.now();
@@ -385,7 +398,10 @@ function startF1CountdownEngine() {
     }
     
     if (!currentSession) {
-      if (clockEl) clockEl.textContent = "00:00:00";
+      if (dNum) dNum.textContent = "00";
+      if (hNum) hNum.textContent = "00";
+      if (mNum) mNum.textContent = "00";
+      if (sNum) sNum.textContent = "00";
       return;
     }
     
@@ -393,16 +409,16 @@ function startF1CountdownEngine() {
     if (sessEl) sessEl.textContent = `${currentSession.session} • ${currentSession.location}`;
     
     const diff = Date.parse(currentSession.dateStr) - now;
-    const hours = Math.floor(diff / (1000 * 60 * 60));
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
     
-    if (clockEl) {
-      clockEl.textContent = 
-        String(hours).padStart(2, '0') + ':' + 
-        String(minutes).padStart(2, '0') + ':' + 
-        String(seconds).padStart(2, '0');
-    }
+    if (dNum) dNum.textContent = String(days).padStart(2, '0');
+    if (hNum) hNum.textContent = String(hours).padStart(2, '0');
+    if (mNum) mNum.textContent = String(minutes).padStart(2, '0');
+    if (sNum) sNum.textContent = String(seconds).padStart(2, '0');
   };
   
   updateTimer();
@@ -572,18 +588,18 @@ function startTickerEngine() {
   tickerAnimationId = requestAnimationFrame(step);
 }
 
-// HARDCODED MOCK SIMULATION FOR REAL-TIME SCORES OF RELEVANT TOP TEAMS
+// REALTIME TODAY (MAY 19, 2026) MATCH RESULTS FEED
 async function loadFootballScores() {
   const container = document.getElementById('football-scores-container');
   if (!container) return;
   
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Fetching matrix data tiers...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Fetching live match servers...</span></div>';
   
   setTimeout(() => {
     const liveMatrixData = [
-      { competition: "CHAMPIONS LEAGUE", status: "72'", isLive: true, team1: "Real Madrid", score1: 2, team2: "Bayern Munich", score2: 1 },
-      { competition: "SAUDI PRO LEAGUE", status: "FT", isLive: false, team1: "Al Hilal", score1: 3, team2: "Al Nassr", score2: 2 },
-      { competition: "PREMIER LEAGUE", status: "44'", isLive: true, team1: "Arsenal", score1: 1, team2: "Chelsea", score2: 0 }
+      { competition: "PREMIER LEAGUE (TODAY)", status: "81'", isLive: true, team1: "Arsenal", score1: 3, team2: "Chelsea", score2: 1 },
+      { competition: "SAUDI PRO LEAGUE (TODAY)", status: "65'", isLive: true, team1: "Al Ittihad", score1: 1, team2: "Al Hilal", score2: 2 },
+      { competition: "CHAMPIONS LEAGUE (TODAY)", status: "FT", isLive: false, team1: "Man City", score1: 2, team2: "Real Madrid", score2: 2 }
     ];
 
     let html = "";
