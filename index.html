@@ -40,16 +40,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .logo span{-webkit-text-fill-color:var(--f1-red)}
 .header-right{display:flex;align-items:center;gap:10px}
 .hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
-.hdr-live{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.3);display:flex;align-items:center;gap:5px}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:pulse 1.4s ease-in-out infinite}
+.hdr-live{background:rgba(79,156,249,0.1);color:var(--ig-blue);border:1px solid rgba(79,156,249,0.3);display:flex;align-items:center;gap:5px}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--ig-blue);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .hdr-time{color:var(--txt-secondary);font-size:12px;font-family:'JetBrains Mono',monospace}
 
-.consensus-banner{background:rgba(167,139,250,0.02);border:1px solid rgba(167,139,250,0.15);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.consensus-banner{background:rgba(79,156,249,0.02);border:1px solid rgba(79,156,249,0.15);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .consensus-info{display:flex;flex-direction:column;gap:1px}
-.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase}
+.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--ig-blue);letter-spacing:1px;text-transform:uppercase}
 .consensus-desc{font-size:11px;color:var(--txt-secondary)}
-.consensus-badge{background:var(--purple);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.consensus-badge{background:var(--ig-blue);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
 
 .card{background:var(--bg-card);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
 .card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
@@ -68,9 +68,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .wire-headline strong{font-weight:600;color:#fff}
 .wire-meta-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .outlet-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,0.04);color:var(--txt-secondary);border:1px solid var(--border-hi);text-transform:uppercase}
-.consensus-count-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--ig-blue);color:#000;text-transform:uppercase;margin-right:4px}
+.consensus-count-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--purple);color:#000;text-transform:uppercase;margin-right:4px}
 .verified-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--epl-green);color:#000;text-transform:uppercase;margin-right:4px}
-.score-badge{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;padding:1px 4px;border-radius:2px;background:rgba(255,255,255,0.03);color:var(--txt-muted);border:1px solid var(--border);margin-left:auto}
+.classification-badge{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;padding:1px 5px;border-radius:2px;background:rgba(255,255,255,0.02);color:var(--txt-muted);border:1px solid var(--border);margin-left:auto;text-transform:uppercase}
 
 .league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border-hi)}
 .ft-badge{font-size:11px;font-weight:600;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;margin-left:auto}
@@ -126,7 +126,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .vol-total{padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--txt-secondary)}
 .vol-total strong{color:var(--txt-primary);font-family:'Rajdhani',sans-serif;font-size:18px}
 
-.empty-state{text-align:center;padding:44px 20px;color:var(--txt-secondary);font-size:13px;line-height:1.6}
+.empty-state{text-align:center;padding:32px 20px;color:var(--txt-secondary);font-size:13px;line-height:1.6}
 .ring-track{fill:none;stroke:var(--bg-raised);stroke-width:12}
 .ring-prog{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease}
 .ticker-wrap{overflow:hidden;border-bottom:1px solid var(--border);background:var(--bg-void);padding:8px 0}
@@ -135,14 +135,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
 .f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
 .f1-api-error{padding:20px 16px;text-align:center;color:var(--rose);font-size:13px}
-.f1-spinner{width:20px;height:20px;border:2px solid var(--bg-raised);border-top-color:var(--purple);border-radius:50%;animation:spin 0.7s linear infinite}
+.f1-spinner{width:20px;height:20px;border:2px solid var(--bg-raised);border-top-color:var(--ig-blue);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg-raised);border:1px solid var(--border-hi);color:var(--txt-primary);border-radius:var(--r-md);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:9999}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .headline-control-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;margin-bottom:10px;width:100%}
-.btn-refresh-styled{background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.25);color:var(--purple);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
-.btn-refresh-styled:active{background:var(--purple);color:#000}
+.btn-refresh-styled{background:rgba(79,156,249,0.06);border:1px solid rgba(79,156,249,0.25);color:var(--ig-blue);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.btn-refresh-styled:active{background:var(--ig-blue);color:#000}
 </style>
 </head>
 <body>
@@ -152,7 +152,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>CONTEXT WEIGHT MATRIX</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>MATRIX OVERHAUL</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -179,29 +179,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Dynamic Engine Metrics</span>
-          <span class="consensus-desc">Headlines evaluated contextually by weight calculations:</span>
+          <span class="consensus-title">Matrix Pipeline Active</span>
+          <span class="consensus-desc">Junk auto-deleted. Wire bifurcated cleanly:</span>
         </div>
-        <span class="consensus-badge" id="consensus-summary-badge">Processing</span>
+        <span class="consensus-badge" id="consensus-summary-badge">Ready</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Evaluating payload matrices...</span>
+          <span class="ticker-item">🏁 Matrix sequence initiated...</span>
         </div>
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🚨 Verified Hard News</p>
+        <p class="section-label" style="margin:0;">🚨 Hard Checked Alerts</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
       <div class="card" id="critical-posts">
-        <div class="f1-api-loading"><div class="f1-spinner"></div><span>Scrutinizing wire values...</span></div>
+        <div class="f1-api-loading"><div class="f1-spinner"></div><span>Filtering news streams...</span></div>
       </div>
 
-      <p class="section-label">📊 Regular Match Context</p>
+      <p class="section-label">📊 General Sport Context</p>
       <div class="card" id="context-posts">
-        <div class="empty-state">No structured background context loaded yet.</div>
+        <div class="empty-state">Awaiting data sequence updates...</div>
       </div>
     </div>
 
@@ -295,20 +295,9 @@ const KEY_ENTITIES = [
   "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix"
 ];
 
-// Context Scoring Weight Architecture Setup
-const SCORE_RULES = [
-  // Extreme Trash - Hard block thresholds
-  { regex: /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column)\b/i, weight: 100 },
-  { regex: /\b(where to watch|how to watch|stream|tv channel|kick-off time|undercard|ufc|boxing|fight)\b/i, weight: 100 },
-  
-  // Moderate Clickbait/Pundit Strings (Adds weights)
-  { regex: /\b(prediction|preview|clash live|match feed|live blog|latest score)\b/i, weight: 25 },
-  { regex: /\b(live:|: live|v|vs)\b/i, weight: 15 },
-  
-  // Hard news weights (Reduces context noise scores dramatically)
-  { regex: /\b(official|confirmed|signs|signed|statement|done deal|extends|contract)\b/i, weight: -60 },
-  { regex: /\b(sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|stadium ban|fined|punished|apology)\b/i, weight: -50 }
-];
+// Structural Classifier Targets
+const CRITICAL_REGEX = /\b(official|confirmed|signs|signed|statement|done deal|extends|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished)\b/i;
+const JUNK_REGEX = /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick-off time|undercard|ufc|boxing|fight|live commentary|live stream)\b/i;
 
 let foodLog = [], setLog = [];
 
@@ -345,22 +334,12 @@ function switchTab(tab) {
   } catch(err){}
 }
 
-async function calculateHeadlineScore(title) {
-  let initialScore = 15; // Balanced base weight index
-  SCORE_RULES.forEach(rule => {
-    if (rule.regex.test(title)) {
-      initialScore += rule.weight;
-    }
-  });
-  return initialScore;
-}
-
 async function loadNewsFeed() {
   const criticalContainer = document.getElementById('critical-posts');
   const contextContainer = document.getElementById('context-posts');
   if (!criticalContainer || !contextContainer) return;
   
-  criticalContainer.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Scrutinizing wire values...</span></div>';
+  criticalContainer.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Parsing matrices...</span></div>';
   contextContainer.innerHTML = '';
   
   const rawDataPayloads = [];
@@ -381,15 +360,17 @@ async function loadNewsFeed() {
   const uniqueStories = [];
 
   try {
-    for (let payload of rawDataPayloads) {
-      for (let item of payload.items) {
-        if (!item || !item.title) continue;
+    rawDataPayloads.forEach(payload => {
+      payload.items.forEach(item => {
+        if (!item || !item.title) return;
 
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
-        const score = await calculateHeadlineScore(originalTitle);
         
-        // Immediate Exclusion Threshold: Absolute Junk/Gossip
-        if (score >= 36) continue;
+        // Tier 1 Guard: Instant Delete of Clickbait/Schedules
+        if (JUNK_REGEX.test(originalTitle)) return;
+
+        // Skip titles that are way too short to carry real context
+        if (originalTitle.split(' ').length < 4) return;
 
         const cleanLink = item.link || "#";
         const itemTimestamp = item.pubDate ? Date.parse(item.pubDate) : Date.now();
@@ -421,10 +402,16 @@ async function loadNewsFeed() {
           if (!matchedStory.sources.includes(payload.source)) {
             matchedStory.sources.push(payload.source);
           }
-          if (score < matchedStory.score) {
-            matchedStory.score = score; // Pick cleanest verification score
+          if (parsedTime > matchedStory.time) {
+            matchedStory.time = parsedTime;
           }
         } else {
+          // Classification Evaluation Lane Assigning
+          let classification = "context";
+          if (CRITICAL_REGEX.test(originalTitle)) {
+            classification = "critical";
+          }
+
           uniqueStories.push({
             title: originalTitle,
             link: cleanLink,
@@ -432,18 +419,18 @@ async function loadNewsFeed() {
             time: parsedTime,
             signature: textFootprint,
             isF1: isF1Source,
-            score: score
+            type: classification
           });
         }
-      }
-    }
+      });
+    });
 
     uniqueStories.sort((a, b) => b.time - a.time);
 
     let criticalHtml = "";
     let contextHtml = "";
     let tickerArray = [];
-    let absoluteCount = 0;
+    let totalRendered = 0;
 
     uniqueStories.forEach(story => {
       tickerArray.push(story.title);
@@ -456,25 +443,21 @@ async function loadNewsFeed() {
       });
 
       const sourceBadgesHtml = story.sources.map(src => `<span class="outlet-tag">${src}</span>`).join('');
-      absoluteCount++;
+      totalRendered++;
 
-      // Split rendering lanes via weights
-      if (story.score < 5) {
-        // Lane 1: Pure Hard Checked Alert News
+      if (story.type === "critical") {
         criticalHtml += `
           <div class="wire-item" onclick="window.open('${story.link}','_blank')">
             <span class="wire-bullet">•</span>
             <div class="wire-content">
               <p class="wire-headline">${parsedHeadlineText}</p>
               <div class="wire-meta-row" style="margin-top: 4px; gap: 6px;">
-                <span class="verified-badge">VERIFIED</span>
+                <span class="verified-badge">VERIFIED ALERT</span>
                 ${sourceBadgesHtml}
-                <span class="score-badge">W: ${story.score}</span>
               </div>
             </div>
           </div>`;
       } else {
-        // Lane 2: Regular Context Wire (Match fixtures, team previews, clean data entries)
         contextHtml += `
           <div class="wire-item" onclick="window.open('${story.link}','_blank')">
             <span class="wire-bullet context-bullet">•</span>
@@ -482,7 +465,7 @@ async function loadNewsFeed() {
               <p class="wire-headline context-headline">${parsedHeadlineText}</p>
               <div class="wire-meta-row" style="margin-top: 4px; gap: 6px;">
                 ${sourceBadgesHtml}
-                <span class="score-badge">W: ${story.score}</span>
+                <span class="classification-badge">${story.sources.length > 1 ? 'Consensus' : 'Newswire'}</span>
               </div>
             </div>
           </div>`;
@@ -491,15 +474,15 @@ async function loadNewsFeed() {
 
     const indicatorBadge = document.getElementById('consensus-summary-badge');
     if (indicatorBadge) {
-      indicatorBadge.textContent = `${absoluteCount} Active`;
+      indicatorBadge.textContent = `${totalRendered} Stories`;
     }
 
-    criticalContainer.innerHTML = criticalHtml || `<div class="empty-state">No major official confirmations on the wire right now.</div>`;
-    contextContainer.innerHTML = contextHtml || `<div class="empty-state">Context list cleared.</div>`;
-    buildTicker(tickerArray.length ? tickerArray : ["Tracking system online..."]);
+    criticalContainer.innerHTML = criticalHtml || `<div class="empty-state">No major breaking alerts right now. System tracking cleanly.</div>`;
+    contextContainer.innerHTML = contextHtml || `<div class="empty-state">Background wire empty.</div>`;
+    buildTicker(tickerArray.length ? tickerArray : ["Awaiting clean news stream..."]);
 
   } catch(err) {
-    criticalContainer.innerHTML = `<div class="f1-api-error">Pipeline processing error.</div>`;
+    criticalContainer.innerHTML = `<div class="f1-api-error">Pipeline routing error.</div>`;
   }
 }
 
@@ -523,21 +506,21 @@ async function loadFootballScores() {
     let html = "";
     
     if (data && data.items) {
-      for (let item of data.items) {
-        const score = await calculateHeadlineScore(item.title);
-        if (score >= 40) continue;
+      data.items.forEach(item => {
+        if (JUNK_REGEX.test(item.title)) return;
+        if (item.title.split(' ').length < 4) return;
         
         html += `
           <div class="match-card">
-            <div class="match-header"><span class="league-badge">FOOTBALL BRIEFING</span><span class="ft-badge">LIVE NODE</span></div>
+            <div class="match-header"><span class="league-badge">FOOTBALL FEED</span><span class="ft-badge">DATA WIRE</span></div>
             <div style="padding:2px 0;">
               <p class="team-name" style="font-size:13.5px; line-height:1.45; color:var(--txt-primary); font-weight:500;">${item.title}</p>
               <p style="font-size:11.5px; color:var(--txt-secondary); margin-top:4px; line-height:1.4;">${item.description ? item.description.replace(/<[^>]*>/g, '').substring(0,100) : ''}...</p>
             </div>
           </div>`;
-      }
+      });
     }
-    container.innerHTML = html || `<div class="empty-state">No football updates within matrix parameters.</div>`;
+    container.innerHTML = html || `<div class="empty-state">No football updates within parameters.</div>`;
   } catch(e) { container.innerHTML = `<div class="f1-api-error">Network stream offline.</div>`; }
 }
 
