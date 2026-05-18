@@ -271,10 +271,10 @@ const KEY_ENTITIES = [
   "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix", "Mourinho"
 ];
 
-// FULL BANNED FLUFF LIST
+// BANNED FLUFF LIST - 7 words are strictly back in here
 const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|hints at|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|build up|undercard|ufc|boxing|fight|live commentary|live stream|outage|chants|promise bans|admits error|admits to mistakes|told to sack|key questions)/;
 
-// SPECIAL HIGH-PRIORITY TARGET WORDS
+// GATEKEEPER CRITERIA - Must contain at least one of these to bypass the strict filter
 const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft)/;
 
 let foodLog = [], setLog = [];
@@ -344,10 +344,13 @@ async function loadNewsFeed() {
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
         const sanitizedTitle = originalTitle.toLowerCase().replace(/[\r\n\t]+/g, " ").replace(/[\u2018\u2019\u201c\u201d]/g, "'").replace(/[^a-z0-9\s]/g, " ").trim();
 
-        // 1. Immediately drop explicitly requested junk keywords
+        // 1. Drop fluff keywords immediately
         if (JUNK_KEYWORDS.test(sanitizedTitle)) return;
         
-        // 2. Clear out short fragment titles
+        // 2. Strict bottleneck validation
+        if (!CRITICAL_KEYWORDS.test(sanitizedTitle)) return;
+
+        // 3. Length safety check
         if (sanitizedTitle.split(' ').filter(w => w.length > 0).length < 4) return;
 
         const cleanLink = item.link || "#";
@@ -355,9 +358,6 @@ async function loadNewsFeed() {
         const parsedTime = isNaN(itemTimestamp) ? Date.now() : itemTimestamp;
         const textFootprint = sanitizedTitle.split(' ').filter(word => word.length > 3);
         const isF1Source = payload.source.toLowerCase().includes('f1');
-        
-        // Tag breaking alerts dynamically
-        const isBreaking = CRITICAL_KEYWORDS.test(sanitizedTitle);
 
         let matchedStory = null;
         for (let story of uniqueStories) {
@@ -370,7 +370,6 @@ async function loadNewsFeed() {
         if (matchedStory) {
           if (!matchedStory.sources.includes(payload.source)) matchedStory.sources.push(payload.source);
           if (parsedTime > matchedStory.time) matchedStory.time = parsedTime;
-          if (isBreaking) matchedStory.isBreaking = true;
         } else {
           uniqueStories.push({ 
             title: originalTitle, 
@@ -378,18 +377,13 @@ async function loadNewsFeed() {
             sources: [payload.source], 
             time: parsedTime, 
             signature: textFootprint, 
-            isF1: isF1Source,
-            isBreaking: isBreaking
+            isF1: isF1Source
           });
         }
       });
     });
 
-    // Rank stories by breaking status first, then by fresh timestamp values
-    uniqueStories.sort((a, b) => {
-      if (a.isBreaking !== b.isBreaking) return b.isBreaking - a.isBreaking;
-      return b.time - a.time;
-    });
+    uniqueStories.sort((a, b) => b.time - a.time);
 
     let criticalHtml = "";
     let tickerArray = [];
@@ -403,12 +397,9 @@ async function loadNewsFeed() {
         parsedHeadlineText = parsedHeadlineText.replace(searchRegex, `<strong>$&</strong>`);
       });
 
-      const bulletClass = story.isBreaking ? "wire-bullet critical" : "wire-bullet";
-      const bulletSymbol = story.isBreaking ? "🔥" : "•";
-
       criticalHtml += `
         <div class="wire-item" onclick="window.open('${story.link}','_blank')">
-          <span class="${bulletClass}">${bulletSymbol}</span>
+          <span class="wire-bullet">•</span>
           <div class="wire-content">
             <p class="wire-headline">${parsedHeadlineText}</p>
           </div>
