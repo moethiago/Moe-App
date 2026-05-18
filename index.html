@@ -40,16 +40,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .logo span{-webkit-text-fill-color:var(--f1-red)}
 .header-right{display:flex;align-items:center;gap:10px}
 .hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
-.hdr-live{background:rgba(56,211,106,0.15);color:var(--epl-green);border:1px solid rgba(56,211,106,0.3);display:flex;align-items:center;gap:5px}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--epl-green);animation:pulse 1.4s ease-in-out infinite}
+.hdr-live{background:rgba(232,0,45,0.12);color:var(--f1-red);border:1px solid rgba(232,0,45,0.3);display:flex;align-items:center;gap:5px}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--f1-red);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .hdr-time{color:var(--txt-secondary);font-size:12px;font-family:'JetBrains Mono',monospace}
 
-.consensus-banner{background:rgba(34,211,238,0.04);border:1px solid rgba(34,211,238,0.12);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.consensus-banner{background:rgba(232,0,45,0.04);border:1px solid rgba(232,0,45,0.15);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .consensus-info{display:flex;flex-direction:column;gap:1px}
-.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:1px;text-transform:uppercase}
+.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--f1-red);letter-spacing:1px;text-transform:uppercase}
 .consensus-desc{font-size:11px;color:var(--txt-secondary)}
-.consensus-badge{background:var(--cyan);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.consensus-badge{background:var(--f1-red);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
 
 .card{background:var(--bg-card);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
 .card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
@@ -57,11 +57,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .section-label{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--txt-muted);margin:18px 0 10px}
 .section-label:first-child{margin-top:0}
 
-/* WIRE BRIEFING LAYOUT */
 .wire-item{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:background 0.15s}
 .wire-item:last-child{border-bottom:none}
 .wire-item:active{background:var(--bg-raised)}
-.wire-bullet{color:var(--cyan);font-size:14px;line-height:1.4;user-select:none;margin-top:1px}
+.wire-bullet{color:var(--f1-red);font-size:14px;line-height:1.4;user-select:none;margin-top:1px}
 .wire-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
 .wire-headline{font-size:13.5px;line-height:1.45;color:var(--txt-primary);font-weight:400}
 .wire-headline strong{font-weight:600;color:#fff}
@@ -138,14 +137,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
 .f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
 .f1-api-error{padding:20px 16px;text-align:center;color:var(--rose);font-size:13px}
-.f1-spinner{width:20px;height:20px;border:2px solid var(--bg-raised);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.7s linear infinite}
+.f1-spinner{width:20px;height:20px;border:2px solid var(--bg-raised);border-top-color:var(--f1-red);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg-raised);border:1px solid var(--border-hi);color:var(--txt-primary);border-radius:var(--r-md);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:9999}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .headline-control-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;margin-bottom:10px;width:100%}
-.btn-refresh-styled{background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.25);color:var(--cyan);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
-.btn-refresh-styled:active{background:var(--cyan);color:#000}
+.btn-refresh-styled{background:rgba(232,0,45,0.08);border:1px solid rgba(232,0,45,0.25);color:var(--f1-red);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.btn-refresh-styled:active{background:var(--f1-red);color:#fff}
 </style>
 </head>
 <body>
@@ -155,7 +154,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>ANTI-CLICKBAIT ENGINE ACTIVE</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>BREAKING FACT CORE ACTIVE</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -182,27 +181,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Intelligence Wire Filter</span>
-          <span class="consensus-desc">Parsing cross-network channels for verified declarations:</span>
+          <span class="consensus-title">Pure-Fact Intelligence Wire</span>
+          <span class="consensus-desc">Parsing 8 high-signal channels for strict declarations:</span>
         </div>
-        <span class="consensus-badge">15+ Feeds</span>
+        <span class="consensus-badge">8 Channels</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Matrix evaluating wire lines...</span>
+          <span class="ticker-item">🏁 Evaluating breaking fact lines...</span>
         </div>
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">⚡ Declarative Facts Intelligence</p>
+        <p class="section-label" style="margin:0;">🔥 Live Verified Declarations</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
 
       <div class="card" id="feed-posts">
         <div class="f1-api-loading">
           <div class="f1-spinner"></div>
-          <span>Sanitizing incoming vectors...</span>
+          <span>Sanitizing stream indices...</span>
         </div>
       </div>
     </div>
@@ -280,33 +279,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 <script>
 const PROXY = "https://corsproxy.io/?url=";
 
+// Strictly limited down to the 8 absolute highest-authority direct breaking indices
 const MASTER_CHANNELS = [
-  { name: "BBC", url: "https://feeds.bbci.co.uk/news/rss.xml" },
-  { name: "BBC World", url: "https://feeds.bbci.co.uk/news/world/rss.xml" },
-  { name: "BBC Football", url: "https://feeds.bbci.co.uk/sport/football/rss.xml" },
-  { name: "BBC F1", url: "https://feeds.bbci.co.uk/sport/formula1/rss.xml" },
+  { name: "BBC News", url: "https://feeds.bbci.co.uk/news/rss.xml" },
+  { name: "BBC Sport", url: "https://feeds.bbci.co.uk/sport/formula1/rss.xml" },
   { name: "ESPN", url: "https://www.espn.com/espn/rss/news" },
-  { name: "ESPN F1", url: "https://www.espn.com/espn/rss/f1/news" },
-  { name: "ESPN Soccer", url: "https://www.espn.com/espn/rss/soccer/news" },
-  { name: "TalkSport", url: "https://talksport.com/feed/" },
   { name: "Sky Sports", url: "https://www.skysports.com/rss/12040" },
   { name: "The Athletic", url: "https://theathletic.com/rss/" },
-  { name: "NYT Sports", url: "https://rss.nytimes.com/services/xml/rss/nyt/Sports.xml" },
-  { name: "Independent", url: "https://www.independent.co.uk/sport/rss" },
   { name: "Marca", url: "https://www.marca.com/rss/index.xml" },
-  { name: "Fox F1", url: "https://api.foxsports.com/v1/rss/f1" },
-  { name: "Fox Soccer", url: "https://api.foxsports.com/v1/rss/soccer" },
   { name: "Autosport", url: "https://www.autosport.com/rss/feed/f1" },
-  { name: "Motorsport", url: "https://www.motorsport.com/rss/f1/news/" }
+  { name: "Independent", url: "https://www.independent.co.uk/sport/rss" }
 ];
 
 const SOCCER_STREAM = "https://feeds.bbci.co.uk/sport/football/rss.xml";
 
-// Entities we want to auto-bold for effortless scanning
 const KEY_ENTITIES = [
   "Hamilton", "Verstappen", "Norris", "Leclerc", "Russell", "Antonelli", "Piastri", "Alonso",
   "Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Real Madrid", "Barcelona", "Bayern",
-  "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "Audi", "GP", "Grand Prix"
+  "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix"
 ];
 
 let foodLog = [], setLog = [];
@@ -334,18 +324,19 @@ async function fetchRawXML(targetUrl) {
   return new DOMParser().parseFromString(await response.text(), "text/xml");
 }
 
-/* ── INTELLIGENCE ENGINE & ANTI-CLICKBAIT VECTOR CORE ── */
+/* ── MAXIMUM SECURITY WIRE CLEANER (ANTI-COMMENTARY & BREAKING FACTS EXCLUSION) ── */
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>De-shucking clickbait and running cross-validation...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Vaporizing questions, editorials, and commentary tracks...</span></div>';
   
   let processedArticles = [];
   const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','near','with','show']);
   
-  // Clickbait phrase/linguistic patterns execution gate
-  const clickbaitBaitWords = [
-    'breaks silence', 'fans react', 'slammed', 'furious', 'spotted', 'you won\'t believe', 
-    'shocking', 'blows mind', 'insane', 'verdict', 'reaction', 'rumor', 'leak'
+  // Strict non-declarative vocabulary rejection parameters
+  const illegalPhrases = [
+    'how to', 'why ', 'where to', 'what to', 'when to', 'here\'s ', 'watch live', 
+    'breaks silence', 'fans react', 'slammed', 'furious', 'spotted', 'verdict', 
+    'reaction', 'rumor', 'leak', 'opinion', 'column', 'preview', 'prediction'
   ];
 
   const promises = MASTER_CHANNELS.map(async (channel) => {
@@ -355,21 +346,21 @@ async function loadNewsFeed() {
       
       items.forEach(item => {
         let title = item.querySelector('title')?.textContent || '';
-        const link = item.querySelector('link')?.textContent || '#';
-        
         title = title.trim();
         const lowerTitle = title.toLowerCase();
 
-        // 1. CRITICAL: Drop any title containing open-ended questions
-        if (title.includes('?')) return;
+        // 1. Drop any explicit or implied questions
+        if (title.includes('?') || lowerTitle.startsWith('why') || lowerTitle.startsWith('how')) return;
 
-        // 2. CRITICAL: Drop any classic buzz-phrase linkbaits
-        if (clickbaitBaitWords.some(word => lowerTitle.includes(word))) return;
+        // 2. Drop if title leads with quotes (editorial opinion/filler fluff pieces)
+        if (title.startsWith('"') || title.startsWith("'") || title.startsWith('“')) return;
 
-        // 3. CRITICAL: Drop listicles/quiz-format lines (e.g., "10 reasons why", "5 times")
-        if (/^\d+\s+(reasons|things|times|players|drivers|ways|signs)/i.test(lowerTitle)) return;
+        // 3. Reject illegal phrase signatures (instructionals, guide words, commentaries)
+        if (illegalPhrases.some(phrase => lowerTitle.includes(phrase))) return;
 
-        // Break down string tokens for similarity vectors
+        // 4. Wipe listicles or numbered slideshow elements
+        if (/^\d+\s+(reasons|things|times|players|drivers|ways|signs|items)/i.test(lowerTitle)) return;
+
         const tokens = lowerTitle
           .replace(/[^a-zA-Z0-9\s]/g, '')
           .split(/\s+/)
@@ -387,15 +378,13 @@ async function loadNewsFeed() {
   let clusterMap = [];
   let shownTitles = new Set();
 
-  // Compare keyword vector intersection weights
+  // Vector comparison to clean duplicates and group verification tokens
   for (let i = 0; i < processedArticles.length; i++) {
     let artA = processedArticles[i];
     let alreadyClustered = false;
 
-    // Check if this matches a cluster we are already assembling
     for (let cluster of clusterMap) {
       const intersect = artA.tokens.filter(t => cluster.tokens.includes(t));
-      // If titles share 2 or more distinctive tags, group them as the exact same story
       if (intersect.length >= 2) {
         if (!cluster.sources.includes(artA.source)) {
           cluster.sources.push(artA.source);
@@ -415,7 +404,7 @@ async function loadNewsFeed() {
     }
   }
 
-  // Sort groups by how heavily verified they are (most matching streams first)
+  // Heavily cross-verified stories climb to the top instantly
   clusterMap.sort((a, b) => b.sources.length - a.sources.length);
 
   let html = "";
@@ -426,14 +415,12 @@ async function loadNewsFeed() {
     shownTitles.add(item.title.toLowerCase());
     validatedTicker.push(item.title);
 
-    // Dynamic clean text replacement: Bold key entities automatically for scanning
     let formattedHeadline = item.title;
     KEY_ENTITIES.forEach(entity => {
       const regex = new RegExp(`\\b${entity}\\b`, 'gi');
       formattedHeadline = formattedHeadline.replace(regex, `<strong>$&</strong>`);
     });
 
-    // Clean inline list badge rendering
     const sourceBadges = item.sources.map(src => `<span class="outlet-tag">${src}</span>`).join('');
 
     html += `
@@ -453,7 +440,7 @@ async function loadNewsFeed() {
       <div class="empty-state">
         <span style="font-size: 24px; display:block; margin-bottom: 8px;">🛡️</span>
         No noise-free declarative headlines found.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:4px;">Streams are currently quiet or full of low-signal metrics.</span>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:4px;">Streams are clear of soft commentary columns.</span>
       </div>`;
     buildTicker(["All lines clear. Monitoring streams..."]);
   } else {
@@ -469,7 +456,7 @@ function buildTicker(titles) {
   tracker.innerHTML = cleanStr + cleanStr + cleanStr;
 }
 
-/* ── RE-ENGINEERED SOCCER DATA ENGINE ── */
+/* ── FOOTBALL STREAM DATA Core ── */
 async function loadFootballScores() {
   const container = document.getElementById('football-scores-container');
   container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Fetching direct match parameters...</span></div>';
@@ -497,7 +484,7 @@ async function loadFootballScores() {
   } catch(e) { container.innerHTML = `<div class="f1-api-error">Failed loading live score stream.</div>`; }
 }
 
-/* ── VERIFIED LIVE 2026 F1 STANDINGS DATA CORE ── */
+/* ── LIVE 2026 F1 STANDINGS DATA CORE ── */
 const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff8700', 'red_bull': '#3671c6', 'alpine': '#0093cc', 'haas': '#b6babd', 'williams': '#64c4ff', 'default': '#8a8fa8' };
 
 function loadF1Data() {
