@@ -154,7 +154,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>BREAKING FACT CORE ACTIVE</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>F1 & FOOTBALL TRACKER</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -181,27 +181,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Pure-Fact Intelligence Wire</span>
-          <span class="consensus-desc">Parsing 8 high-signal channels for strict declarations:</span>
+          <span class="consensus-title">Pure F1 & Football Intelligence Wire</span>
+          <span class="consensus-desc">Strictly processing dedicated sports streams:</span>
         </div>
-        <span class="consensus-badge">8 Channels</span>
+        <span class="consensus-badge">8 Nodes</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Evaluating breaking fact lines...</span>
+          <span class="ticker-item">🏁 Evaluating breaking sports lines...</span>
         </div>
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🔥 Live Verified Declarations</p>
+        <p class="section-label" style="margin:0;">🔥 Live F1 & Football Wire</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
 
       <div class="card" id="feed-posts">
         <div class="f1-api-loading">
           <div class="f1-spinner"></div>
-          <span>Sanitizing stream indices...</span>
+          <span>Purging general global indices...</span>
         </div>
       </div>
     </div>
@@ -279,15 +279,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 <script>
 const PROXY = "https://corsproxy.io/?url=";
 
+// 100% Dedicated to F1 and Football Streams Only
 const MASTER_CHANNELS = [
-  { name: "BBC News", url: "https://feeds.bbci.co.uk/news/rss.xml" },
-  { name: "BBC Sport", url: "https://feeds.bbci.co.uk/sport/formula1/rss.xml" },
-  { name: "ESPN", url: "https://www.espn.com/espn/rss/news" },
-  { name: "Sky Sports", url: "https://www.skysports.com/rss/12040" },
-  { name: "The Athletic", url: "https://theathletic.com/rss/" },
-  { name: "Marca", url: "https://www.marca.com/rss/index.xml" },
-  { name: "Autosport", url: "https://www.autosport.com/rss/feed/f1" },
-  { name: "Independent", url: "https://www.independent.co.uk/sport/rss" }
+  { name: "BBC Sport F1", url: "https://feeds.bbci.co.uk/sport/formula1/rss.xml" },
+  { name: "BBC Football", url: "https://feeds.bbci.co.uk/sport/football/rss.xml" },
+  { name: "Sky Sports F1", url: "https://www.skysports.com/rss/12040" },
+  { name: "Sky Sports Football", url: "https://www.skysports.com/rss/11095" },
+  { name: "Autosport F1", url: "https://www.autosport.com/rss/feed/f1" },
+  { name: "Motorsport F1", url: "https://www.motorsport.com/rss/feed/f1" },
+  { name: "ESPN F1", url: "https://www.espn.com/espn/rss/f1/news" },
+  { name: "ESPN Football", url: "https://www.espn.com/espn/rss/soccer/news" }
 ];
 
 const SOCCER_STREAM = "https://feeds.bbci.co.uk/sport/football/rss.xml";
@@ -325,7 +326,7 @@ async function fetchRawXML(targetUrl) {
 
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Sanitizing feed vectors...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Filtering out noise...</span></div>';
   
   let processedArticles = [];
   const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','near','with','show']);
@@ -394,7 +395,6 @@ async function loadNewsFeed() {
     }
   }
 
-  // Softened layout logic: Let individual standalone breaking lines print safely if channels are clear
   let html = "";
   let validatedTicker = [];
 
@@ -430,7 +430,7 @@ async function loadNewsFeed() {
         No noise-free declarative headlines found.<br>
         <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:4px;">Streams are clear of soft commentary columns.</span>
       </div>`;
-    buildTicker(["All lines clear. Monitoring streams..."]);
+    buildTicker(["All lines clear. Monitoring sports networks..."]);
   } else {
     container.innerHTML = html;
     buildTicker(validatedTicker);
