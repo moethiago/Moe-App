@@ -271,10 +271,10 @@ const KEY_ENTITIES = [
   "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix", "Mourinho"
 ];
 
-// STRICT EXCLUSION LIST (YOUR REQUESTED EXCLUSIONS)
-const JUNK_KEYWORDS = /(gossip|rumour|rumor|paper talk|eyeing|eyes|linked|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|hints at|opens up about|left out of|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|build up|undercard|ufc|boxing|fight|live commentary|live stream|outage|chants|promise bans|admits error|admits to mistakes|told to sack|key questions)/;
+// FULL BANNED FLUFF LIST
+const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|hints at|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|build up|undercard|ufc|boxing|fight|live commentary|live stream|outage|chants|promise bans|admits error|admits to mistakes|told to sack|key questions)/;
 
-// SPECIAL FLAG KEYWORDS (BRINGS ATTENTION OR HIGH STAGE SYMBOLS TO TOP HEADLINES)
+// SPECIAL HIGH-PRIORITY TARGET WORDS
 const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft)/;
 
 let foodLog = [], setLog = [];
@@ -344,10 +344,10 @@ async function loadNewsFeed() {
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
         const sanitizedTitle = originalTitle.toLowerCase().replace(/[\r\n\t]+/g, " ").replace(/[\u2018\u2019\u201c\u201d]/g, "'").replace(/[^a-z0-9\s]/g, " ").trim();
 
-        // 1. Instantly drop explicitly requested junk keywords
+        // 1. Immediately drop explicitly requested junk keywords
         if (JUNK_KEYWORDS.test(sanitizedTitle)) return;
         
-        // 2. Clear out ultra-short fragment titles
+        // 2. Clear out short fragment titles
         if (sanitizedTitle.split(' ').filter(w => w.length > 0).length < 4) return;
 
         const cleanLink = item.link || "#";
@@ -356,7 +356,7 @@ async function loadNewsFeed() {
         const textFootprint = sanitizedTitle.split(' ').filter(word => word.length > 3);
         const isF1Source = payload.source.toLowerCase().includes('f1');
         
-        // Tag breaking alerts dynamically without cutting standard reports out
+        // Tag breaking alerts dynamically
         const isBreaking = CRITICAL_KEYWORDS.test(sanitizedTitle);
 
         let matchedStory = null;
@@ -385,7 +385,7 @@ async function loadNewsFeed() {
       });
     });
 
-    // Rank stories primarily by breaking status, then sort cleanly by fresh time values
+    // Rank stories by breaking status first, then by fresh timestamp values
     uniqueStories.sort((a, b) => {
       if (a.isBreaking !== b.isBreaking) return b.isBreaking - a.isBreaking;
       return b.time - a.time;
@@ -403,7 +403,6 @@ async function loadNewsFeed() {
         parsedHeadlineText = parsedHeadlineText.replace(searchRegex, `<strong>$&</strong>`);
       });
 
-      // Special visual accenting badge icon for highly rated confirmed alerts
       const bulletClass = story.isBreaking ? "wire-bullet critical" : "wire-bullet";
       const bulletSymbol = story.isBreaking ? "🔥" : "•";
 
