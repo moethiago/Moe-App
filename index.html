@@ -39,17 +39,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:20px;letter-spacing:2px;background:linear-gradient(90deg,var(--ig-blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .logo span{-webkit-text-fill-color:var(--f1-red)}
 .header-right{display:flex;align-items:center;gap:10px}
-.hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
-.hdr-live{background:rgba(79,156,249,0.1);color:var(--ig-blue);border:1px solid rgba(79,156,249,0.3);display:flex;align-items:center;gap:5px}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--ig-blue);animation:pulse 1.4s ease-in-out infinite}
+.hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
+.hdr-live{background:rgba(232,0,45,0.1);color:var(--f1-red);border:1px solid rgba(232,0,45,0.3);display:flex;align-items:center;gap:5px}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--f1-red);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .hdr-time{color:var(--txt-secondary);font-size:12px;font-family:'JetBrains Mono',monospace}
-
-.consensus-banner{background:rgba(79,156,249,0.02);border:1px solid rgba(79,156,249,0.15);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.consensus-info{display:flex;flex-direction:column;gap:1px}
-.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--ig-blue);letter-spacing:1px;text-transform:uppercase}
-.consensus-desc{font-size:11px;color:var(--txt-secondary)}
-.consensus-badge{background:var(--ig-blue);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
 
 .card{background:var(--bg-card);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
 .card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
@@ -126,7 +120,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .ring-track{fill:none;stroke:var(--bg-raised);stroke-width:12}
 .ring-prog{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease}
 .ticker-wrap{overflow:hidden;border-bottom:1px solid var(--border);background:var(--bg-void);padding:8px 0}
-.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:ticker 45s linear infinite}
+.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:ticker 25s linear infinite}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
 .ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
 .f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
@@ -148,7 +142,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>CRITICAL MATRIX EXCLUSION</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>LIVE</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -173,14 +167,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 
   <div id="scroll-wrap">
     <div class="tab-panel active" id="panel-feed">
-      <div class="consensus-banner">
-        <div class="consensus-info">
-          <span class="consensus-title">Hard Fact Engine</span>
-          <span class="consensus-desc">General sport lines and contextual wires are permanently disabled:</span>
-        </div>
-        <span class="consensus-badge" id="consensus-summary-badge">Ready</span>
-      </div>
-
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
           <span class="ticker-item">🏁 Verified alerts system active...</span>
@@ -362,10 +348,7 @@ async function loadNewsFeed() {
           .trim();
 
         if (JUNK_KEYWORDS.test(sanitizedTitle)) return;
-        
-        // Dynamic Drop Protocol: If it doesn't match a verified action, drop it immediately
         if (!CRITICAL_KEYWORDS.test(sanitizedTitle)) return;
-        
         if (sanitizedTitle.split(' ').filter(w => w.length > 0).length < 4) return;
 
         const cleanLink = item.link || "#";
@@ -441,11 +424,6 @@ async function loadNewsFeed() {
           </div>
         </div>`;
     });
-
-    const indicatorBadge = document.getElementById('consensus-summary-badge');
-    if (indicatorBadge) {
-      indicatorBadge.textContent = `${totalRendered} Verified`;
-    }
 
     criticalContainer.innerHTML = criticalHtml || `<div class="empty-state">No major breaking updates right now. Filters clean.</div>`;
     buildTicker(tickerArray.length ? tickerArray : ["Awaiting verified breaking events..."]);
