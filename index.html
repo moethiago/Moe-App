@@ -175,10 +175,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Unified Sports Wire</span>
-          <span class="consensus-desc">Real-time aggregated sporting data stream:</span>
+          <span class="consensus-title">Cross-Network Verified Wire</span>
+          <span class="consensus-desc">Requiring matching multi-source footprints:</span>
         </div>
-        <span class="consensus-badge" id="source-node-count" style="background:var(--ig-blue)">Feed Active</span>
+        <span class="consensus-badge" id="source-node-count">Syncing Engine...</span>
       </div>
 
       <div class="ticker-wrap">
@@ -188,14 +188,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🔥 Live Sports Stream</p>
+        <p class="section-label" style="margin:0;">🔥 Cross-Verified Consensus</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
 
       <div class="card" id="feed-posts">
         <div class="f1-api-loading">
           <div class="f1-spinner"></div>
-          <span>Parsing global feed networks...</span>
+          <span>Cross-checking network footprints...</span>
         </div>
       </div>
     </div>
@@ -271,14 +271,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 <div id="toast"></div>
 
 <script>
-// Clean, isolated parsing strategy to protect the Main Thread
 const RSS_API = "https://api.rss2json.com/v1/api.json?rss_url=";
 
 const MASTER_CHANNELS = [
   { name: "BBC F1", url: "https://feeds.bbci.co.uk/sport/formula1/rss.xml" },
   { name: "BBC Football", url: "https://feeds.bbci.co.uk/sport/football/rss.xml" },
   { name: "Sky F1", url: "https://www.skysports.com/rss/12040" },
-  { name: "Sky Football", url: "https://www.skysports.com/rss/11095" }
+  { name: "Sky Football", url: "https://www.skysports.com/rss/11095" },
+  { name: "TalkSport", url: "https://talksport.com/feed/" },
+  { name: "Independent", url: "https://www.independent.co.uk/sport/rss" }
 ];
 
 const SOCCER_STREAM = "https://feeds.bbci.co.uk/sport/football/rss.xml";
@@ -291,7 +292,6 @@ const KEY_ENTITIES = [
 
 let foodLog = [], setLog = [];
 
-// BOOT ENGINE: Load the UI frame instantly and independently of structural network traffic
 document.addEventListener('DOMContentLoaded', () => {
   try { foodLog = JSON.parse(localStorage.getItem('m_food')) || []; } catch(e){}
   try { setLog = JSON.parse(localStorage.getItem('m_sets')) || []; } catch(e){}
@@ -300,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
   try { renderSets(); } catch(e){}
   try { startClock(); } catch(e){}
   
-  // Isolate completely into microtask layout to safeguard button listeners
   setTimeout(() => {
     loadNewsFeed().catch(err => {});
   }, 100);
@@ -319,56 +318,120 @@ function switchTab(tab) {
       loadF1Data(); 
     }
   } catch(err) {
-    console.error("Navigation fault protection: ", err);
+    console.error(err);
   }
 }
 
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
   if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Parsing global feed networks...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Cross-checking network footprints...</span></div>';
   
   let processedArticles = [];
+  const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','latest','news','sport']);
 
-  try {
-    // Isolated processing map prevents cross-origin data deadlocks
-    const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
-      try {
-        const res = await fetch(RSS_API + encodeURIComponent(channel.url));
-        if (!res.ok) return;
-        const data = await res.json();
-        
-        if (data && data.items) {
-          data.items.slice(0, 5).forEach(item => {
-            if (item.title) {
-              processedArticles.push({
-                title: item.title.trim(),
-                link: item.link || '#',
-                source: channel.name,
-                timestamp: item.pubDate ? Date.parse(item.pubDate) : Date.now()
-              });
-            }
+  // Fetch feeds completely asynchronously to avoid execution blocks
+  const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
+    try {
+      const res = await fetch(RSS_API + encodeURIComponent(channel.url));
+      if (!res.ok) return;
+      const data = await res.json();
+      
+      if (data && data.items) {
+        data.items.slice(0, 6).forEach(item => {
+          let title = item.title ? item.title.trim() : '';
+          if (!title) return;
+          const lowerTitle = title.toLowerCase();
+
+          // Split headline into comparative string footprints
+          const tokens = lowerTitle
+            .replace(/[^a-zA-Z0-9\s]/g, '')
+            .split(/\s+/)
+            .filter(t => t.length > 3 && !stopWords.has(t));
+
+          processedArticles.push({
+            title,
+            link: item.link || '#',
+            source: channel.name,
+            tokens,
+            timestamp: item.pubDate ? Date.parse(item.pubDate) : Date.now()
           });
-        }
-      } catch(e) {}
-    });
+        });
+      }
+    } catch(e) {}
+  });
 
-    await Promise.all(fetchPromises);
-  } catch(e) {}
+  await Promise.all(fetchPromises);
 
-  processedArticles.sort((a, b) => b.timestamp - a.timestamp);
+  // Cluster algorithm matching system
+  let clusterMap = [];
+
+  processedArticles.forEach(art => {
+    let matchedCluster = null;
+    for (let cluster of clusterMap) {
+      const sharedTokens = art.tokens.filter(t => cluster.tokens.includes(t));
+      // Require at least 2 distinct matching terms across providers to match topics
+      if (sharedTokens.length >= 2) {
+        matchedCluster = cluster;
+        break;
+      }
+    }
+
+    if (matchedCluster) {
+      if (!matchedCluster.sources.includes(art.source)) {
+        matchedCluster.sources.push(art.source);
+      }
+      if (art.timestamp > matchedCluster.timestamp) {
+        matchedCluster.timestamp = art.timestamp;
+        matchedCluster.representativeTitle = art.title;
+        matchedCluster.link = art.link;
+      }
+    } else {
+      clusterMap.push({
+        representativeTitle: art.title,
+        link: art.link,
+        tokens: art.tokens,
+        sources: [art.source],
+        timestamp: art.timestamp
+      });
+    }
+  });
+
+  clusterMap.sort((a, b) => b.timestamp - a.timestamp);
+
+  // Dynamic Fallback Matrix Configuration (3 Sources down to 2 Sources, completely blocking Single Source noise)
+  let dynamicThreshold = 3; 
+  if (clusterMap.length > 0) {
+    const maxSourcesFound = clusterMap.reduce((max, item) => item.sources.length > max ? item.sources.length : max, 0);
+    // If no stories have 3 sources, but we have 2-source matches, safely fall back to 2
+    if (maxSourcesFound === 2) {
+      dynamicThreshold = 2;
+    }
+  }
+
+  // Update UI badge status cleanly
+  const nodeBadge = document.getElementById('source-node-count');
+  if (nodeBadge) {
+    nodeBadge.textContent = `${dynamicThreshold}+ Source Match`;
+    nodeBadge.style.background = dynamicThreshold >= 3 ? 'var(--epl-green)' : 'var(--ig-blue)';
+  }
 
   let consensusHtml = "";
   let validatedTicker = [];
 
-  processedArticles.slice(0, 15).forEach(item => {
-    validatedTicker.push(item.title);
+  clusterMap.forEach(item => {
+    // Rigid guardrail: Never print item if it fails the dynamic threshold, or if it is single-sourced
+    if (item.sources.length < dynamicThreshold || item.sources.length < 2) return;
 
-    let formattedHeadline = item.title;
+    validatedTicker.push(item.representativeTitle);
+
+    let formattedHeadline = item.representativeTitle;
     KEY_ENTITIES.forEach(entity => {
       const regex = new RegExp(`\\b${entity}\\b`, 'gi');
       formattedHeadline = formattedHeadline.replace(regex, `<strong>$&</strong>`);
     });
+
+    const sourceBadges = item.sources.map(src => `<span class="outlet-tag">${src}</span>`).join('');
 
     consensusHtml += `
       <div class="wire-item" onclick="window.open('${item.link}','_blank')">
@@ -376,7 +439,8 @@ async function loadNewsFeed() {
         <div class="wire-content">
           <p class="wire-headline">${formattedHeadline}</p>
           <div class="wire-meta-row" style="margin-top: 4px;">
-            <span class="outlet-tag" style="background:rgba(255,255,255,0.03); color:var(--txt-secondary)">${item.source}</span>
+            <span class="consensus-count-badge" style="background:${item.sources.length >= 3 ? 'var(--epl-green)' : 'var(--bg-raised)'; color:${item.sources.length >= 3 ? '#000' : 'var(--txt-secondary)'}">${item.sources.length} Network Verification</span>
+            ${sourceBadges}
           </div>
         </div>
       </div>`;
@@ -386,10 +450,10 @@ async function loadNewsFeed() {
     container.innerHTML = `
       <div class="empty-state">
         <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
-        No active stream items found at this time.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Check connection or try reloading.</span>
+        No verified multi-source consensus lines right now.<br>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Single source wire traffic ignored by consensus engine.</span>
       </div>`;
-    buildTicker(["Monitoring streaming networks... Engine active."]);
+    buildTicker(["Wire active. Single source wire items suppressed..."]);
   } else {
     container.innerHTML = consensusHtml;
     buildTicker(validatedTicker);
@@ -399,7 +463,7 @@ async function loadNewsFeed() {
 function buildTicker(titles) {
   const tracker = document.getElementById('ticker');
   if (!tracker || !titles || !titles.length) return;
-  const cleanStr = titles.slice(0, 6).map(t => `<span class="ticker-item">⚡ Line: ${t}</span>`).join('');
+  const cleanStr = titles.slice(0, 6).map(t => `<span class="ticker-item">⚡ Verified: ${t}</span>`).join('');
   tracker.innerHTML = cleanStr + cleanStr + cleanStr;
 }
 
@@ -425,11 +489,9 @@ async function loadFootballScores() {
           </div>`;
       });
     }
-    container.innerHTML = html || `<div class="empty-state">No sports updates available right now.</div>`;
+    container.innerHTML = html || `<div class="empty-state">No football updates available right now.</div>`;
   } catch(e) { container.innerHTML = `<div class="f1-api-error">Network stream offline. Try refreshing later.</div>`; }
 }
-
-const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff8700', 'red_bull': '#3671c6', 'alpine': '#0093cc', 'haas': '#b6babd', 'williams': '#64c4ff', 'default': '#8a8fa8' };
 
 function loadF1Data() {
   const container = document.getElementById('f1-standings-body');
@@ -449,6 +511,8 @@ function loadF1Data() {
   
   let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">WINS</span><span style="text-align:right">PTS</span></div>';
   
+  const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff8700', 'red_bull': '#3671c6', 'alpine': '#0093cc', 'haas': '#b6babd', 'williams': '#64c4ff', 'default': '#8a8fa8' };
+
   current2026Standings.forEach(d => {
     const col = BRAND_MAP[d.teamId] || BRAND_MAP.default;
     html += `
