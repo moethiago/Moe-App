@@ -1082,21 +1082,13 @@ async function pulseFetch(manual=false){
   feedEl.innerHTML=`<div class="empty"><div style="font-size:24px;margin-bottom:8px">📡</div><div style="color:var(--t2)">Loading stories…</div><div style="font-size:11px;color:var(--t3);margin-top:4px">F1 · Bayern · AI</div></div>`;
   if(updEl)updEl.textContent='Fetching…';
   try{
-    const results=await Promise.allSettled(
-      Object.keys(PULSE_TOPICS).map(cat=>
-        async function pulseFetch(manual=false){
-  const feedEl=document.getElementById('pulseFeed');const updEl=document.getElementById('pulseUpdated');if(!feedEl)return;
-  feedEl.innerHTML=`<div class="empty"><div style="font-size:24px;margin-bottom:8px">📡</div><div style="color:var(--t2)">Scanning signals…</div><div style="font-size:11px;color:var(--t3);margin-top:4px">F1 · Bayern · AI</div></div>`;
-  if(updEl)updEl.textContent='Fetching…';
-  try{
     const all=[];
     for(const [cat,cfg] of Object.entries(PULSE_TOPICS)){const s=await fetchPulseStories(cat,cfg);all.push(...s);}
     all.sort((a,b)=>b.trend_score-a.trend_score);
     pulseStories=dedupeStories(all);save(PK,{ts:Date.now(),stories:pulseStories});
     if(updEl)updEl.textContent='Updated just now';renderPulseFeed();
   }catch(err){
-    if(pulseStories.length){renderPulseFeed();if(updEl)updEl.textContent='Using cached data';}
-    else{feedEl.innerHTML=`<div class="empty"><div style="font-size:24px;margin-bottom:8px">📡</div>No signals right now.<br><button class="btn bp" style="margin-top:14px;display:inline-block" onclick="pulseFetch(true)">↻ Retry</button></div>`;}
+        else{feedEl.innerHTML=`<div class="empty"><div style="font-size:24px;margin-bottom:8px">📡</div>No signals right now.<br><button class="btn bp" style="margin-top:14px;display:inline-block" onclick="pulseFetch(true)">↻ Retry</button></div>`;}
   }
 }
 async function fetchPulseStories(cat,cfg){
