@@ -53,7 +53,7 @@ font-size: 16px;
 html, body {
 width: 100%; height: 100%;
 overflow: hidden;
-background: var(–bg-void);
+background: #000;
 color: var(–txt-primary);
 font-family: ‘DM Sans’, sans-serif;
 -webkit-font-smoothing: antialiased;
@@ -61,19 +61,23 @@ font-family: ‘DM Sans’, sans-serif;
 
 /* ── LAYOUT SHELL ───────────────────────────────── */
 #app {
-width: 100%; height: 100%;
-max-width: 540px;
+width: 100%;
+max-width: 430px;
+height: 100%;
 margin: 0 auto;
 background: var(–bg-base);
 position: relative;
 display: flex;
 flex-direction: column;
+box-shadow: 0 0 80px rgba(0,0,0,0.8);
 }
 #top-bar {
 position: fixed;
 top: 0;
-left: 0;
-right: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 100%;
+max-width: 430px;
 z-index: 200;
 display: flex;
 flex-direction: column;
@@ -148,6 +152,7 @@ overflow-x: hidden;
 overscroll-behavior: contain;
 scroll-behavior: smooth;
 padding-top: calc(var(–safe-top) + var(–header-h) + var(–nav-h));
+box-sizing: border-box;
 }
 #scroll-wrap::-webkit-scrollbar { display: none; }
 
