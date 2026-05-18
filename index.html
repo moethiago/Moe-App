@@ -45,11 +45,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .hdr-time{color:var(--txt-secondary);font-size:12px;font-family:'JetBrains Mono',monospace}
 
-.consensus-banner{background:rgba(79,156,249,0.04);border:1px solid rgba(79,156,249,0.2);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.consensus-banner{background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.2);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .consensus-info{display:flex;flex-direction:column;gap:1px}
-.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--ig-blue);letter-spacing:1px;text-transform:uppercase}
+.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase}
 .consensus-desc{font-size:11px;color:var(--txt-secondary)}
-.consensus-badge{background:var(--cyan);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.consensus-badge{background:var(--purple);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
 
 .card{background:var(--bg-card);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
 .card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
@@ -65,7 +65,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .wire-headline{font-size:13.5px;line-height:1.45;color:var(--txt-primary);font-weight:400}
 .wire-headline strong{font-weight:600;color:#fff}
 .wire-meta-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-.outlet-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(79,156,249,0.06);color:var(--ig-blue);border:1px solid rgba(79,156,249,0.15);text-transform:uppercase}
+.outlet-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,0.04);color:var(--txt-secondary);border:1px solid var(--border-hi);text-transform:uppercase}
 .consensus-count-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--epl-green);color:#000;text-transform:uppercase;margin-right:4px}
 
 .league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border-hi)}
@@ -148,7 +148,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>POST-FILTER LAYER</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>CONSENSUS ACTIVE</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -175,27 +175,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Safe Post-Processing Pipeline</span>
-          <span class="consensus-desc">Collects everything first, then cleans out data:</span>
+          <span class="consensus-title">Cross-Network Aggregator</span>
+          <span class="consensus-desc">Deduplicating matched updates into single titles:</span>
         </div>
-        <span class="consensus-badge" id="source-node-count">Post-Filter</span>
+        <span class="consensus-badge" id="consensus-summary-badge">Syncing</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Waiting for baseline stream initialization...</span>
+          <span class="ticker-item">🏁 Scanning structural feed arrays...</span>
         </div>
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🔥 Cleaned Wire</p>
+        <p class="section-label" style="margin:0;">🔥 Consolidated Network Matrix</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
 
       <div class="card" id="feed-posts">
         <div class="f1-api-loading">
           <div class="f1-spinner"></div>
-          <span>Acquiring clean network arrays...</span>
+          <span>Building network cross-references...</span>
         </div>
       </div>
     </div>
@@ -299,7 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
   try { renderFood(); } catch(e){}
   try { renderSets(); } catch(e){}
   
-  // Independent initialization of the clock execution loop
   startClock();
   
   setTimeout(() => {
@@ -316,11 +315,11 @@ function startClock() {
         clockEl.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
       }
     } catch(err) {
-      console.error("Clock tracking error bypassed safely.");
+      console.error(err);
     }
   };
   runClock();
-  setInterval(runClock, 2000); // Decoupled execution loop prevents processing crashes from erasing it
+  setInterval(runClock, 2000);
 }
 
 function switchTab(tab) {
@@ -343,106 +342,154 @@ function switchTab(tab) {
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
   if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Acquiring clean network arrays...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Acquiring network payloads...</span></div>';
   
-  // STEP 1: The Blind Collection Stage
-  // Zero text analysis, filtering, or property mutation happens here. Just gathering arrays.
   const rawDataPayloads = [];
 
+  // Stage 1: Safe Fetch Collection
   const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
     try {
       const res = await fetch(RSS_API + encodeURIComponent(channel.url));
       if (!res.ok) return;
       const data = await res.json();
-      
       if (data && data.items && Array.isArray(data.items)) {
-        rawDataPayloads.push({
-          sourceName: channel.name,
-          items: data.items
-        });
+        rawDataPayloads.push({ source: channel.name, items: data.items });
       }
     } catch(e) {
-      console.warn("Isolated network node bypassed safely.");
+      console.warn("Network node bypass");
     }
   });
 
   await Promise.allSettled(fetchPromises);
 
-  // STEP 2: The Post-Processing Filter Stage
-  // We completely isolate the parsing logic from the async network flow inside a deep sandbox.
-  const processedFeedItems = [];
+  // Stage 2: Post-Processing Consensus & Best Title Match Engine
+  const uniqueStories = [];
 
   try {
     rawDataPayloads.forEach(payload => {
-      if (!payload || !Array.isArray(payload.items)) return;
-
       payload.items.forEach(item => {
-        // Double protective fallback defaults for required fields
         if (!item || !item.title) return;
-        
-        const cleanTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
-        const cleanLink = item.link || "#";
-        const rawTimestamp = item.pubDate ? Date.parse(item.pubDate) : Date.now();
 
-        processedFeedItems.push({
-          title: cleanTitle,
-          link: cleanLink,
-          source: payload.sourceName,
-          time: isNaN(rawTimestamp) ? Date.now() : rawTimestamp
-        });
+        const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
+        const cleanLink = item.link || "#";
+        const itemTimestamp = item.pubDate ? Date.parse(item.pubDate) : Date.now();
+        const parsedTime = isNaN(itemTimestamp) ? Date.now() : itemTimestamp;
+
+        // Clean text footprint to compare similarity (lowercase, strip out filler punctuation)
+        const textFootprint = originalTitle.toLowerCase()
+          .replace(/[^a-z0-9\s]/g, '')
+          .split(' ')
+          .filter(word => word.length > 3); // match only meaningful words
+
+        // Cross-check if this matches any story we already saved
+        let matchedStory = null;
+        for (let story of uniqueStories) {
+          // Count word matches between current title and target story signature
+          let overlapCount = 0;
+          textFootprint.forEach(word => {
+            if (story.signature.includes(word)) overlapCount++;
+          });
+
+          // If 3 or more significant words match, treat it as a duplicate story node
+          if (overlapCount >= 3 || (textFootprint.length <= 3 && overlapCount >= 2)) {
+            matchedStory = story;
+            break;
+          }
+        }
+
+        if (matchedStory) {
+          // Cross-reference matched story: update network tracking metrics
+          if (!matchedStory.sources.includes(payload.source)) {
+            matchedStory.sources.push(payload.source);
+          }
+          // RULE: Automatically select the BEST title variant (longest title contains best detail)
+          if (originalTitle.length > matchedStory.title.length) {
+            matchedStory.title = originalTitle;
+          }
+          // Preserve freshest timestamp variant
+          if (parsedTime > matchedStory.time) {
+            matchedStory.time = parsedTime;
+          }
+        } else {
+          // Initialize a brand-new unique narrative record
+          uniqueStories.push({
+            title: originalTitle,
+            link: cleanLink,
+            sources: [payload.source],
+            time: parsedTime,
+            signature: textFootprint
+          });
+        }
       });
     });
 
-    // Sort items cleanly after extraction completes
-    processedFeedItems.sort((a, b) => b.time - a.time);
+    // Chronological baseline sort
+    uniqueStories.sort((a, b) => b.time - a.time);
 
-  } catch(filterProcessingException) {
-    console.error("Post-processing encountered a data format exception.", filterProcessingException);
-    container.innerHTML = `<div class="f1-api-error">Data filter execution exception handled safely. Clock preserved.</div>`;
+  } catch(engineException) {
+    console.error(engineException);
+    container.innerHTML = `<div class="f1-api-error">Consensus structural exception handled safely.</div>`;
     return;
   }
 
-  // STEP 3: The Render Generation Stage
+  // Stage 3: Render Matrix Generation
   try {
-    let finalOutputHtml = "";
+    let finalHtml = "";
     let tickerArray = [];
+    let highConsensusCount = 0;
 
-    // Slice the final safe subset
-    const presentationSubset = processedFeedItems.slice(0, 15);
+    const presentationOutput = uniqueStories.slice(0, 15);
 
-    presentationSubset.forEach(item => {
-      tickerArray.push(item.title);
-      let parsedHeadlineText = item.title;
+    presentationOutput.forEach(story => {
+      tickerArray.push(story.title);
+      let parsedHeadlineText = story.title;
 
+      // Entity Bold Highlight Pass
       KEY_ENTITIES.forEach(entity => {
         if (!entity) return;
-        // Escaping values safely using regex initialization
         const searchRegex = new RegExp(`\\b${entity}\\b`, 'gi');
         parsedHeadlineText = parsedHeadlineText.replace(searchRegex, `<strong>$&</strong>`);
       });
 
-      finalOutputHtml += `
-        <div class="wire-item" onclick="window.open('${item.link}','_blank')">
+      // Render out sources badge layout strings dynamically
+      const sourceBadgesHtml = story.sources.map(src => `<span class="outlet-tag">${src}</span>`).join('');
+      
+      // Consensus tracker layout logic
+      let consensusIndicator = "";
+      if (story.sources.length > 1) {
+        highConsensusCount++;
+        consensusIndicator = `<span class="consensus-count-badge">${story.sources.length} NETWORKS</span>`;
+      }
+
+      finalHtml += `
+        <div class="wire-item" onclick="window.open('${story.link}','_blank')">
           <span class="wire-bullet">•</span>
           <div class="wire-content">
             <p class="wire-headline">${parsedHeadlineText}</p>
-            <div class="wire-meta-row" style="margin-top: 4px;">
-              <span class="outlet-tag" style="background:rgba(34,211,238,0.06); color:var(--cyan); border-color:rgba(34,211,238,0.15)">${item.source}</span>
+            <div class="wire-meta-row" style="margin-top: 4px; gap: 6px;">
+              ${consensusIndicator}
+              ${sourceBadgesHtml}
             </div>
           </div>
         </div>`;
     });
 
-    if (!finalOutputHtml) {
-      container.innerHTML = `<div class="empty-state">No stories extracted. Click refresh to retry pipeline sync.</div>`;
-      buildTicker(["System clear. Matrix empty."]);
+    // Update banner indicator badge safely
+    const indicatorBadge = document.getElementById('consensus-summary-badge');
+    if (indicatorBadge) {
+      indicatorBadge.textContent = highConsensusCount > 0 ? `${highConsensusCount} Clusters` : "Synced";
+    }
+
+    if (!finalHtml) {
+      container.innerHTML = `<div class="empty-state">No current matching headlines returned.</div>`;
+      buildTicker(["Matrix clear."]);
     } else {
-      container.innerHTML = finalOutputHtml;
+      container.innerHTML = finalHtml;
       buildTicker(tickerArray);
     }
 
-  } catch(domInjectionException) {
-    container.innerHTML = `<div class="f1-api-error">Template string generation aborted safely.</div>`;
+  } catch(domException) {
+    container.innerHTML = `<div class="f1-api-error">Pipeline DOM rendering safely aborted.</div>`;
   }
 }
 
@@ -531,10 +578,8 @@ function addFood() {
 function deleteFood(id) { foodLog = foodLog.filter(f => f.id !== id); localStorage.setItem('m_food', JSON.stringify(foodLog)); renderFood(); }
 function renderFood() {
   const totals = foodLog.reduce((a, b) => ({ kcal: a.kcal+b.kcal, prot: a.prot+b.prot, carb: a.carb+b.carb, fat: a.fat+b.fat }), { kcal:0, prot:0, carb:0, fat:0 });
-  
   const calDisp = document.getElementById('cal-display');
   if (calDisp) calDisp.textContent = Math.round(totals.kcal);
-  
   if (document.getElementById('prot-val')) {
     document.getElementById('prot-val').textContent = Math.round(totals.prot) + 'g'; 
     document.getElementById('carb-val').textContent = Math.round(totals.carb) + 'g'; 
@@ -544,7 +589,6 @@ function renderFood() {
     if(document.getElementById('fat-bar')) document.getElementById('fat-bar').style.width = Math.min((totals.fat/70)*100, 100) + '%';
     if(document.getElementById('cal-ring')) document.getElementById('cal-ring').style.strokeDashoffset = 314 * (1 - Math.min(totals.kcal / 2500, 1));
   }
-  
   const container = document.getElementById('food-list');
   if(!container) return;
   if(!foodLog.length) { container.innerHTML = `<div class="empty-state">No nutritional intake items logged.</div>`; return; }
@@ -561,7 +605,6 @@ function addSet() {
 function deleteSet(id) { setLog = setLog.filter(s => s.id !== id); localStorage.setItem('m_sets', JSON.stringify(setLog)); renderSets(); }
 function renderSets() {
   const totalVol = setLog.reduce((a, b) => a + (b.weight * b.reps), 0), uniqueEx = [...new Set(setLog.map(s => s.exercise.toLowerCase()))].length;
-  
   const setsCount = document.getElementById('wk-sets');
   if (setsCount) {
     setsCount.textContent = setLog.length; 
@@ -569,7 +612,6 @@ function renderSets() {
     if(document.getElementById('wk-exs')) document.getElementById('wk-exs').textContent = uniqueEx;
     if(document.getElementById('vol-total-val')) document.getElementById('vol-total-val').textContent = totalVol.toLocaleString() + ' kg';
   }
-  
   const container = document.getElementById('set-list');
   if(!container) return;
   if(!setLog.length) { container.innerHTML = `<div class="empty-state">Workout list empty.</div>`; return; }
