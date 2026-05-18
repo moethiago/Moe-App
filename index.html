@@ -261,25 +261,26 @@ const MASTER_CHANNELS = [
   { name: "Sky Football", url: "https://www.skysports.com/rss/11095" },
   { name: "TalkSport", url: "https://talksport.com/feed/" },
   { name: "Independent", url: "https://www.independent.co.uk/sport/rss" },
-  { name: "Arab News Sport", url: "https://www.arabnews.com/cat/5/rss.xml" }
+  { name: "Arab News Sport", url: "https://www.arabnews.com/cat/5/rss.xml" },
+  { name: "Arab News KSA", url: "https://www.arabnews.com/cat/3/rss.xml" }
 ];
 
 const SOCCER_STREAM = "https://feeds.bbci.co.uk/sport/football/rss.xml";
 
-// UPDATED WITH REGIONAL HIGHLIGHT KSA TARGET TRIGGERS
+// EXPANDED KEY ENTITIES MATRIX TO INCLUDE PRIMARY SAUDI ARABIAN GEOPOLITICAL/ECONOMIC ENTITIES WITH THE BASEBALL METRIC SYSTEM
 const KEY_ENTITIES = [
   "Hamilton", "Verstappen", "Norris", "Leclerc", "Russell", "Antonelli", "Piastri", "Alonso",
   "Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Real Madrid", "Barcelona", "Bayern",
   "Bayern Munich", "Munich", "Kompany", "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", 
   "GP", "Grand Prix", "Mourinho", "Al Nassr", "Al Hilal", "Al Ittihad", "Al Ahli", "Ronaldo", "Neymar", 
-  "Saudi Pro League", "SPL"
+  "Saudi Pro League", "SPL", "Saudi Arabia", "KSA", "Riyadh", "Jeddah", "NEOM", "Aramco", "Vision 2030"
 ];
 
 // BANNED FLUFF LIST
 const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|hints at|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|build up|undercard|ufc|boxing|fight|live commentary|live stream|outage|chants|promise bans|admits error|admits to mistakes|told to sack|key questions)/;
 
-// GATEKEEPER CRITERIA
-const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft|cup champions|trophy|clinch)/;
+// EXPANDED CRITICAL ACTIONS TO INCLUDE NATIONAL/REGIONAL BREAKING DEFINITIONS
+const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft|cup champions|trophy|clinch|decree|launch|launches|approves|approved|unveiled|unveils|signing|agreement|inaugurates|inaugurated|deal)/;
 
 let foodLog = [], setLog = [];
 let tickerPosition = 0;
