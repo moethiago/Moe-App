@@ -148,7 +148,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>CONSENSUS MATCH ENGINE</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>CONSENSUS WIRE</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -175,10 +175,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Cross-Network Verified Wire</span>
-          <span class="consensus-desc">Requiring concurrent reports across sports providers:</span>
+          <span class="consensus-title">Unified Sports Wire</span>
+          <span class="consensus-desc">Real-time aggregated sporting data stream:</span>
         </div>
-        <span class="consensus-badge" id="source-node-count">12 Nodes Active</span>
+        <span class="consensus-badge" id="source-node-count" style="background:var(--ig-blue)">Feed Active</span>
       </div>
 
       <div class="ticker-wrap">
@@ -188,14 +188,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🔥 Cross-Verified Consensus</p>
+        <p class="section-label" style="margin:0;">🔥 Live Sports Stream</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
 
       <div class="card" id="feed-posts">
         <div class="f1-api-loading">
           <div class="f1-spinner"></div>
-          <span>Cross-checking network footprints...</span>
+          <span>Parsing global feed networks...</span>
         </div>
       </div>
     </div>
@@ -271,23 +271,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 <div id="toast"></div>
 
 <script>
-// Primary Proxy Matrix
-const PRIMARY_PROXY = "https://api.allorigins.win/raw?url=";
-const BACKUP_PROXY = "https://corsproxy.io/?url=";
+// Clean, isolated parsing strategy to protect the Main Thread
+const RSS_API = "https://api.rss2json.com/v1/api.json?rss_url=";
 
 const MASTER_CHANNELS = [
   { name: "BBC F1", url: "https://feeds.bbci.co.uk/sport/formula1/rss.xml" },
   { name: "BBC Football", url: "https://feeds.bbci.co.uk/sport/football/rss.xml" },
   { name: "Sky F1", url: "https://www.skysports.com/rss/12040" },
-  { name: "Sky Football", url: "https://www.skysports.com/rss/11095" },
-  { name: "Autosport", url: "https://www.autosport.com/rss/feed/f1" },
-  { name: "Motorsport", url: "https://www.motorsport.com/rss/feed/f1" },
-  { name: "ESPN F1", url: "https://www.espn.com/espn/rss/f1/news" },
-  { name: "ESPN Football", url: "https://www.espn.com/espn/rss/soccer/news" },
-  { name: "The Athletic", url: "https://theathletic.com/rss/" },
-  { name: "Marca News", url: "https://www.marca.com/rss/index.xml" },
-  { name: "TalkSport", url: "https://talksport.com/feed/" },
-  { name: "Independent", url: "https://www.independent.co.uk/sport/rss" }
+  { name: "Sky Football", url: "https://www.skysports.com/rss/11095" }
 ];
 
 const SOCCER_STREAM = "https://feeds.bbci.co.uk/sport/football/rss.xml";
@@ -300,7 +291,7 @@ const KEY_ENTITIES = [
 
 let foodLog = [], setLog = [];
 
-// CRITICAL FIX: Setup the interface immediately. Zero blocking network interactions inside DOMContentLoaded.
+// BOOT ENGINE: Load the UI frame instantly and independently of structural network traffic
 document.addEventListener('DOMContentLoaded', () => {
   try { foodLog = JSON.parse(localStorage.getItem('m_food')) || []; } catch(e){}
   try { setLog = JSON.parse(localStorage.getItem('m_sets')) || []; } catch(e){}
@@ -309,10 +300,10 @@ document.addEventListener('DOMContentLoaded', () => {
   try { renderSets(); } catch(e){}
   try { startClock(); } catch(e){}
   
-  // Asynchronously spawn network tracking off the main initialization sequence
+  // Isolate completely into microtask layout to safeguard button listeners
   setTimeout(() => {
     loadNewsFeed().catch(err => {});
-  }, 200);
+  }, 100);
 });
 
 function switchTab(tab) {
@@ -328,144 +319,56 @@ function switchTab(tab) {
       loadF1Data(); 
     }
   } catch(err) {
-    console.error("Tab Navigation Error: ", err);
-  }
-}
-
-async function fetchRawXML(targetUrl) {
-  // Insulated fallback matrix logic to bypass frozen sockets
-  try {
-    const response = await fetch(PRIMARY_PROXY + encodeURIComponent(targetUrl));
-    if (!response.ok) throw new Error();
-    const textData = await response.text();
-    return new DOMParser().parseFromString(textData, "text/xml");
-  } catch(e) {
-    try {
-      const backupResponse = await fetch(BACKUP_PROXY + encodeURIComponent(targetUrl));
-      if (!backupResponse.ok) throw new Error();
-      const textData = await backupResponse.text();
-      return new DOMParser().parseFromString(textData, "text/xml");
-    } catch(err) {
-      return new DOMParser().parseFromString("<rss></rss>", "text/xml");
-    }
+    console.error("Navigation fault protection: ", err);
   }
 }
 
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
   if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Cross-checking network footprints...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Parsing global feed networks...</span></div>';
   
   let processedArticles = [];
-  const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','near','show','with','out','into','back','how','why']);
 
   try {
-    // Process channels individually to avoid Promise.all batch clogging
-    for (const channel of MASTER_CHANNELS) {
+    // Isolated processing map prevents cross-origin data deadlocks
+    const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
       try {
-        const xml = await fetchRawXML(channel.url);
-        const items = Array.from(xml.querySelectorAll('item')).slice(0, 5);
+        const res = await fetch(RSS_API + encodeURIComponent(channel.url));
+        if (!res.ok) return;
+        const data = await res.json();
         
-        items.forEach(item => {
-          let title = item.querySelector('title')?.textContent || '';
-          const link = item.querySelector('link')?.textContent || '#';
-          const pubDateStr = item.querySelector('pubDate')?.textContent || '';
-          title = title.trim();
-          if(!title) return;
-          const lowerTitle = title.toLowerCase();
-
-          let timestamp = Date.now();
-          if (pubDateStr) {
-            const parsed = Date.parse(pubDateStr);
-            if (!isNaN(parsed)) timestamp = parsed;
-          }
-
-          const seventyTwoHoursAgo = Date.now() - (72 * 60 * 60 * 1000);
-          if (timestamp < seventyTwoHoursAgo) return;
-
-          const tokens = lowerTitle
-            .replace(/[^a-zA-Z0-9\s]/g, '')
-            .split(/\s+/)
-            .filter(t => t.length > 3 && !stopWords.has(t));
-
-          if (tokens.length > 0) {
-            processedArticles.push({ title, link, tokens, source: channel.name, timestamp });
-          }
-        });
+        if (data && data.items) {
+          data.items.slice(0, 5).forEach(item => {
+            if (item.title) {
+              processedArticles.push({
+                title: item.title.trim(),
+                link: item.link || '#',
+                source: channel.name,
+                timestamp: item.pubDate ? Date.parse(item.pubDate) : Date.now()
+              });
+            }
+          });
+        }
       } catch(e) {}
-    }
+    });
+
+    await Promise.all(fetchPromises);
   } catch(e) {}
 
-  let clusterMap = [];
-
-  processedArticles.forEach(art => {
-    let matchedCluster = null;
-    for (let cluster of clusterMap) {
-      const sharedTokens = art.tokens.filter(t => cluster.tokens.includes(t));
-      if (sharedTokens.length >= 2) {
-        matchedCluster = cluster;
-        break;
-      }
-    }
-
-    if (matchedCluster) {
-      if (!matchedCluster.sources.includes(art.source)) {
-        matchedCluster.sources.push(art.source);
-      }
-      if (art.timestamp > matchedCluster.timestamp) {
-        matchedCluster.timestamp = art.timestamp;
-        matchedCluster.representativeTitle = art.title;
-        matchedCluster.link = art.link;
-      }
-    } else {
-      clusterMap.push({
-        representativeTitle: art.title,
-        link: art.link,
-        tokens: art.tokens,
-        sources: [art.source],
-        timestamp: art.timestamp
-      });
-    }
-  });
-
-  clusterMap.sort((a, b) => b.timestamp - a.timestamp);
-
-  let dynamicThreshold = 2; 
-  let maxClusterSize = 0;
-
-  if (clusterMap.length > 0) {
-    maxClusterSize = clusterMap.reduce((max, item) => item.sources.length > max ? item.sources.length : max, 0);
-    if (maxClusterSize >= 4) { dynamicThreshold = 4; } 
-    else if (maxClusterSize === 3) { dynamicThreshold = 3; } 
-    else { dynamicThreshold = 2; }
-  }
-
-  const nodeBadge = document.getElementById('source-node-count');
-  if (nodeBadge) {
-    if (maxClusterSize >= 2) {
-      nodeBadge.textContent = maxClusterSize >= 4 ? "4+ Source Match" : `${dynamicThreshold}-Node Wire`;
-      nodeBadge.style.background = dynamicThreshold >= 3 ? 'var(--epl-green)' : 'var(--ig-blue)';
-    } else {
-      nodeBadge.textContent = "12 Nodes Active";
-      nodeBadge.style.background = 'var(--bg-raised)';
-    }
-  }
+  processedArticles.sort((a, b) => b.timestamp - a.timestamp);
 
   let consensusHtml = "";
   let validatedTicker = [];
 
-  clusterMap.forEach(item => {
-    if (item.sources.length < dynamicThreshold || item.sources.length < 2) return; 
+  processedArticles.slice(0, 15).forEach(item => {
+    validatedTicker.push(item.title);
 
-    validatedTicker.push(item.representativeTitle);
-
-    let formattedHeadline = item.representativeTitle;
+    let formattedHeadline = item.title;
     KEY_ENTITIES.forEach(entity => {
       const regex = new RegExp(`\\b${entity}\\b`, 'gi');
       formattedHeadline = formattedHeadline.replace(regex, `<strong>$&</strong>`);
     });
-
-    const sourceBadges = item.sources.map(src => `<span class="outlet-tag">${src}</span>`).join('');
 
     consensusHtml += `
       <div class="wire-item" onclick="window.open('${item.link}','_blank')">
@@ -473,8 +376,7 @@ async function loadNewsFeed() {
         <div class="wire-content">
           <p class="wire-headline">${formattedHeadline}</p>
           <div class="wire-meta-row" style="margin-top: 4px;">
-            <span class="consensus-count-badge" style="background:${item.sources.length >= 3 ? 'var(--epl-green)' : 'var(--bg-raised)'; color:${item.sources.length >= 3 ? '#000' : 'var(--txt-secondary)'}">${item.sources.length} Sources Match</span>
-            ${sourceBadges}
+            <span class="outlet-tag" style="background:rgba(255,255,255,0.03); color:var(--txt-secondary)">${item.source}</span>
           </div>
         </div>
       </div>`;
@@ -484,10 +386,10 @@ async function loadNewsFeed() {
     container.innerHTML = `
       <div class="empty-state">
         <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
-        No multi-source cross-network stories found right now.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">External feeds quiet or unreachable. Engine online.</span>
+        No active stream items found at this time.<br>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Check connection or try reloading.</span>
       </div>`;
-    buildTicker(["Monitoring network interfaces for verified consensus lines..."]);
+    buildTicker(["Monitoring streaming networks... Engine active."]);
   } else {
     container.innerHTML = consensusHtml;
     buildTicker(validatedTicker);
@@ -497,35 +399,34 @@ async function loadNewsFeed() {
 function buildTicker(titles) {
   const tracker = document.getElementById('ticker');
   if (!tracker || !titles || !titles.length) return;
-  const cleanStr = titles.slice(0, 10).map(t => `<span class="ticker-item">⚡ Consensus Match: ${t}</span>`).join('');
+  const cleanStr = titles.slice(0, 6).map(t => `<span class="ticker-item">⚡ Line: ${t}</span>`).join('');
   tracker.innerHTML = cleanStr + cleanStr + cleanStr;
 }
 
 async function loadFootballScores() {
   const container = document.getElementById('football-scores-container');
   if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Fetching direct match parameters...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Parsing goal feeds...</span></div>';
   try {
-    const xml = await fetchRawXML(SOCCER_STREAM);
-    const items = Array.from(xml.querySelectorAll('item')).slice(0, 6);
+    const res = await fetch(RSS_API + encodeURIComponent(SOCCER_STREAM));
+    if (!res.ok) throw new Error();
+    const data = await res.json();
     let html = "";
     
-    items.forEach(item => {
-      const title = item.querySelector('title')?.textContent || '';
-      const desc = item.querySelector('description')?.textContent || '';
-      if(title && !title.toLowerCase().includes("xml") && title.length > 5) {
+    if (data && data.items) {
+      data.items.slice(0, 5).forEach(item => {
         html += `
           <div class="match-card">
             <div class="match-header"><span class="league-badge">FOOTBALL BRIEFING</span><span class="ft-badge">LIVE NODE</span></div>
             <div style="padding:2px 0;">
-              <p class="team-name" style="font-size:13.5px; line-height:1.45; color:var(--txt-primary); font-weight:500;">${title}</p>
-              <p style="font-size:11.5px; color:var(--txt-secondary); margin-top:4px; line-height:1.4;">${desc.substring(0,100)}...</p>
+              <p class="team-name" style="font-size:13.5px; line-height:1.45; color:var(--txt-primary); font-weight:500;">${item.title}</p>
+              <p style="font-size:11.5px; color:var(--txt-secondary); margin-top:4px; line-height:1.4;">${item.description ? item.description.replace(/<[^>]*>/g, '').substring(0,100) : ''}...</p>
             </div>
           </div>`;
-      }
-    });
-    container.innerHTML = html || `<div class="empty-state">No football updates available right now.</div>`;
-  } catch(e) { container.innerHTML = `<div class="f1-api-error">Network stream timed out. Try refreshing later.</div>`; }
+      });
+    }
+    container.innerHTML = html || `<div class="empty-state">No sports updates available right now.</div>`;
+  } catch(e) { container.innerHTML = `<div class="f1-api-error">Network stream offline. Try refreshing later.</div>`; }
 }
 
 const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff8700', 'red_bull': '#3671c6', 'alpine': '#0093cc', 'haas': '#b6babd', 'williams': '#64c4ff', 'default': '#8a8fa8' };
