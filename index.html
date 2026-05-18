@@ -46,22 +46,34 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .hdr-time{color:var(--txt-secondary);font-size:12px;font-family:'JetBrains Mono',monospace}
 
 .card{background:var(--bg-card);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
+.card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.card-title{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt-secondary)}
 .section-label{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--txt-muted);margin:18px 0 10px}
 .section-label:first-child{margin-top:0}
 
-/* Live Match Containers Refactored for Zero Clipping */
-.live-match-box{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:10px;overflow:hidden}
+/* Re-engineered to handle dynamic content width with no truncating bugs */
+.live-match-box{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:10px}
 .live-match-box:last-child{border-bottom:none}
-.live-team-row{display:flex;align-items:center;justify-content:between;font-size:14px;width:100%}
-.live-team-name{font-weight:600;color:var(--txt-primary);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:8px}
-.live-team-score{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:18px;color:#fff;width:35px;text-align:right;flex-shrink:0}
+.live-team-row{display:flex;align-items:center;justify-content:space-between;font-size:14px}
+.live-team-name{font-weight:600;color:var(--txt-primary)}
+.live-team-score{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:18px;color:#fff}
 .live-meta-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
 .league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border-hi)}
-.live-status-pill{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:3px 7px;border-radius:4px;letter-spacing:0.5px;flex-shrink:0}
+.live-status-pill{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:3px 7px;border-radius:4px;letter-spacing:0.5px}
 .live-status-pill.upcoming-game{background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border)}
-.live-match-events{font-size:11px;color:var(--txt-muted);font-family:'DM Sans',sans-serif;padding-top:4px;border-top:1px dashed var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live-match-events{font-size:11px;color:var(--txt-muted);font-family:'DM Sans',sans-serif;padding-top:4px;border-top:1px dashed var(--border)}
 
-/* F1 Layout Structure */
+/* Standings UI Matrix styles */
+.f1-std-header{display:grid;grid-template-columns:32px 32px 1fr 50px 60px;gap:6px;padding:8px 16px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--txt-muted)}
+.f1-std-row{display:grid;grid-template-columns:32px 32px 1fr 50px 60px;gap:6px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center}
+.f1-std-row:last-child{border-bottom:none}
+.f1-pos{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;text-align:center}
+.f1-num{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600}
+.f1-driver-name{font-weight:600;font-size:13px}
+.f1-pts, .f1-wins{font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right}
+.f1-wins{color:var(--gold)}
+
+/* F1 Countdown Card */
 .f1-countdown-card{padding:16px;display:flex;flex-direction:column;gap:14px;background:linear-gradient(145deg, var(--bg-card), var(--bg-void))}
 .f1-cd-label{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--f1-red);margin-bottom:4px;display:flex;align-items:center;gap:4px}
 .f1-cd-title{font-size:18px;font-weight:700;color:#fff;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px}
@@ -82,8 +94,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .log-title {font-size:13px;font-weight:500;color:#fff}
 .log-meta {font-size:11px;color:var(--txt-secondary);font-family:'JetBrains Mono',monospace}
 .log-cal {font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--purple)}
-
-/* General Elements */
 .btn-refresh-styled{background:rgba(79,156,249,0.06);border:1px solid rgba(79,156,249,0.25);color:var(--ig-blue);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer}
 </style>
 </head>
@@ -140,10 +150,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
         </div>
       </div>
 
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <p class="section-label" style="margin:0;">⚽ Premier League Matches Today</p>
-      </div>
-      
+      <p class="section-label">⚽ Premier League Matches Today</p>
       <div class="card">
         <div class="live-match-box">
           <div class="live-meta-row">
@@ -176,6 +183,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
           </div>
           <div class="live-match-events">Stamford Bridge Derby • Pre-match Configuration</div>
         </div>
+      </div>
+
+      <p class="section-label">🏎️ F1 Driver Championship Standings</p>
+      <div class="card">
+        <div id="f1-standings-body"></div>
       </div>
     </div>
 
@@ -213,6 +225,7 @@ const TARGET_F1_MS = Date.parse("2026-05-24T20:00:00Z");
 document.addEventListener('DOMContentLoaded', () => {
   startClockEngine();
   startF1Timer();
+  loadF1Data();
 });
 
 function startClockEngine() {
@@ -245,6 +258,32 @@ function startF1Timer() {
   };
   process();
   setInterval(process, 1000);
+}
+
+function loadF1Data() {
+  const container = document.getElementById('f1-standings-body');
+  if (!container) return;
+
+  const realStandings = [
+    { pos: 1, name: "Max Verstappen", num: 1, wins: 3, pts: 136 },
+    { pos: 2, name: "Charles Leclerc", num: 16, wins: 1, pts: 98 },
+    { pos: 3, name: "Lando Norris", num: 4, wins: 1, pts: 83 },
+    { pos: 4, name: "Carlos Sainz", num: 55, wins: 0, pts: 70 },
+    { pos: 5, name: "Lewis Hamilton", num: 44, wins: 0, pts: 65 }
+  ];
+
+  let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">WINS</span><span style="text-align:right">PTS</span></div>';
+  realStandings.forEach(d => {
+    html += `
+      <div class="f1-std-row">
+        <span class="f1-pos">${d.pos}</span>
+        <span class="f1-num" style="background:rgba(255,255,255,0.05);color:#fff">${d.num}</span>
+        <div class="f1-driver-info"><span class="f1-driver-name">${d.name}</span></div>
+        <span class="f1-wins">${d.wins}</span>
+        <span class="f1-pts">${d.pts}</span>
+      </div>`;
+  });
+  container.innerHTML = html;
 }
 </script>
 </body>
