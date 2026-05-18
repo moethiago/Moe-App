@@ -40,16 +40,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .logo span{-webkit-text-fill-color:var(--f1-red)}
 .header-right{display:flex;align-items:center;gap:10px}
 .hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
-.hdr-live{background:rgba(56,211,106,0.1);color:var(--epl-green);border:1px solid rgba(56,211,106,0.3);display:flex;align-items:center;gap:5px}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--epl-green);animation:pulse 1.4s ease-in-out infinite}
+.hdr-live{background:rgba(34,211,238,0.1);color:var(--cyan);border:1px solid rgba(34,211,238,0.3);display:flex;align-items:center;gap:5px}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .hdr-time{color:var(--txt-secondary);font-size:12px;font-family:'JetBrains Mono',monospace}
 
-.consensus-banner{background:rgba(56,211,106,0.02);border:1px solid rgba(56,211,106,0.15);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.consensus-banner{background:rgba(34,211,238,0.02);border:1px solid rgba(34,211,238,0.15);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .consensus-info{display:flex;flex-direction:column;gap:1px}
-.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--epl-green);letter-spacing:1px;text-transform:uppercase}
+.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:1px;text-transform:uppercase}
 .consensus-desc{font-size:11px;color:var(--txt-secondary)}
-.consensus-badge{background:var(--epl-green);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.consensus-badge{background:var(--cyan);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
 
 .card{background:var(--bg-card);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
 .card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
@@ -132,14 +132,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
 .f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
 .f1-api-error{padding:20px 16px;text-align:center;color:var(--rose);font-size:13px}
-.f1-spinner{width:20px;height:20px;border:2px solid var(--bg-raised);border-top-color:var(--f1-red);border-radius:50%;animation:spin 0.7s linear infinite}
+.f1-spinner{width:20px;height:20px;border:2px solid var(--bg-raised);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg-raised);border:1px solid var(--border-hi);color:var(--txt-primary);border-radius:var(--r-md);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:9999}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .headline-control-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;margin-bottom:10px;width:100%}
-.btn-refresh-styled{background:rgba(56,211,106,0.06);border:1px solid rgba(56,211,106,0.25);color:var(--epl-green);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
-.btn-refresh-styled:active{background:var(--epl-green);color:#000}
+.btn-refresh-styled{background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.25);color:var(--cyan);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.btn-refresh-styled:active{background:var(--cyan);color:#000}
 </style>
 </head>
 <body>
@@ -149,7 +149,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>VERIFIED MODE</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>STRICT VERIFICATION</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -176,8 +176,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Hard News Pipeline</span>
-          <span class="consensus-desc">Rumors, columns, and transfer gossip filtered out:</span>
+          <span class="consensus-title">Zero-Noise Intelligence</span>
+          <span class="consensus-desc">Clickbait syntax, pundit essays, and speculation purged:</span>
         </div>
         <span class="consensus-badge" id="consensus-summary-badge">Analyzing</span>
       </div>
@@ -189,7 +189,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🔥 Confirmed News Wire</p>
+        <p class="section-label" style="margin:0;">🔥 Confirmed Hard News Wire</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
 
@@ -291,11 +291,11 @@ const KEY_ENTITIES = [
   "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix"
 ];
 
-// Aggressive match pattern to trash columns, gossip summaries, rumors, and dynamic trade claims
-const SPECULATION_BLACKLIST = /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|targets|target|swap|weighs up|closely monitoring|interested in)\b/i;
+// Expanded Matrix Filter: Destroys transfer rumors, clickbait, pundit opinion essays, and fan drama
+const SPECULATION_BLACKLIST = /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|targets|target|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column)\b/i;
 
-// Absolute certainty phrases that instantly verify an article even if tracked on only 1 network
-const CONFIRMED_WHITELIST = /\b(official|confirmed|signs|signed|statement|done deal|extends|contract|ruled out|apologises|apologizes|sacked|appointed)\b/i;
+// Definitive Truth Markers: Hard facts that let a single network through instantly
+const CONFIRMED_WHITELIST = /\b(official|confirmed|signs|signed|statement|done deal|extends|contract|ruled out|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced)\b/i;
 
 let foodLog = [], setLog = [];
 
@@ -361,7 +361,7 @@ async function loadNewsFeed() {
 
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
         
-        // RULE 1: Blacklist Verification Pass (Trash the speculation immediately)
+        // 1. Blacklist Filtering Pass
         if (SPECULATION_BLACKLIST.test(originalTitle)) return;
 
         const cleanLink = item.link || "#";
@@ -408,10 +408,14 @@ async function loadNewsFeed() {
       });
     });
 
-    // RULE 2: Hard News Core Verification Filter
-    // Keeps stories only if they possess definite words OR have multi-network corroboration
+    // 2. Structural Gate Processing (Length and Verification rules)
     const verifiedStories = uniqueStories.filter(story => {
       const standardTitle = story.title.toLowerCase();
+      
+      // Structural Length Protection Rule: Block ultra-short clickbait hooks
+      const titleTokensCount = story.title.split(' ').length;
+      if (titleTokensCount < 5 && !CONFIRMED_WHITELIST.test(standardTitle)) return false;
+
       const hasHardProof = CONFIRMED_WHITELIST.test(standardTitle);
       const hasConsensus = story.sources.length >= 2;
       return hasHardProof || hasConsensus;
@@ -419,7 +423,7 @@ async function loadNewsFeed() {
 
     verifiedStories.sort((a, b) => b.time - a.time);
 
-    // Render Matrix Output
+    // Rendering output pass
     let finalHtml = "";
     let tickerArray = [];
     let absoluteVerificationCount = 0;
@@ -474,7 +478,7 @@ async function loadNewsFeed() {
     }
 
   } catch(engineException) {
-    container.innerHTML = `<div class="f1-api-error">Pipeline processing error. Clock preserved.</div>`;
+    container.innerHTML = `<div class="f1-api-error">Pipeline processing error.</div>`;
   }
 }
 
@@ -498,8 +502,11 @@ async function loadFootballScores() {
     let html = "";
     
     if (data && data.items) {
-      // Apply the exact same strict anti-gossip filter to football briefs
-      const realBriefs = data.items.filter(item => !SPECULATION_BLACKLIST.test(item.title));
+      const realBriefs = data.items.filter(item => {
+        const titleLower = item.title.toLowerCase();
+        const shortTokenCheck = item.title.split(' ').length >= 5 || CONFIRMED_WHITELIST.test(titleLower);
+        return !SPECULATION_BLACKLIST.test(item.title) && shortTokenCheck;
+      });
       
       realBriefs.slice(0, 5).forEach(item => {
         html += `
