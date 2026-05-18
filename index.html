@@ -40,16 +40,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .logo span{-webkit-text-fill-color:var(--f1-red)}
 .header-right{display:flex;align-items:center;gap:10px}
 .hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
-.hdr-live{background:rgba(34,211,238,0.1);color:var(--cyan);border:1px solid rgba(34,211,238,0.3);display:flex;align-items:center;gap:5px}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse 1.4s ease-in-out infinite}
+.hdr-live{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.3);display:flex;align-items:center;gap:5px}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .hdr-time{color:var(--txt-secondary);font-size:12px;font-family:'JetBrains Mono',monospace}
 
-.consensus-banner{background:rgba(34,211,238,0.02);border:1px solid rgba(34,211,238,0.15);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.consensus-banner{background:rgba(167,139,250,0.02);border:1px solid rgba(167,139,250,0.15);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
 .consensus-info{display:flex;flex-direction:column;gap:1px}
-.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:1px;text-transform:uppercase}
+.consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--purple);letter-spacing:1px;text-transform:uppercase}
 .consensus-desc{font-size:11px;color:var(--txt-secondary)}
-.consensus-badge{background:var(--cyan);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.consensus-badge{background:var(--purple);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
 
 .card{background:var(--bg-card);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
 .card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
@@ -61,13 +61,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .wire-item:last-child{border-bottom:none}
 .wire-item:active{background:var(--bg-raised)}
 .wire-bullet{color:var(--cyan);font-size:14px;line-height:1.4;user-select:none;margin-top:1px}
+.wire-bullet.context-bullet{color:var(--txt-muted)}
 .wire-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
 .wire-headline{font-size:13.5px;line-height:1.45;color:var(--txt-primary);font-weight:400}
+.wire-headline.context-headline{color:var(--txt-secondary);font-size:13px}
 .wire-headline strong{font-weight:600;color:#fff}
 .wire-meta-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
 .outlet-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,0.04);color:var(--txt-secondary);border:1px solid var(--border-hi);text-transform:uppercase}
 .consensus-count-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--ig-blue);color:#000;text-transform:uppercase;margin-right:4px}
 .verified-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--epl-green);color:#000;text-transform:uppercase;margin-right:4px}
+.score-badge{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;padding:1px 4px;border-radius:2px;background:rgba(255,255,255,0.03);color:var(--txt-muted);border:1px solid var(--border);margin-left:auto}
 
 .league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border-hi)}
 .ft-badge{font-size:11px;font-weight:600;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;margin-left:auto}
@@ -132,14 +135,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
 .f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
 .f1-api-error{padding:20px 16px;text-align:center;color:var(--rose);font-size:13px}
-.f1-spinner{width:20px;height:20px;border:2px solid var(--bg-raised);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.7s linear infinite}
+.f1-spinner{width:20px;height:20px;border:2px solid var(--bg-raised);border-top-color:var(--purple);border-radius:50%;animation:spin 0.7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg-raised);border:1px solid var(--border-hi);color:var(--txt-primary);border-radius:var(--r-md);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:9999}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .headline-control-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;margin-bottom:10px;width:100%}
-.btn-refresh-styled{background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.25);color:var(--cyan);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
-.btn-refresh-styled:active{background:var(--cyan);color:#000}
+.btn-refresh-styled{background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.25);color:var(--purple);border-radius:6px;padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;flex-shrink:0}
+.btn-refresh-styled:active{background:var(--purple);color:#000}
 </style>
 </head>
 <body>
@@ -149,7 +152,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>STRICT VERIFICATION</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>CONTEXT WEIGHT MATRIX</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -176,28 +179,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Zero-Noise Intelligence</span>
-          <span class="consensus-desc">Live blogs, TV listings, and speculation deleted:</span>
+          <span class="consensus-title">Dynamic Engine Metrics</span>
+          <span class="consensus-desc">Headlines evaluated contextually by weight calculations:</span>
         </div>
-        <span class="consensus-badge" id="consensus-summary-badge">Analyzing</span>
+        <span class="consensus-badge" id="consensus-summary-badge">Processing</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Evaluating clean data nodes...</span>
+          <span class="ticker-item">🏁 Evaluating payload matrices...</span>
         </div>
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🔥 Confirmed Hard News Wire</p>
+        <p class="section-label" style="margin:0;">🚨 Verified Hard News</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
+      <div class="card" id="critical-posts">
+        <div class="f1-api-loading"><div class="f1-spinner"></div><span>Scrutinizing wire values...</span></div>
+      </div>
 
-      <div class="card" id="feed-posts">
-        <div class="f1-api-loading">
-          <div class="f1-spinner"></div>
-          <span>Parsing verified networks...</span>
-        </div>
+      <p class="section-label">📊 Regular Match Context</p>
+      <div class="card" id="context-posts">
+        <div class="empty-state">No structured background context loaded yet.</div>
       </div>
     </div>
 
@@ -291,11 +295,20 @@ const KEY_ENTITIES = [
   "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix"
 ];
 
-// Re-engineered Multi-Sport Filter System: Deletes gossip columns, pundit arrays, live media commentary trackers, TV schedules, and alternative martial art networks
-const SPECULATION_BLACKLIST = /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|targets|target|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column|live:|: live|where to watch|how to watch|stream|tv channel|kick-off time|prediction|preview|undercard|ufc|boxing|fight|clash live|match feed)\b/i;
-
-// Firm Structural News Markers: Only corporate validation statements or injuries pass on a single link
-const CONFIRMED_WHITELIST = /\b(official|confirmed|signs|signed|statement|done deal|extends|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|stadium ban|fined|punished|apology)\b/i;
+// Context Scoring Weight Architecture Setup
+const SCORE_RULES = [
+  // Extreme Trash - Hard block thresholds
+  { regex: /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column)\b/i, weight: 100 },
+  { regex: /\b(where to watch|how to watch|stream|tv channel|kick-off time|undercard|ufc|boxing|fight)\b/i, weight: 100 },
+  
+  // Moderate Clickbait/Pundit Strings (Adds weights)
+  { regex: /\b(prediction|preview|clash live|match feed|live blog|latest score)\b/i, weight: 25 },
+  { regex: /\b(live:|: live|v|vs)\b/i, weight: 15 },
+  
+  // Hard news weights (Reduces context noise scores dramatically)
+  { regex: /\b(official|confirmed|signs|signed|statement|done deal|extends|contract)\b/i, weight: -60 },
+  { regex: /\b(sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|stadium ban|fined|punished|apology)\b/i, weight: -50 }
+];
 
 let foodLog = [], setLog = [];
 
@@ -332,10 +345,23 @@ function switchTab(tab) {
   } catch(err){}
 }
 
+async function calculateHeadlineScore(title) {
+  let initialScore = 15; // Balanced base weight index
+  SCORE_RULES.forEach(rule => {
+    if (rule.regex.test(title)) {
+      initialScore += rule.weight;
+    }
+  });
+  return initialScore;
+}
+
 async function loadNewsFeed() {
-  const container = document.getElementById('feed-posts');
-  if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Filtering out fluff and schedules...</span></div>';
+  const criticalContainer = document.getElementById('critical-posts');
+  const contextContainer = document.getElementById('context-posts');
+  if (!criticalContainer || !contextContainer) return;
+  
+  criticalContainer.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Scrutinizing wire values...</span></div>';
+  contextContainer.innerHTML = '';
   
   const rawDataPayloads = [];
 
@@ -355,14 +381,15 @@ async function loadNewsFeed() {
   const uniqueStories = [];
 
   try {
-    rawDataPayloads.forEach(payload => {
-      payload.items.forEach(item => {
-        if (!item || !item.title) return;
+    for (let payload of rawDataPayloads) {
+      for (let item of payload.items) {
+        if (!item || !item.title) continue;
 
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
+        const score = await calculateHeadlineScore(originalTitle);
         
-        // 1. Core Filter Pass
-        if (SPECULATION_BLACKLIST.test(originalTitle)) return;
+        // Immediate Exclusion Threshold: Absolute Junk/Gossip
+        if (score >= 36) continue;
 
         const cleanLink = item.link || "#";
         const itemTimestamp = item.pubDate ? Date.parse(item.pubDate) : Date.now();
@@ -373,12 +400,10 @@ async function loadNewsFeed() {
           .split(' ')
           .filter(word => word.length > 3);
 
-        // Core Category Structural Match Tag
         const isF1Source = payload.source.toLowerCase().includes('f1');
 
         let matchedStory = null;
         for (let story of uniqueStories) {
-          // Cross-Sport Guardrail: Never let an F1 feed join metrics with a football feed
           if (story.isF1 !== isF1Source) continue;
 
           let overlapCount = 0;
@@ -396,11 +421,8 @@ async function loadNewsFeed() {
           if (!matchedStory.sources.includes(payload.source)) {
             matchedStory.sources.push(payload.source);
           }
-          if (originalTitle.length > matchedStory.title.length) {
-            matchedStory.title = originalTitle;
-          }
-          if (parsedTime > matchedStory.time) {
-            matchedStory.time = parsedTime;
+          if (score < matchedStory.score) {
+            matchedStory.score = score; // Pick cleanest verification score
           }
         } else {
           uniqueStories.push({
@@ -409,37 +431,21 @@ async function loadNewsFeed() {
             sources: [payload.source],
             time: parsedTime,
             signature: textFootprint,
-            isF1: isF1Source
+            isF1: isF1Source,
+            score: score
           });
         }
-      });
-    });
+      }
+    }
 
-    // 2. Structural Length Guard & Double Safety Valve Passes
-    const verifiedStories = uniqueStories.filter(story => {
-      const standardTitle = story.title.toLowerCase();
-      
-      // Secondary filter pass
-      if (SPECULATION_BLACKLIST.test(standardTitle)) return false;
+    uniqueStories.sort((a, b) => b.time - a.time);
 
-      // Token Length rule: Stop short clickbait hooks from leaking out
-      const titleTokensCount = story.title.split(' ').length;
-      if (titleTokensCount < 5 && !CONFIRMED_WHITELIST.test(standardTitle)) return false;
-
-      const hasHardProof = CONFIRMED_WHITELIST.test(standardTitle);
-      const hasConsensus = story.sources.length >= 2;
-      return hasHardProof || hasConsensus;
-    });
-
-    verifiedStories.sort((a, b) => b.time - a.time);
-
-    let finalHtml = "";
+    let criticalHtml = "";
+    let contextHtml = "";
     let tickerArray = [];
-    let absoluteVerificationCount = 0;
+    let absoluteCount = 0;
 
-    const presentationOutput = verifiedStories.slice(0, 15);
-
-    presentationOutput.forEach(story => {
+    uniqueStories.forEach(story => {
       tickerArray.push(story.title);
       let parsedHeadlineText = story.title;
 
@@ -450,44 +456,50 @@ async function loadNewsFeed() {
       });
 
       const sourceBadgesHtml = story.sources.map(src => `<span class="outlet-tag">${src}</span>`).join('');
-      
-      let consensusIndicator = "";
-      if (story.sources.length > 1) {
-        consensusIndicator = `<span class="consensus-count-badge">${story.sources.length} NETWORKS</span>`;
-      } else if (CONFIRMED_WHITELIST.test(story.title.toLowerCase())) {
-        consensusIndicator = `<span class="verified-badge">VERIFIED</span>`;
-      }
-      
-      absoluteVerificationCount++;
+      absoluteCount++;
 
-      finalHtml += `
-        <div class="wire-item" onclick="window.open('${story.link}','_blank')">
-          <span class="wire-bullet">•</span>
-          <div class="wire-content">
-            <p class="wire-headline">${parsedHeadlineText}</p>
-            <div class="wire-meta-row" style="margin-top: 4px; gap: 6px;">
-              ${consensusIndicator}
-              ${sourceBadgesHtml}
+      // Split rendering lanes via weights
+      if (story.score < 5) {
+        // Lane 1: Pure Hard Checked Alert News
+        criticalHtml += `
+          <div class="wire-item" onclick="window.open('${story.link}','_blank')">
+            <span class="wire-bullet">•</span>
+            <div class="wire-content">
+              <p class="wire-headline">${parsedHeadlineText}</p>
+              <div class="wire-meta-row" style="margin-top: 4px; gap: 6px;">
+                <span class="verified-badge">VERIFIED</span>
+                ${sourceBadgesHtml}
+                <span class="score-badge">W: ${story.score}</span>
+              </div>
             </div>
-          </div>
-        </div>`;
+          </div>`;
+      } else {
+        // Lane 2: Regular Context Wire (Match fixtures, team previews, clean data entries)
+        contextHtml += `
+          <div class="wire-item" onclick="window.open('${story.link}','_blank')">
+            <span class="wire-bullet context-bullet">•</span>
+            <div class="wire-content">
+              <p class="wire-headline context-headline">${parsedHeadlineText}</p>
+              <div class="wire-meta-row" style="margin-top: 4px; gap: 6px;">
+                ${sourceBadgesHtml}
+                <span class="score-badge">W: ${story.score}</span>
+              </div>
+            </div>
+          </div>`;
+      }
     });
 
     const indicatorBadge = document.getElementById('consensus-summary-badge');
     if (indicatorBadge) {
-      indicatorBadge.textContent = absoluteVerificationCount > 0 ? `${absoluteVerificationCount} Verified` : "Filtered";
+      indicatorBadge.textContent = `${absoluteCount} Active`;
     }
 
-    if (!finalHtml) {
-      container.innerHTML = `<div class="empty-state">No hard verifiable stories found on the wires right now.</div>`;
-      buildTicker(["Awaiting verified bulletins..."]);
-    } else {
-      container.innerHTML = finalHtml;
-      buildTicker(tickerArray);
-    }
+    criticalContainer.innerHTML = criticalHtml || `<div class="empty-state">No major official confirmations on the wire right now.</div>`;
+    contextContainer.innerHTML = contextHtml || `<div class="empty-state">Context list cleared.</div>`;
+    buildTicker(tickerArray.length ? tickerArray : ["Tracking system online..."]);
 
-  } catch(engineException) {
-    container.innerHTML = `<div class="f1-api-error">Pipeline processing error.</div>`;
+  } catch(err) {
+    criticalContainer.innerHTML = `<div class="f1-api-error">Pipeline processing error.</div>`;
   }
 }
 
@@ -511,13 +523,10 @@ async function loadFootballScores() {
     let html = "";
     
     if (data && data.items) {
-      const realBriefs = data.items.filter(item => {
-        const titleLower = item.title.toLowerCase();
-        const shortTokenCheck = item.title.split(' ').length >= 5 || CONFIRMED_WHITELIST.test(titleLower);
-        return !SPECULATION_BLACKLIST.test(item.title) && shortTokenCheck;
-      });
-      
-      realBriefs.slice(0, 5).forEach(item => {
+      for (let item of data.items) {
+        const score = await calculateHeadlineScore(item.title);
+        if (score >= 40) continue;
+        
         html += `
           <div class="match-card">
             <div class="match-header"><span class="league-badge">FOOTBALL BRIEFING</span><span class="ft-badge">LIVE NODE</span></div>
@@ -526,9 +535,9 @@ async function loadFootballScores() {
               <p style="font-size:11.5px; color:var(--txt-secondary); margin-top:4px; line-height:1.4;">${item.description ? item.description.replace(/<[^>]*>/g, '').substring(0,100) : ''}...</p>
             </div>
           </div>`;
-      });
+      }
     }
-    container.innerHTML = html || `<div class="empty-state">No confirmed football updates available.</div>`;
+    container.innerHTML = html || `<div class="empty-state">No football updates within matrix parameters.</div>`;
   } catch(e) { container.innerHTML = `<div class="f1-api-error">Network stream offline.</div>`; }
 }
 
