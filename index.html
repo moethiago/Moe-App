@@ -8,781 +8,217 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* ── RESET & TOKENS ─────────────────────────────── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg-void:#07080d;--bg-base:#0d0f18;--bg-card:#13151f;--bg-raised:#1a1d2a;--bg-hover:#21253a;
+  --border:rgba(255,255,255,0.06);--border-hi:rgba(255,255,255,0.12);
+  --txt-primary:#eeeef2;--txt-secondary:#8a8fa8;--txt-muted:#484d65;
+  --f1-red:#e8002d;--f1-orange:#ff5f00;--epl-green:#38d36a;--ig-blue:#4f9cf9;
+  --x-white:#e7e9ea;--gold:#f5c842;--purple:#a78bfa;--cyan:#22d3ee;--rose:#fb7185;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+  --header-h:56px;--nav-h:52px;
+  --r-sm:10px;--r-md:14px;--r-lg:18px;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt-primary);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
 
-:root {
-–bg-void:      #07080d;
-–bg-base:      #0d0f18;
-–bg-card:      #13151f;
-–bg-raised:    #1a1d2a;
-–bg-hover:     #21253a;
-–border:       rgba(255,255,255,0.06);
-–border-hi:    rgba(255,255,255,0.12);
+/* ── CORE LAYOUT ── */
+#app{
+width:100%;max-width:430px;height:100%;
+margin:0 auto;
+background:var(–bg-base);
+display:flex;
+flex-direction:column;
+overflow:hidden;
+}
+#header{
+flex-shrink:0;
+padding-top:var(–safe-top);
+background:rgba(13,15,24,0.97);
+border-bottom:1px solid var(–border);
+}
+#header-inner{height:var(–header-h);display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+#top-nav{
+flex-shrink:0;
+background:rgba(13,15,24,0.97);
+border-bottom:1px solid var(–border);
+}
+.nav-inner{height:var(–nav-h);display:flex;align-items:stretch}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(–txt-muted);transition:color 0.2s;position:relative}
+.nav-btn.active{color:var(–txt-primary)}
+.nav-btn.active::after{content:’’;position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:28px;height:2px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,var(–ig-blue),var(–purple))}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.nav-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-label{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+#scroll-wrap{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#scroll-wrap::-webkit-scrollbar{display:none}
+.tab-panel{display:none;padding:14px;padding-bottom:30px}
+.tab-panel.active{display:block}
 
-```
---txt-primary:  #eeeef2;
---txt-secondary:#8a8fa8;
---txt-muted:    #484d65;
+/* ── LOGO / HEADER ── */
+.logo{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:20px;letter-spacing:2px;background:linear-gradient(90deg,var(–ig-blue),var(–purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo span{-webkit-text-fill-color:var(–f1-red)}
+.header-right{display:flex;align-items:center;gap:10px}
+.hdr-badge{font-family:‘JetBrains Mono’,monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
+.hdr-live{background:rgba(232,0,45,0.15);color:var(–f1-red);border:1px solid rgba(232,0,45,0.3);display:flex;align-items:center;gap:5px}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(–f1-red);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.hdr-time{color:var(–txt-secondary);font-size:12px;font-family:‘JetBrains Mono’,monospace}
 
---f1-red:       #e8002d;
---f1-orange:    #ff5f00;
---epl-green:    #38d36a;
---ig-blue:      #4f9cf9;
---x-white:      #e7e9ea;
---gold:         #f5c842;
---purple:       #a78bfa;
---cyan:         #22d3ee;
---rose:         #fb7185;
+/* ── CARDS ── */
+.card{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid var(–border);overflow:hidden;margin-bottom:12px}
+.card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(–border)}
+.card-title{font-family:‘Rajdhani’,sans-serif;font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(–txt-secondary)}
+.section-label{font-family:‘Rajdhani’,sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(–txt-muted);margin:18px 0 10px}
+.section-label:first-child{margin-top:0}
+.platform-badge{font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:500;padding:2px 7px;border-radius:4px;letter-spacing:0.5px;text-transform:uppercase}
+.badge-x{background:rgba(231,233,234,0.1);color:var(–x-white);border:1px solid rgba(231,233,234,0.15)}
+.badge-ig{background:rgba(79,156,249,0.12);color:var(–ig-blue);border:1px solid rgba(79,156,249,0.2)}
+.badge-f1{background:rgba(232,0,45,0.12);color:var(–f1-red);border:1px solid rgba(232,0,45,0.2)}
 
---safe-top:    env(safe-area-inset-top, 0px);
---safe-bottom: env(safe-area-inset-bottom, 0px);
---header-h:    56px;
---nav-h:       64px;
+/* ── FEED ── */
+.post{padding:14px 16px;border-bottom:1px solid var(–border);display:flex;gap:12px}
+.post:last-child{border-bottom:none}
+.post:active{background:var(–bg-raised)}
+.post-avatar{width:40px;height:40px;border-radius:50%;background:var(–bg-raised);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:16px;position:relative;overflow:hidden}
+.post-body{flex:1;min-width:0}
+.post-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.post-name{font-weight:600;font-size:13px}
+.post-time{color:var(–txt-muted);font-size:11px;margin-left:auto}
+.post-text{font-size:14px;line-height:1.5;color:var(–txt-primary);margin-bottom:10px}
+.post-img{width:100%;border-radius:var(–r-sm);margin-bottom:10px;background:var(–bg-raised);height:160px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.post-img-gradient{position:absolute;inset:0;border-radius:var(–r-sm)}
+.post-img-label{position:relative;z-index:1;font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:28px;letter-spacing:2px}
+.post-actions{display:flex;gap:16px}
+.post-action{display:flex;align-items:center;gap:5px;color:var(–txt-muted);font-size:12px;cursor:pointer;transition:color 0.15s}
+.post-action svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+.post-action.liked{color:var(–rose)}
+.post-action.liked svg{fill:var(–rose);stroke:var(–rose)}
+.stories-row{display:flex;gap:12px;overflow-x:auto;padding:14px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.stories-row::-webkit-scrollbar{display:none}
+.story{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;cursor:pointer}
+.story-ring{width:54px;height:54px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center}
+.story-ring.seen{background:var(–bg-raised)}
+.story-avatar{width:100%;height:100%;border-radius:50%;background:var(–bg-raised);border:2px solid var(–bg-card);display:flex;align-items:center;justify-content:center;font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:18px}
+.story-name{font-size:10px;color:var(–txt-secondary);max-width:54px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
---r-sm: 10px;
---r-md: 14px;
---r-lg: 18px;
---r-xl: 24px;
+/* ── SPORTS ── */
+.match-card{padding:14px 16px;border-bottom:1px solid var(–border)}
+.match-card:last-child{border-bottom:none}
+.match-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.league-badge{font-size:9px;font-weight:600;font-family:‘JetBrains Mono’,monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase}
+.league-epl{background:rgba(56,211,106,0.12);color:var(–epl-green);border:1px solid rgba(56,211,106,0.25)}
+.league-ucl{background:rgba(79,156,249,0.12);color:var(–ig-blue);border:1px solid rgba(79,156,249,0.25)}
+.league-ll{background:rgba(245,200,66,0.12);color:var(–gold);border:1px solid rgba(245,200,66,0.25)}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(–f1-red);font-family:‘JetBrains Mono’,monospace;margin-left:auto}
+.ft-badge{font-size:11px;font-weight:500;color:var(–txt-muted);font-family:‘JetBrains Mono’,monospace;margin-left:auto}
+.match-score-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+.match-team{display:flex;flex-direction:column;gap:3px}
+.match-team.away{align-items:flex-end}
+.team-name{font-weight:600;font-size:15px}
+.team-stat{font-size:11px;color:var(–txt-muted)}
+.score-box{display:flex;align-items:center;gap:8px;background:var(–bg-raised);border-radius:var(–r-sm);padding:6px 12px}
+.score-num{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:28px;line-height:1}
+.score-sep{color:var(–txt-muted);font-size:20px;font-weight:300}
+.match-events{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.event-chip{font-size:11px;background:var(–bg-raised);border-radius:20px;padding:3px 10px;color:var(–txt-secondary);display:flex;align-items:center;gap:4px}
 
-font-size: 16px;
-```
+/* ── F1 ── */
+.f1-header-row{display:grid;grid-template-columns:28px 28px 1fr 70px 70px;gap:6px;padding:8px 16px;border-bottom:1px solid var(–border);font-family:‘JetBrains Mono’,monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(–txt-muted);align-items:center}
+.f1-row{display:grid;grid-template-columns:28px 28px 1fr 70px 70px;gap:6px;padding:10px 16px;border-bottom:1px solid var(–border);align-items:center}
+.f1-row:last-child{border-bottom:none}
+.f1-pos{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:18px;text-align:center}
+.f1-pos.p1{color:var(–gold)}.f1-pos.p2{color:#c0c0c0}.f1-pos.p3{color:#cd7f32}
+.f1-num{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:‘JetBrains Mono’,monospace;font-size:10px;font-weight:500}
+.f1-driver-info{display:flex;flex-direction:column;gap:1px}
+.f1-driver-name{font-weight:600;font-size:14px}
+.f1-team-name{font-size:10px;color:var(–txt-muted)}
+.f1-interval{font-family:‘JetBrains Mono’,monospace;font-size:12px;color:var(–txt-secondary);text-align:right}
+.f1-fastest{font-family:‘JetBrains Mono’,monospace;font-size:11px;text-align:right}
+.f1-fastest.is-fastest{color:var(–purple)}
+.f1-race-banner{padding:12px 16px;background:linear-gradient(90deg,rgba(232,0,45,0.08),transparent);border-bottom:1px solid var(–border);display:flex;align-items:center;gap:12px}
+.f1-banner-tag{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(–f1-red);background:rgba(232,0,45,0.12);border:1px solid rgba(232,0,45,0.2);border-radius:4px;padding:3px 9px}
+.f1-banner-text{font-size:13px;font-weight:500}
+.f1-banner-sub{font-size:11px;color:var(–txt-secondary);margin-left:auto;font-family:‘JetBrains Mono’,monospace}
+.f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(–txt-muted);font-size:13px}
+.f1-api-error{padding:20px 16px;text-align:center;color:var(–rose);font-size:13px}
+.f1-spinner{width:24px;height:24px;border:2px solid var(–bg-raised);border-top-color:var(–f1-red);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.f1-result-row{display:grid;grid-template-columns:28px 28px 1fr 80px 72px;gap:6px;padding:10px 16px;border-bottom:1px solid var(–border);align-items:center}
+.f1-result-row:last-child{border-bottom:none}
+.f1-result-header{display:grid;grid-template-columns:28px 28px 1fr 80px 72px;gap:6px;padding:8px 16px;border-bottom:1px solid var(–border);font-family:‘JetBrains Mono’,monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(–txt-muted)}
+.f1-std-row{display:grid;grid-template-columns:28px 28px 1fr 36px 56px;gap:6px;padding:10px 16px;border-bottom:1px solid var(–border);align-items:center}
+.f1-std-row:last-child{border-bottom:none}
+.f1-std-header{display:grid;grid-template-columns:28px 28px 1fr 36px 56px;gap:6px;padding:8px 16px;border-bottom:1px solid var(–border);font-family:‘JetBrains Mono’,monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(–txt-muted)}
+.f1-con-row{display:grid;grid-template-columns:28px 1fr 60px;gap:8px;padding:12px 16px;border-bottom:1px solid var(–border);align-items:center}
+.f1-con-row:last-child{border-bottom:none}
+.f1-pts{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:16px;text-align:right}
+.f1-wins{font-family:‘JetBrains Mono’,monospace;font-size:12px;color:var(–gold);text-align:right}
+.f1-time-gap{font-family:‘JetBrains Mono’,monospace;font-size:11px;color:var(–txt-secondary);text-align:right}
+.f1-last-updated{text-align:center;padding:8px;font-size:10px;color:var(–txt-muted);font-family:‘JetBrains Mono’,monospace;border-top:1px solid var(–border)}
+.f1-con-bar{height:4px;border-radius:2px;background:var(–bg-hover);overflow:hidden;margin-top:4px}
+.f1-con-fill{height:100%;border-radius:2px;transition:width 0.6s ease}
 
-}
-
-html, body {
-width: 100%; height: 100%;
-overflow: hidden;
-background: #000;
-color: var(–txt-primary);
-font-family: ‘DM Sans’, sans-serif;
--webkit-font-smoothing: antialiased;
-}
-
-/* ── LAYOUT SHELL ───────────────────────────────── */
-#app {
-position: fixed;
-top: 0; bottom: 0;
-left: 50%;
-transform: translateX(-50%);
-width: 100%;
-max-width: 430px;
-background: var(–bg-base);
-display: flex;
-flex-direction: column;
-overflow: hidden;
-box-shadow: 0 0 60px rgba(0,0,0,0.9);
-}
-#top-bar {
-flex-shrink: 0;
-display: flex;
-flex-direction: column;
-background: #0d0f18;
-z-index: 200;
-}
-
-/* ── HEADER ─────────────────────────────────────── */
-#header {
-padding-top: var(–safe-top);
-background: rgba(13,15,24,0.88);
-backdrop-filter: blur(20px) saturate(180%);
--webkit-backdrop-filter: blur(20px) saturate(180%);
-border-bottom: 1px solid var(–border);
-}
-#header-inner {
-height: var(–header-h);
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 0 18px;
-}
-.logo {
-font-family: ‘Rajdhani’, sans-serif;
-font-weight: 700;
-font-size: 22px;
-letter-spacing: 3px;
-background: linear-gradient(90deg, var(–ig-blue), var(–purple));
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-}
-.logo span { color: var(–f1-red); -webkit-text-fill-color: var(–f1-red); }
-.header-right {
-display: flex; align-items: center; gap: 10px;
-}
-.hdr-badge {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 10px;
-font-weight: 500;
-padding: 3px 8px;
-border-radius: 4px;
-letter-spacing: 0.5px;
-}
-.hdr-live {
-background: rgba(232,0,45,0.15);
-color: var(–f1-red);
-border: 1px solid rgba(232,0,45,0.3);
-display: flex; align-items: center; gap: 5px;
-}
-.pulse-dot {
-width: 6px; height: 6px;
-border-radius: 50%;
-background: var(–f1-red);
-animation: pulse 1.4s ease-in-out infinite;
-}
-@keyframes pulse {
-0%,100% { opacity: 1; transform: scale(1); }
-50%      { opacity: 0.4; transform: scale(0.7); }
-}
-.hdr-time {
-color: var(–txt-secondary);
-font-size: 12px;
-font-family: ‘JetBrains Mono’, monospace;
-}
-
-/* ── SCROLL CONTAINER ───────────────────────────── */
-#scroll-wrap {
-flex: 1;
-overflow-y: auto;
-overflow-x: hidden;
--webkit-overflow-scrolling: touch;
-overscroll-behavior: contain;
-scroll-behavior: smooth;
-}
-#scroll-wrap::-webkit-scrollbar { display: none; }
-
-.tab-panel { display: none; padding: 16px; padding-bottom: 20px; }
-.tab-panel.active { display: block; }
-
-/* ── TOP NAV ────────────────────────────────────── */
-#top-nav {
-background: rgba(13,15,24,0.92);
-backdrop-filter: blur(24px) saturate(180%);
--webkit-backdrop-filter: blur(24px) saturate(180%);
-border-bottom: 1px solid var(–border);
-}
-.nav-inner {
-height: var(–nav-h);
-display: flex;
-align-items: stretch;
-}
-.nav-btn {
-flex: 1;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-gap: 4px;
-border: none;
-background: none;
-cursor: pointer;
-color: var(–txt-muted);
-transition: color 0.2s;
-position: relative;
-}
-.nav-btn.active { color: var(–txt-primary); }
-.nav-btn.active::before {
-content: ‘’;
-position: absolute;
-bottom: 0; left: 50%;
-transform: translateX(-50%);
-width: 32px; height: 2px;
-border-radius: 4px 4px 0 0;
-background: linear-gradient(90deg, var(–ig-blue), var(–purple));
-}
-.nav-icon {
-width: 22px; height: 22px;
-display: flex; align-items: center; justify-content: center;
-}
-.nav-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.nav-label {
-font-size: 10px; font-weight: 500;
-letter-spacing: 0.5px;
-text-transform: uppercase;
-}
-
-/* ── SHARED CARD ────────────────────────────────── */
-.card {
-background: var(–bg-card);
-border-radius: var(–r-lg);
-border: 1px solid var(–border);
-overflow: hidden;
-margin-bottom: 12px;
-}
-.card-header {
-padding: 14px 16px 10px;
-display: flex; align-items: center; justify-content: space-between;
-border-bottom: 1px solid var(–border);
-}
-.card-title {
-font-family: ‘Rajdhani’, sans-serif;
-font-weight: 600;
-font-size: 13px;
-letter-spacing: 1.5px;
-text-transform: uppercase;
-color: var(–txt-secondary);
-}
-.section-label {
-font-family: ‘Rajdhani’, sans-serif;
-font-size: 11px;
-font-weight: 600;
-letter-spacing: 2px;
-text-transform: uppercase;
-color: var(–txt-muted);
-margin: 20px 0 10px;
-}
-.section-label:first-child { margin-top: 0; }
-
-/* ── PLATFORM BADGES ────────────────────────────── */
-.platform-badge {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 9px; font-weight: 500;
-padding: 2px 7px; border-radius: 4px;
-letter-spacing: 0.5px; text-transform: uppercase;
-}
-.badge-x   { background: rgba(231,233,234,0.1); color: var(–x-white); border: 1px solid rgba(231,233,234,0.15); }
-.badge-ig  { background: rgba(79,156,249,0.12); color: var(–ig-blue);  border: 1px solid rgba(79,156,249,0.2); }
-.badge-f1  { background: rgba(232,0,45,0.12);  color: var(–f1-red);   border: 1px solid rgba(232,0,45,0.2); }
-
-/* ── FEED POSTS ─────────────────────────────────── */
-.post {
-padding: 14px 16px;
-border-bottom: 1px solid var(–border);
-display: flex; gap: 12px;
-transition: background 0.15s;
-}
-.post:last-child { border-bottom: none; }
-.post:active { background: var(–bg-raised); }
-.post-avatar {
-width: 40px; height: 40px;
-border-radius: 50%;
-background: var(–bg-raised);
-flex-shrink: 0;
-display: flex; align-items: center; justify-content: center;
-font-family: ‘Rajdhani’, sans-serif;
-font-weight: 700;
-font-size: 16px;
-position: relative;
-overflow: hidden;
-}
-.post-avatar-ring {
-position: absolute; inset: -2px;
-border-radius: 50%;
-padding: 2px;
-}
-.post-avatar-ring.ig { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
-.post-avatar-ring.x  { background: var(–x-white); }
-.post-avatar-ring.f1 { background: linear-gradient(135deg, var(–f1-red), var(–f1-orange)); }
-.post-body { flex: 1; min-width: 0; }
-.post-meta {
-display: flex; align-items: center; gap: 8px;
-margin-bottom: 6px; flex-wrap: wrap;
-}
-.post-name { font-weight: 600; font-size: 13px; }
-.post-handle { color: var(–txt-muted); font-size: 12px; }
-.post-time   { color: var(–txt-muted); font-size: 11px; margin-left: auto; }
-.post-text   { font-size: 14px; line-height: 1.5; color: var(–txt-primary); margin-bottom: 10px; }
-.post-img {
-width: 100%; border-radius: var(–r-sm); margin-bottom: 10px;
-background: var(–bg-raised);
-height: 160px;
-display: flex; align-items: center; justify-content: center;
-overflow: hidden; position: relative;
-}
-.post-img-gradient {
-position: absolute; inset: 0;
-border-radius: var(–r-sm);
-}
-.post-img-label {
-position: relative; z-index: 1;
-font-family: ‘Rajdhani’, sans-serif;
-font-weight: 700; font-size: 28px;
-letter-spacing: 2px;
-}
-.post-actions {
-display: flex; gap: 16px;
-}
-.post-action {
-display: flex; align-items: center; gap: 5px;
-color: var(–txt-muted); font-size: 12px;
-cursor: pointer; transition: color 0.15s;
-}
-.post-action svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; }
-.post-action:active { color: var(–ig-blue); }
-.post-action.liked { color: var(–rose); }
-.post-action.liked svg { fill: var(–rose); stroke: var(–rose); }
-
-/* ── STORIES ROW ────────────────────────────────── */
-.stories-row {
-display: flex; gap: 12px;
-overflow-x: auto; padding: 14px 16px;
--webkit-overflow-scrolling: touch;
-scrollbar-width: none;
-}
-.stories-row::-webkit-scrollbar { display: none; }
-.story {
-display: flex; flex-direction: column;
-align-items: center; gap: 6px; flex-shrink: 0;
-cursor: pointer;
-}
-.story-ring {
-width: 54px; height: 54px;
-border-radius: 50%;
-padding: 2px;
-background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
-display: flex; align-items: center; justify-content: center;
-}
-.story-ring.seen { background: var(–bg-raised); }
-.story-avatar {
-width: 100%; height: 100%;
-border-radius: 50%;
-background: var(–bg-raised);
-border: 2px solid var(–bg-card);
-display: flex; align-items: center; justify-content: center;
-font-family: ‘Rajdhani’, sans-serif;
-font-weight: 700; font-size: 18px;
-}
-.story-name { font-size: 10px; color: var(–txt-secondary); max-width: 54px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* ── SPORTS TICKER ──────────────────────────────── */
-.match-card {
-padding: 14px 16px;
-border-bottom: 1px solid var(–border);
-}
-.match-card:last-child { border-bottom: none; }
-.match-header {
-display: flex; align-items: center; gap: 8px;
-margin-bottom: 12px;
-}
-.league-badge {
-font-size: 9px; font-weight: 600;
-font-family: ‘JetBrains Mono’, monospace;
-padding: 2px 7px; border-radius: 4px;
-letter-spacing: 1px; text-transform: uppercase;
-}
-.league-epl  { background: rgba(56,211,106,0.12); color: var(–epl-green); border: 1px solid rgba(56,211,106,0.25); }
-.league-ucl  { background: rgba(79,156,249,0.12); color: var(–ig-blue);  border: 1px solid rgba(79,156,249,0.25); }
-.league-ll   { background: rgba(245,200,66,0.12); color: var(–gold);      border: 1px solid rgba(245,200,66,0.25); }
-.live-badge {
-display: flex; align-items: center; gap: 5px;
-font-size: 11px; font-weight: 600;
-color: var(–f1-red);
-font-family: ‘JetBrains Mono’, monospace;
-margin-left: auto;
-}
-.ft-badge {
-font-size: 11px; font-weight: 500;
-color: var(–txt-muted);
-font-family: ‘JetBrains Mono’, monospace;
-margin-left: auto;
-}
-.match-score-row {
-display: grid; grid-template-columns: 1fr auto 1fr;
-align-items: center; gap: 12px;
-}
-.match-team { display: flex; flex-direction: column; gap: 3px; }
-.match-team.away { align-items: flex-end; }
-.team-name { font-weight: 600; font-size: 15px; }
-.team-stat { font-size: 11px; color: var(–txt-muted); }
-.score-box {
-display: flex; align-items: center; gap: 8px;
-background: var(–bg-raised);
-border-radius: var(–r-sm);
-padding: 6px 12px;
-}
-.score-num {
-font-family: ‘Rajdhani’, sans-serif;
-font-weight: 700; font-size: 28px;
-line-height: 1;
-}
-.score-sep { color: var(–txt-muted); font-size: 20px; font-weight: 300; }
-.match-events {
-margin-top: 10px;
-display: flex; flex-wrap: wrap; gap: 6px;
-}
-.event-chip {
-font-size: 11px;
-background: var(–bg-raised);
-border-radius: 20px;
-padding: 3px 10px;
-color: var(–txt-secondary);
-display: flex; align-items: center; gap: 4px;
-}
-.event-chip .ev-icon { font-size: 12px; }
-
-/* ── F1 TIMING ──────────────────────────────────── */
-.f1-header-row {
-display: grid;
-grid-template-columns: 28px 28px 1fr 70px 70px;
-gap: 6px;
-padding: 8px 16px;
-border-bottom: 1px solid var(–border);
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 9px;
-letter-spacing: 1px;
-text-transform: uppercase;
-color: var(–txt-muted);
-align-items: center;
-}
-.f1-row {
-display: grid;
-grid-template-columns: 28px 28px 1fr 70px 70px;
-gap: 6px;
-padding: 10px 16px;
-border-bottom: 1px solid var(–border);
-align-items: center;
-transition: background 0.15s;
-}
-.f1-row:last-child { border-bottom: none; }
-.f1-row:active { background: var(–bg-raised); }
-.f1-pos {
-font-family: ‘Rajdhani’, sans-serif;
-font-weight: 700;
-font-size: 18px;
-text-align: center;
-}
-.f1-pos.p1 { color: var(–gold); }
-.f1-pos.p2 { color: #c0c0c0; }
-.f1-pos.p3 { color: #cd7f32; }
-.f1-num {
-width: 22px; height: 22px;
-border-radius: 4px;
-display: flex; align-items: center; justify-content: center;
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 10px; font-weight: 500;
-}
-.f1-driver-info { display: flex; flex-direction: column; gap: 1px; }
-.f1-driver-name { font-weight: 600; font-size: 14px; }
-.f1-team-name   { font-size: 10px; color: var(–txt-muted); }
-.f1-interval    { font-family: ‘JetBrains Mono’, monospace; font-size: 12px; color: var(–txt-secondary); text-align: right; }
-.f1-fastest     { font-family: ‘JetBrains Mono’, monospace; font-size: 11px; text-align: right; }
-.f1-fastest.is-fastest { color: var(–purple); }
-.f1-race-banner {
-padding: 12px 16px;
-background: linear-gradient(90deg, rgba(232,0,45,0.08), transparent);
-border-bottom: 1px solid var(–border);
-display: flex; align-items: center; gap: 12px;
-}
-.f1-banner-tag {
-font-family: ‘Rajdhani’, sans-serif;
-font-weight: 700; font-size: 11px;
-letter-spacing: 2px; text-transform: uppercase;
-color: var(–f1-red);
-background: rgba(232,0,45,0.12);
-border: 1px solid rgba(232,0,45,0.25);
-border-radius: 4px; padding: 3px 9px;
-}
-.f1-banner-text { font-size: 13px; font-weight: 500; }
-.f1-banner-sub  { font-size: 11px; color: var(–txt-secondary); margin-left: auto; font-family: ‘JetBrains Mono’, monospace; }
-.f1-sc-banner {
-background: rgba(245,200,66,0.08);
-border-bottom: 1px solid rgba(245,200,66,0.15);
-}
-.f1-sc-banner .f1-banner-tag { color: var(–gold); background: rgba(245,200,66,0.12); border-color: rgba(245,200,66,0.25); }
-
-/* ── HEALTH HUB ─────────────────────────────────── */
-.macro-ring-wrap {
-padding: 20px 16px 16px;
-display: flex; flex-direction: column; align-items: center; gap: 16px;
-}
-.ring-outer {
-position: relative;
-width: 140px; height: 140px;
-flex-shrink: 0;
-}
-.ring-outer svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-.ring-center {
-position: absolute; inset: 0;
-display: flex; flex-direction: column;
-align-items: center; justify-content: center;
-gap: 2px;
-}
-.ring-val { font-family: ‘Rajdhani’, sans-serif; font-weight: 700; font-size: 28px; line-height: 1; }
-.ring-sub { font-size: 11px; color: var(–txt-muted); }
-.macros-row {
-display: flex; gap: 12px; width: 100%;
-}
-.macro-pill {
-flex: 1;
-background: var(–bg-raised);
-border-radius: var(–r-md);
-padding: 12px;
-display: flex; flex-direction: column; gap: 6px;
-border: 1px solid var(–border);
-}
-.macro-pill-top {
-display: flex; align-items: center; justify-content: space-between;
-}
-.macro-name { font-size: 11px; color: var(–txt-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-.macro-val  { font-family: ‘Rajdhani’, sans-serif; font-weight: 700; font-size: 18px; }
-.macro-bar  { height: 4px; border-radius: 2px; background: var(–bg-hover); overflow: hidden; }
-.macro-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
-.fill-protein { background: var(–ig-blue); }
-.fill-carbs   { background: var(–epl-green); }
-.fill-fat      { background: var(–gold); }
-.fill-cal     { background: linear-gradient(90deg, var(–ig-blue), var(–purple)); }
-
-.food-log-list {
-padding: 0 16px 12px;
-display: flex; flex-direction: column; gap: 2px;
-}
-.food-item {
-display: flex; align-items: center; gap: 10px;
-padding: 9px 12px;
-background: var(–bg-raised);
-border-radius: var(–r-sm);
-margin-bottom: 2px;
-border: 1px solid var(–border);
-transition: background 0.15s;
-}
-.food-item-name { font-size: 13px; font-weight: 500; flex: 1; }
-.food-item-kcal { font-family: ‘JetBrains Mono’, monospace; font-size: 12px; color: var(–txt-secondary); }
-.food-item-p    { font-family: ‘JetBrains Mono’, monospace; font-size: 11px; color: var(–ig-blue); }
-.food-del { background: none; border: none; color: var(–txt-muted); cursor: pointer; font-size: 16px; padding: 0 2px; transition: color 0.15s; }
-.food-del:active { color: var(–rose); }
-
-/* ── INPUT FORM ─────────────────────────────────── */
-.log-form {
-padding: 12px 16px;
-display: flex; flex-direction: column; gap: 10px;
-border-top: 1px solid var(–border);
-}
-.log-form-row { display: flex; gap: 8px; }
-.log-input {
-flex: 1;
-background: var(–bg-raised);
-border: 1px solid var(–border-hi);
-border-radius: var(–r-sm);
-color: var(–txt-primary);
-font-family: ‘DM Sans’, sans-serif;
-font-size: 14px;
-padding: 10px 12px;
-outline: none;
-transition: border-color 0.2s, box-shadow 0.2s;
--webkit-appearance: none;
-}
-.log-input::placeholder { color: var(–txt-muted); }
-.log-input:focus { border-color: var(–ig-blue); box-shadow: 0 0 0 3px rgba(79,156,249,0.1); }
-.log-input.small { max-width: 90px; text-align: center; }
-.log-btn {
-background: linear-gradient(135deg, var(–ig-blue), var(–purple));
-border: none; border-radius: var(–r-sm);
-color: #fff; font-family: ‘Rajdhani’, sans-serif;
-font-weight: 700; font-size: 14px;
-letter-spacing: 1px; text-transform: uppercase;
-padding: 10px 18px; cursor: pointer;
-transition: opacity 0.2s, transform 0.1s;
-white-space: nowrap;
-}
-.log-btn:active { opacity: 0.8; transform: scale(0.97); }
-.log-btn.red { background: linear-gradient(135deg, var(–f1-red), var(–f1-orange)); }
-
-/* ── WORKOUT MODULE ─────────────────────────────── */
-.workout-stats-row {
-display: grid; grid-template-columns: 1fr 1fr 1fr;
-gap: 8px; padding: 14px 16px;
-}
-.wk-stat {
-background: var(–bg-raised);
-border-radius: var(–r-sm); padding: 12px;
-text-align: center; border: 1px solid var(–border);
-}
-.wk-stat-val { font-family: ‘Rajdhani’, sans-serif; font-weight: 700; font-size: 22px; }
-.wk-stat-lbl { font-size: 10px; color: var(–txt-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
-.set-list {
-padding: 0 16px 12px;
-display: flex; flex-direction: column; gap: 4px;
-}
-.set-row {
-display: flex; align-items: center; gap: 10px;
-background: var(–bg-raised);
-border-radius: var(–r-sm);
-padding: 10px 12px;
-border: 1px solid var(–border);
-transition: background 0.15s;
-animation: slideIn 0.3s ease;
-}
-@keyframes slideIn {
-from { opacity: 0; transform: translateY(-8px); }
-to   { opacity: 1; transform: translateY(0); }
-}
-.set-exercise { font-size: 13px; font-weight: 500; flex: 1; }
-.set-vol {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 12px; color: var(–txt-secondary);
-}
-.set-vol strong { color: var(–cyan); }
-.set-del { background: none; border: none; color: var(–txt-muted); cursor: pointer; font-size: 16px; transition: color 0.15s; }
-.set-del:active { color: var(–rose); }
-.empty-state {
-text-align: center; padding: 32px 16px;
-color: var(–txt-muted); font-size: 14px;
-display: flex; flex-direction: column; gap: 8px; align-items: center;
-}
-.empty-icon { font-size: 32px; }
-
-/* ── PROGRESS BAR ───────────────────────────────── */
-.prog-bar { height: 6px; border-radius: 3px; background: var(–bg-hover); overflow: hidden; margin: 2px 0; }
-.prog-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
-
-/* ── TICKER SCROLL ──────────────────────────────── */
-.ticker-wrap {
-overflow: hidden;
-border-bottom: 1px solid var(–border);
-background: var(–bg-void);
-padding: 7px 0;
-}
-.ticker-track {
-display: flex; gap: 0;
-animation: ticker 28s linear infinite;
-white-space: nowrap;
-}
-@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-.ticker-item {
-padding: 0 20px;
-font-size: 11px; font-family: ‘JetBrains Mono’, monospace;
-color: var(–txt-secondary); display: inline-flex; align-items: center; gap: 8px;
-border-right: 1px solid var(–border);
-}
-.ticker-item .t-score { color: var(–txt-primary); font-weight: 500; }
-.ticker-item .t-live  { color: var(–f1-red); }
-
-/* ── SVG RING UTIL ──────────────────────────────── */
-.ring-track { fill: none; stroke: var(–bg-raised); stroke-width: 12; }
-.ring-prog  { fill: none; stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease; }
-
-/* ── MISC ───────────────────────────────────────── */
-.divider { height: 1px; background: var(–border); margin: 4px 0; }
-.tag {
-font-size: 11px; padding: 2px 8px; border-radius: 20px;
-font-weight: 500; display: inline-block;
-}
-.tag-muscle { background: rgba(34,211,238,0.1); color: var(–cyan); border: 1px solid rgba(34,211,238,0.2); }
-.tag-compound { background: rgba(167,139,250,0.1); color: var(–purple); border: 1px solid rgba(167,139,250,0.2); }
-
-.vol-total {
-padding: 10px 16px;
-border-top: 1px solid var(–border);
-display: flex; align-items: center; justify-content: space-between;
-font-size: 13px; color: var(–txt-secondary);
-}
-.vol-total strong { color: var(–txt-primary); font-family: ‘Rajdhani’, sans-serif; font-size: 18px; }
-
-/* ── TOAST ──────────────────────────────────────── */
-#toast {
-position: fixed; bottom: 28px;
-left: 50%; transform: translateX(-50%) translateY(8px);
-background: var(–bg-raised); border: 1px solid var(–border-hi);
-color: var(–txt-primary); border-radius: var(–r-md);
-padding: 10px 18px; font-size: 13px; font-weight: 500;
-box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-opacity: 0; pointer-events: none;
-transition: opacity 0.25s, transform 0.25s;
-z-index: 9999; white-space: nowrap;
-max-width: calc(100vw - 40px);
-}
-#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-.clock-label {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 10px; color: var(–txt-muted);
-text-align: center; padding: 6px;
-}
-
-/* ── F1 API LIVE ────────────────────────────────── */
-.f1-api-loading {
-padding: 28px 16px;
-display: flex; flex-direction: column;
-align-items: center; gap: 10px;
-color: var(–txt-muted); font-size: 13px;
-}
-.f1-api-error {
-padding: 20px 16px; text-align: center;
-color: var(–rose); font-size: 13px;
-}
-.f1-spinner {
-width: 24px; height: 24px;
-border: 2px solid var(–bg-raised);
-border-top-color: var(–f1-red);
-border-radius: 50%;
-animation: spin 0.7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.f1-result-row {
-display: grid;
-grid-template-columns: 28px 28px 1fr 80px 72px;
-gap: 6px; padding: 10px 16px;
-border-bottom: 1px solid var(–border);
-align-items: center;
-}
-.f1-result-row:last-child { border-bottom: none; }
-.f1-result-header {
-display: grid;
-grid-template-columns: 28px 28px 1fr 80px 72px;
-gap: 6px; padding: 8px 16px;
-border-bottom: 1px solid var(–border);
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 9px; letter-spacing: 1px;
-text-transform: uppercase; color: var(–txt-muted);
-}
-.f1-std-row {
-display: grid;
-grid-template-columns: 28px 28px 1fr 36px 56px;
-gap: 6px; padding: 10px 16px;
-border-bottom: 1px solid var(–border);
-align-items: center;
-}
-.f1-std-row:last-child { border-bottom: none; }
-.f1-std-header {
-display: grid;
-grid-template-columns: 28px 28px 1fr 36px 56px;
-gap: 6px; padding: 8px 16px;
-border-bottom: 1px solid var(–border);
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 9px; letter-spacing: 1px;
-text-transform: uppercase; color: var(–txt-muted);
-}
-.f1-con-row {
-display: grid;
-grid-template-columns: 28px 1fr 60px;
-gap: 8px; padding: 12px 16px;
-border-bottom: 1px solid var(–border);
-align-items: center;
-}
-.f1-con-row:last-child { border-bottom: none; }
-.f1-pts {
-font-family: ‘Rajdhani’, sans-serif;
-font-weight: 700; font-size: 16px;
-text-align: right;
-}
-.f1-wins {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 12px; color: var(–gold);
-text-align: right;
-}
-.f1-time-gap {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 11px; color: var(–txt-secondary);
-text-align: right;
-}
-.f1-last-updated {
-text-align: center; padding: 8px;
-font-size: 10px; color: var(–txt-muted);
-font-family: ‘JetBrains Mono’, monospace;
-border-top: 1px solid var(–border);
-}
-.f1-con-bar { height: 4px; border-radius: 2px; background: var(–bg-hover); overflow: hidden; margin-top: 4px; }
-.f1-con-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+/* ── HEALTH ── */
+.macro-ring-wrap{padding:20px 16px 16px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.ring-outer{position:relative;width:140px;height:140px;flex-shrink:0}
+.ring-outer svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.ring-val{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:28px;line-height:1}
+.ring-sub{font-size:11px;color:var(–txt-muted)}
+.macros-row{display:flex;gap:12px;width:100%}
+.macro-pill{flex:1;background:var(–bg-raised);border-radius:var(–r-md);padding:12px;display:flex;flex-direction:column;gap:6px;border:1px solid var(–border)}
+.macro-pill-top{display:flex;align-items:center;justify-content:space-between}
+.macro-name{font-size:11px;color:var(–txt-muted);text-transform:uppercase;letter-spacing:0.5px}
+.macro-val{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:18px}
+.macro-bar{height:4px;border-radius:2px;background:var(–bg-hover);overflow:hidden}
+.macro-fill{height:100%;border-radius:2px;transition:width 0.4s ease}
+.fill-protein{background:var(–ig-blue)}.fill-carbs{background:var(–epl-green)}.fill-fat{background:var(–gold)}
+.food-log-list{padding:0 16px 12px;display:flex;flex-direction:column;gap:2px}
+.food-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(–bg-raised);border-radius:var(–r-sm);margin-bottom:2px;border:1px solid var(–border)}
+.food-item-name{font-size:13px;font-weight:500;flex:1}
+.food-item-kcal{font-family:‘JetBrains Mono’,monospace;font-size:12px;color:var(–txt-secondary)}
+.food-item-p{font-family:‘JetBrains Mono’,monospace;font-size:11px;color:var(–ig-blue)}
+.food-del{background:none;border:none;color:var(–txt-muted);cursor:pointer;font-size:16px;padding:0 2px}
+.log-form{padding:12px 16px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(–border)}
+.log-form-row{display:flex;gap:8px}
+.log-input{flex:1;background:var(–bg-raised);border:1px solid var(–border-hi);border-radius:var(–r-sm);color:var(–txt-primary);font-family:‘DM Sans’,sans-serif;font-size:14px;padding:10px 12px;outline:none;-webkit-appearance:none}
+.log-input::placeholder{color:var(–txt-muted)}
+.log-input:focus{border-color:var(–ig-blue);box-shadow:0 0 0 3px rgba(79,156,249,0.1)}
+.log-input.small{max-width:80px;text-align:center}
+.log-btn{background:linear-gradient(135deg,var(–ig-blue),var(–purple));border:none;border-radius:var(–r-sm);color:#fff;font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:10px 16px;cursor:pointer;white-space:nowrap}
+.log-btn.red{background:linear-gradient(135deg,var(–f1-red),var(–f1-orange))}
+.workout-stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:14px 16px}
+.wk-stat{background:var(–bg-raised);border-radius:var(–r-sm);padding:12px;text-align:center;border:1px solid var(–border)}
+.wk-stat-val{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:22px}
+.wk-stat-lbl{font-size:10px;color:var(–txt-muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.set-list{padding:0 16px 12px;display:flex;flex-direction:column;gap:4px}
+.set-row{display:flex;align-items:center;gap:10px;background:var(–bg-raised);border-radius:var(–r-sm);padding:10px 12px;border:1px solid var(–border);animation:slideIn 0.3s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.set-exercise{font-size:13px;font-weight:500;flex:1}
+.set-vol{font-family:‘JetBrains Mono’,monospace;font-size:12px;color:var(–txt-secondary)}
+.set-vol strong{color:var(–cyan)}
+.set-del{background:none;border:none;color:var(–txt-muted);cursor:pointer;font-size:16px}
+.empty-state{text-align:center;padding:32px 16px;color:var(–txt-muted);font-size:14px;display:flex;flex-direction:column;gap:8px;align-items:center}
+.empty-icon{font-size:32px}
+.vol-total{padding:10px 16px;border-top:1px solid var(–border);display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(–txt-secondary)}
+.vol-total strong{color:var(–txt-primary);font-family:‘Rajdhani’,sans-serif;font-size:18px}
+.ring-track{fill:none;stroke:var(–bg-raised);stroke-width:12}
+.ring-prog{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease}
+.ticker-wrap{overflow:hidden;border-bottom:1px solid var(–border);background:var(–bg-void);padding:7px 0}
+.ticker-track{display:flex;gap:0;animation:ticker 28s linear infinite;white-space:nowrap}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{padding:0 20px;font-size:11px;font-family:‘JetBrains Mono’,monospace;color:var(–txt-secondary);display:inline-flex;align-items:center;gap:8px;border-right:1px solid var(–border)}
+.ticker-item .t-score{color:var(–txt-primary);font-weight:500}
+.ticker-item .t-live{color:var(–f1-red)}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(–bg-raised);border:1px solid var(–border-hi);color:var(–txt-primary);border-radius:var(–r-md);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.25s,transform 0.25s;z-index:9999;white-space:nowrap;max-width:calc(100vw - 40px)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.clock-label{font-family:‘JetBrains Mono’,monospace;font-size:10px;color:var(–txt-muted);text-align:center;padding:6px}
 </style>
 
 </head>
 <body>
 <div id="app">
 
-  <!-- TOP BAR: header + nav fixed at top -->
-
-  <div id="top-bar">
-  <!-- HEADER -->
   <header id="header">
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
@@ -793,42 +229,27 @@ border-top: 1px solid var(–border);
     </div>
   </header>
 
-  <!-- TOP NAV -->
-
   <nav id="top-nav">
     <div class="nav-inner">
       <button class="nav-btn active" id="nav-feed" onclick="switchTab('feed')">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </span>
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
         <span class="nav-label">Feed</span>
       </button>
       <button class="nav-btn" id="nav-sports" onclick="switchTab('sports')">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4-4-4 4-4z"/></svg>
-        </span>
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4-4-4 4-4z"/></svg></span>
         <span class="nav-label">Sports</span>
       </button>
       <button class="nav-btn" id="nav-health" onclick="switchTab('health')">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </span>
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
         <span class="nav-label">Health</span>
       </button>
     </div>
   </nav>
-  </div><!-- /top-bar -->
-
-  <!-- SCROLL CONTAINER -->
 
   <div id="scroll-wrap">
+    <div class="tab-panel active" id="panel-feed">
 
 ```
-<!-- ══════════════════════════════════════════════ -->
-<!-- TAB 1 · UNIFIED FEED -->
-<!-- ══════════════════════════════════════════════ -->
-<div class="tab-panel active" id="panel-feed">
-
   <!-- Ticker -->
   <div class="ticker-wrap">
     <div class="ticker-track" id="ticker">
@@ -1008,10 +429,6 @@ border-top: 1px solid var(–border);
   </div><!-- /feed-posts -->
 </div><!-- /panel-feed -->
 
-
-<!-- ══════════════════════════════════════════════ -->
-<!-- TAB 2 · LIVE SPORTS -->
-<!-- ══════════════════════════════════════════════ -->
 <div class="tab-panel" id="panel-sports">
 
   <p class="section-label">⚽ Football · Live & Recent</p>
@@ -1183,10 +600,6 @@ border-top: 1px solid var(–border);
 
 </div><!-- /panel-sports -->
 
-
-<!-- ══════════════════════════════════════════════ -->
-<!-- TAB 3 · HEALTH & PERFORMANCE -->
-<!-- ══════════════════════════════════════════════ -->
 <div class="tab-panel" id="panel-health">
 
   <!-- ── NUTRITION ── -->
@@ -1306,14 +719,10 @@ border-top: 1px solid var(–border);
 </div><!-- /panel-health -->
 ```
 
-  </div><!-- /scroll-wrap -->
+  </div>
 
 </div>
-
-<!-- TOAST -->
-
 <div id="toast"></div>
-
 <script>
 /* ═══════════════════════════════════════════════════════
    STATE
@@ -1326,425 +735,418 @@ let foodLog = [];
 let setLog  = [];
 
 /* ═══════════════════════════════════════════════════════
-   INIT
+INIT
 ════════════════════════════════════════════════════════ */
 (function init() {
-  try { foodLog = JSON.parse(localStorage.getItem(LS_FOOD)) || []; } catch(e) { foodLog = []; }
-  try { setLog  = JSON.parse(localStorage.getItem(LS_SETS))  || []; } catch(e) { setLog  = []; }
-  renderFood();
-  renderSets();
-  startClock();
+try { foodLog = JSON.parse(localStorage.getItem(LS_FOOD)) || []; } catch(e) { foodLog = []; }
+try { setLog  = JSON.parse(localStorage.getItem(LS_SETS))  || []; } catch(e) { setLog  = []; }
+renderFood();
+renderSets();
+startClock();
 })();
 
 /* ═══════════════════════════════════════════════════════
-   TAB SWITCH
+TAB SWITCH
 ════════════════════════════════════════════════════════ */
 function switchTab(tab) {
-  ['feed','sports','health'].forEach(t => {
-    document.getElementById('panel-' + t).classList.toggle('active', t === tab);
-    document.getElementById('nav-'   + t).classList.toggle('active', t === tab);
-  });
-  document.getElementById('scroll-wrap').scrollTop = 0;
+[‘feed’,‘sports’,‘health’].forEach(t => {
+document.getElementById(‘panel-’ + t).classList.toggle(‘active’, t === tab);
+document.getElementById(‘nav-’   + t).classList.toggle(‘active’, t === tab);
+});
+document.getElementById(‘scroll-wrap’).scrollTop = 0;
 }
 
 /* ═══════════════════════════════════════════════════════
-   LIKE TOGGLE
+LIKE TOGGLE
 ════════════════════════════════════════════════════════ */
 function toggleLike(el) {
-  el.classList.toggle('liked');
-  const span = el.querySelector('span');
-  let n = parseInt(span.textContent.replace(/[^\d]/g,'')) || 0;
-  if (el.classList.contains('liked')) n++;
-  else n = Math.max(0, n - 1);
-  span.textContent = formatNum(n);
+el.classList.toggle(‘liked’);
+const span = el.querySelector(‘span’);
+let n = parseInt(span.textContent.replace(/[^\d]/g,’’)) || 0;
+if (el.classList.contains(‘liked’)) n++;
+else n = Math.max(0, n - 1);
+span.textContent = formatNum(n);
 }
 
 function formatNum(n) {
-  if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'K';
-  return n.toString();
+if (n >= 1000) return (n/1000).toFixed(1).replace(/.0$/,’’) + ‘K’;
+return n.toString();
 }
 
 /* ═══════════════════════════════════════════════════════
-   NUTRITION
+NUTRITION
 ════════════════════════════════════════════════════════ */
 function addFood() {
-  const name = document.getElementById('food-name').value.trim();
-  const kcal = parseFloat(document.getElementById('food-kcal').value) || 0;
-  const prot = parseFloat(document.getElementById('food-prot').value) || 0;
-  const carb = parseFloat(document.getElementById('food-carb').value) || 0;
-  const fat  = parseFloat(document.getElementById('food-fat').value)  || 0;
-  if (!name) { toast('Enter a food name'); return; }
-  if (!kcal && !prot && !carb && !fat) { toast('Enter at least one value'); return; }
-  foodLog.push({ id: Date.now(), name, kcal, prot, carb, fat });
-  saveFood();
-  renderFood();
-  clearInputs(['food-name','food-kcal','food-prot','food-carb','food-fat']);
-  toast('✅ ' + name + ' logged');
+const name = document.getElementById(‘food-name’).value.trim();
+const kcal = parseFloat(document.getElementById(‘food-kcal’).value) || 0;
+const prot = parseFloat(document.getElementById(‘food-prot’).value) || 0;
+const carb = parseFloat(document.getElementById(‘food-carb’).value) || 0;
+const fat  = parseFloat(document.getElementById(‘food-fat’).value)  || 0;
+if (!name) { toast(‘Enter a food name’); return; }
+if (!kcal && !prot && !carb && !fat) { toast(‘Enter at least one value’); return; }
+foodLog.push({ id: Date.now(), name, kcal, prot, carb, fat });
+saveFood();
+renderFood();
+clearInputs([‘food-name’,‘food-kcal’,‘food-prot’,‘food-carb’,‘food-fat’]);
+toast(‘✅ ’ + name + ’ logged’);
 }
 
 function deleteFood(id) {
-  foodLog = foodLog.filter(f => f.id !== id);
-  saveFood();
-  renderFood();
+foodLog = foodLog.filter(f => f.id !== id);
+saveFood();
+renderFood();
 }
 
 function saveFood() { localStorage.setItem(LS_FOOD, JSON.stringify(foodLog)); }
 
 function renderFood() {
-  const totals = foodLog.reduce((acc, f) => {
-    acc.kcal += f.kcal; acc.prot += f.prot;
-    acc.carb += f.carb; acc.fat  += f.fat;
-    return acc;
-  }, { kcal:0, prot:0, carb:0, fat:0 });
+const totals = foodLog.reduce((acc, f) => {
+acc.kcal += f.kcal; acc.prot += f.prot;
+acc.carb += f.carb; acc.fat  += f.fat;
+return acc;
+}, { kcal:0, prot:0, carb:0, fat:0 });
 
-  // Ring
-  const calPct = Math.min(totals.kcal / TARGETS.kcal, 1);
-  const circumference = 2 * Math.PI * 50;
-  const offset = circumference * (1 - calPct);
-  const ring = document.getElementById('cal-ring');
-  ring.style.strokeDasharray  = circumference;
-  ring.style.strokeDashoffset = offset;
-  document.getElementById('cal-display').textContent = Math.round(totals.kcal);
+// Ring
+const calPct = Math.min(totals.kcal / TARGETS.kcal, 1);
+const circumference = 2 * Math.PI * 50;
+const offset = circumference * (1 - calPct);
+const ring = document.getElementById(‘cal-ring’);
+ring.style.strokeDasharray  = circumference;
+ring.style.strokeDashoffset = offset;
+document.getElementById(‘cal-display’).textContent = Math.round(totals.kcal);
 
-  // Macros
-  document.getElementById('prot-val').textContent = Math.round(totals.prot) + 'g';
-  document.getElementById('carb-val').textContent = Math.round(totals.carb) + 'g';
-  document.getElementById('fat-val').textContent  = Math.round(totals.fat)  + 'g';
-  document.getElementById('prot-bar').style.width = Math.min(totals.prot/TARGETS.prot*100,100) + '%';
-  document.getElementById('carb-bar').style.width = Math.min(totals.carb/TARGETS.carb*100,100) + '%';
-  document.getElementById('fat-bar').style.width  = Math.min(totals.fat /TARGETS.fat *100,100) + '%';
+// Macros
+document.getElementById(‘prot-val’).textContent = Math.round(totals.prot) + ‘g’;
+document.getElementById(‘carb-val’).textContent = Math.round(totals.carb) + ‘g’;
+document.getElementById(‘fat-val’).textContent  = Math.round(totals.fat)  + ‘g’;
+document.getElementById(‘prot-bar’).style.width = Math.min(totals.prot/TARGETS.prot*100,100) + ‘%’;
+document.getElementById(‘carb-bar’).style.width = Math.min(totals.carb/TARGETS.carb*100,100) + ‘%’;
+document.getElementById(‘fat-bar’).style.width  = Math.min(totals.fat /TARGETS.fat *100,100) + ‘%’;
 
-  // Food list
-  const list = document.getElementById('food-list');
-  if (foodLog.length === 0) {
-    list.innerHTML = '<div class="empty-state" style="padding:20px;"><span class="empty-icon">🍽️</span><span>No foods logged yet</span></div>';
-    return;
-  }
-  list.innerHTML = foodLog.map(f => `
-    <div class="food-item">
-      <span class="food-item-name">${esc(f.name)}</span>
-      <span class="food-item-kcal">${f.kcal} kcal</span>
-      <span class="food-item-p">${f.prot}P</span>
-      <button class="food-del" onclick="deleteFood(${f.id})">×</button>
-    </div>
-  `).join('');
+// Food list
+const list = document.getElementById(‘food-list’);
+if (foodLog.length === 0) {
+list.innerHTML = ‘<div class="empty-state" style="padding:20px;"><span class="empty-icon">🍽️</span><span>No foods logged yet</span></div>’;
+return;
+}
+list.innerHTML = foodLog.map(f => `<div class="food-item"> <span class="food-item-name">${esc(f.name)}</span> <span class="food-item-kcal">${f.kcal} kcal</span> <span class="food-item-p">${f.prot}P</span> <button class="food-del" onclick="deleteFood(${f.id})">×</button> </div>`).join(’’);
 }
 
 /* ═══════════════════════════════════════════════════════
-   WORKOUT
+WORKOUT
 ════════════════════════════════════════════════════════ */
 function addSet() {
-  const exercise = document.getElementById('set-exercise').value.trim();
-  const weight   = parseFloat(document.getElementById('set-weight').value) || 0;
-  const reps     = parseInt(document.getElementById('set-reps').value) || 0;
-  if (!exercise) { toast('Enter an exercise name'); return; }
-  if (!reps)     { toast('Enter number of reps'); return; }
-  setLog.push({ id: Date.now(), exercise, weight, reps });
-  saveSets();
-  renderSets();
-  clearInputs(['set-weight','set-reps']);
-  document.getElementById('set-exercise').focus();
-  toast('💪 ' + exercise + ' — ' + weight + 'kg × ' + reps);
+const exercise = document.getElementById(‘set-exercise’).value.trim();
+const weight   = parseFloat(document.getElementById(‘set-weight’).value) || 0;
+const reps     = parseInt(document.getElementById(‘set-reps’).value) || 0;
+if (!exercise) { toast(‘Enter an exercise name’); return; }
+if (!reps)     { toast(‘Enter number of reps’); return; }
+setLog.push({ id: Date.now(), exercise, weight, reps });
+saveSets();
+renderSets();
+clearInputs([‘set-weight’,‘set-reps’]);
+document.getElementById(‘set-exercise’).focus();
+toast(’💪 ’ + exercise + ’ — ’ + weight + ’kg × ’ + reps);
 }
 
 function deleteSet(id) {
-  setLog = setLog.filter(s => s.id !== id);
-  saveSets();
-  renderSets();
+setLog = setLog.filter(s => s.id !== id);
+saveSets();
+renderSets();
 }
 
 function saveSets() { localStorage.setItem(LS_SETS, JSON.stringify(setLog)); }
 
 function renderSets() {
-  const list  = document.getElementById('set-list');
-  const empty = document.getElementById('set-empty');
-  const totalVol = setLog.reduce((acc, s) => acc + s.weight * s.reps, 0);
-  const uniqueEx = [...new Set(setLog.map(s => s.exercise.toLowerCase()))].length;
+const list  = document.getElementById(‘set-list’);
+const empty = document.getElementById(‘set-empty’);
+const totalVol = setLog.reduce((acc, s) => acc + s.weight * s.reps, 0);
+const uniqueEx = […new Set(setLog.map(s => s.exercise.toLowerCase()))].length;
 
-  document.getElementById('wk-sets').textContent = setLog.length;
-  document.getElementById('wk-vol').textContent  = totalVol.toLocaleString();
-  document.getElementById('wk-exs').textContent  = uniqueEx;
-  document.getElementById('vol-total-val').textContent = totalVol.toLocaleString() + ' kg';
+document.getElementById(‘wk-sets’).textContent = setLog.length;
+document.getElementById(‘wk-vol’).textContent  = totalVol.toLocaleString();
+document.getElementById(‘wk-exs’).textContent  = uniqueEx;
+document.getElementById(‘vol-total-val’).textContent = totalVol.toLocaleString() + ’ kg’;
 
-  if (setLog.length === 0) {
-    if (empty) empty.style.display = 'flex';
-    // remove all set-row elements
-    list.querySelectorAll('.set-row').forEach(e => e.remove());
-    return;
-  }
-  if (empty) empty.style.display = 'none';
+if (setLog.length === 0) {
+if (empty) empty.style.display = ‘flex’;
+// remove all set-row elements
+list.querySelectorAll(’.set-row’).forEach(e => e.remove());
+return;
+}
+if (empty) empty.style.display = ‘none’;
 
-  // Group by exercise for display
-  const grouped = {};
-  setLog.forEach(s => {
-    const k = s.exercise.toLowerCase();
-    if (!grouped[k]) grouped[k] = { name: s.exercise, sets: [] };
-    grouped[k].sets.push(s);
-  });
+// Group by exercise for display
+const grouped = {};
+setLog.forEach(s => {
+const k = s.exercise.toLowerCase();
+if (!grouped[k]) grouped[k] = { name: s.exercise, sets: [] };
+grouped[k].sets.push(s);
+});
 
-  let html = '';
-  Object.values(grouped).forEach(g => {
-    g.sets.forEach((s, i) => {
-      const vol = (s.weight * s.reps).toFixed(0);
-      html += `
-        <div class="set-row" id="set-${s.id}">
-          <span class="set-exercise">${esc(s.exercise)} <span style="color:var(--txt-muted);font-size:11px;">#${i+1}</span></span>
-          <span class="set-vol">${s.weight}kg × ${s.reps} = <strong>${vol}kg</strong></span>
-          <button class="set-del" onclick="deleteSet(${s.id})">×</button>
-        </div>`;
-    });
-  });
+let html = ‘’;
+Object.values(grouped).forEach(g => {
+g.sets.forEach((s, i) => {
+const vol = (s.weight * s.reps).toFixed(0);
+html += ` <div class="set-row" id="set-${s.id}"> <span class="set-exercise">${esc(s.exercise)} <span style="color:var(--txt-muted);font-size:11px;">#${i+1}</span></span> <span class="set-vol">${s.weight}kg × ${s.reps} = <strong>${vol}kg</strong></span> <button class="set-del" onclick="deleteSet(${s.id})">×</button> </div>`;
+});
+});
 
-  list.innerHTML = html;
-  if (empty) list.prepend(empty);
+list.innerHTML = html;
+if (empty) list.prepend(empty);
 }
 
 /* ═══════════════════════════════════════════════════════
-   UTILITIES
+UTILITIES
 ════════════════════════════════════════════════════════ */
 function esc(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+return s.replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);
 }
 
-function clearInputs(ids) { ids.forEach(id => { document.getElementById(id).value = ''; }); }
+function clearInputs(ids) { ids.forEach(id => { document.getElementById(id).value = ‘’; }); }
 
 let toastTimer;
 function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+const el = document.getElementById(‘toast’);
+el.textContent = msg;
+el.classList.add(‘show’);
+clearTimeout(toastTimer);
+toastTimer = setTimeout(() => el.classList.remove(‘show’), 2400);
 }
 
 function startClock() {
-  function update() {
-    const now = new Date();
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    document.getElementById('clock').textContent = h + ':' + m;
-  }
-  update();
-  setInterval(update, 10000);
+function update() {
+const now = new Date();
+const h = String(now.getHours()).padStart(2,‘0’);
+const m = String(now.getMinutes()).padStart(2,‘0’);
+document.getElementById(‘clock’).textContent = h + ‘:’ + m;
+}
+update();
+setInterval(update, 10000);
 }
 
-
 /* ═══════════════════════════════════════════════════════
-   F1 LIVE API · Jolpica (api.jolpi.ca)
+F1 LIVE API · Jolpica (api.jolpi.ca)
 ════════════════════════════════════════════════════════ */
-const F1_BASE = 'https://api.jolpi.ca/ergast/f1';
-const CORS_PROXY = 'https://corsproxy.io/?url=';
+const F1_BASE = ‘https://api.jolpi.ca/ergast/f1’;
+const CORS_PROXY = ‘https://corsproxy.io/?url=’;
 
 const TEAM_COLORS = {
-  'red_bull':       '#3671c6',
-  'mclaren':        '#ff8700',
-  'ferrari':        '#e8002d',
-  'mercedes':       '#00d2be',
-  'aston_martin':   '#229971',
-  'alpine':         '#0093cc',
-  'williams':       '#64c4ff',
-  'rb':             '#6692ff',
-  'kick_sauber':    '#52e252',
-  'haas':           '#b6babd',
-  'default':        '#8a8fa8'
+‘red_bull’:       ‘#3671c6’,
+‘mclaren’:        ‘#ff8700’,
+‘ferrari’:        ‘#e8002d’,
+‘mercedes’:       ‘#00d2be’,
+‘aston_martin’:   ‘#229971’,
+‘alpine’:         ‘#0093cc’,
+‘williams’:       ‘#64c4ff’,
+‘rb’:             ‘#6692ff’,
+‘kick_sauber’:    ‘#52e252’,
+‘haas’:           ‘#b6babd’,
+‘default’:        ‘#8a8fa8’
 };
 
 function teamColor(constructorId) {
-  return TEAM_COLORS[constructorId] || TEAM_COLORS['default'];
+return TEAM_COLORS[constructorId] || TEAM_COLORS[‘default’];
 }
 
 function posClass(p) {
-  if (p === 1) return 'p1';
-  if (p === 2) return 'p2';
-  if (p === 3) return 'p3';
-  return '';
+if (p === 1) return ‘p1’;
+if (p === 2) return ‘p2’;
+if (p === 3) return ‘p3’;
+return ‘’;
 }
 
 async function f1Fetch(endpoint) {
-  const url = F1_BASE + endpoint + '.json?limit=20';
-  // Try direct first, fall back to CORS proxy
-  let res;
-  try {
-    res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('direct ' + res.status);
-  } catch(e) {
-    res = await fetch(CORS_PROXY + encodeURIComponent(url));
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-  }
-  return res.json();
+const url = F1_BASE + endpoint + ‘.json?limit=20’;
+// Try direct first, fall back to CORS proxy
+let res;
+try {
+res = await fetch(url, { mode: ‘cors’ });
+if (!res.ok) throw new Error(’direct ’ + res.status);
+} catch(e) {
+res = await fetch(CORS_PROXY + encodeURIComponent(url));
+if (!res.ok) throw new Error(’HTTP ’ + res.status);
+}
+return res.json();
 }
 
 function setLoading(id) {
-  document.getElementById(id).innerHTML =
-    '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Loading…</span></div>';
+document.getElementById(id).innerHTML =
+‘<div class="f1-api-loading"><div class="f1-spinner"></div><span>Loading…</span></div>’;
 }
 
 function setError(id, msg) {
-  document.getElementById(id).innerHTML =
-    '<div class="f1-api-error">⚠️ ' + msg + '</div>';
+document.getElementById(id).innerHTML =
+’<div class="f1-api-error">⚠️ ’ + msg + ‘</div>’;
 }
 
 async function loadF1LastRace() {
-  setLoading('f1-last-race-body');
-  try {
-    const data = await f1Fetch('/2025/last/results');
-    const race = data.MRData.RaceTable.Races[0];
-    if (!race) throw new Error('No race data yet');
+setLoading(‘f1-last-race-body’);
+try {
+const data = await f1Fetch(’/2025/last/results’);
+const race = data.MRData.RaceTable.Races[0];
+if (!race) throw new Error(‘No race data yet’);
 
-    document.getElementById('f1-last-race-name').textContent =
-      'R' + race.round + ' · ' + race.raceName.replace(' Grand Prix','').toUpperCase() + ' GP';
+```
+document.getElementById('f1-last-race-name').textContent =
+  'R' + race.round + ' · ' + race.raceName.replace(' Grand Prix','').toUpperCase() + ' GP';
 
-    const results = race.Results.slice(0, 10);
-    const leaderTime = results[0]?.Time?.time || '';
+const results = race.Results.slice(0, 10);
+const leaderTime = results[0]?.Time?.time || '';
 
-    let html = '<div class="f1-result-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">TEAM</span><span style="text-align:right">TIME/GAP</span></div>';
+let html = '<div class="f1-result-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">TEAM</span><span style="text-align:right">TIME/GAP</span></div>';
 
-    results.forEach(r => {
-      const pos = parseInt(r.position);
-      const cid = r.Constructor.constructorId;
-      const col = teamColor(cid);
-      const driverName = r.Driver.familyName;
-      const teamShort = r.Constructor.name.replace('Formula One','F1');
-      const gap = pos === 1
-        ? (leaderTime || 'Winner')
-        : (r.Time ? r.Time.time : (r.status || 'DNF'));
+results.forEach(r => {
+  const pos = parseInt(r.position);
+  const cid = r.Constructor.constructorId;
+  const col = teamColor(cid);
+  const driverName = r.Driver.familyName;
+  const teamShort = r.Constructor.name.replace('Formula One','F1');
+  const gap = pos === 1
+    ? (leaderTime || 'Winner')
+    : (r.Time ? r.Time.time : (r.status || 'DNF'));
 
-      html += `
-        <div class="f1-result-row">
-          <span class="f1-pos ${posClass(pos)}">${pos}</span>
-          <span class="f1-num" style="background:${col}22;color:${col}">${r.Driver.permanentNumber}</span>
-          <div class="f1-driver-info">
-            <span class="f1-driver-name">${driverName}</span>
-            <span class="f1-team-name">${esc(teamShort)}</span>
-          </div>
-          <span class="f1-time-gap" style="font-size:10px;min-width:80px;">${esc(teamShort.substring(0,10))}</span>
-          <span class="f1-time-gap">${esc(gap)}</span>
-        </div>`;
-    });
+  html += `
+    <div class="f1-result-row">
+      <span class="f1-pos ${posClass(pos)}">${pos}</span>
+      <span class="f1-num" style="background:${col}22;color:${col}">${r.Driver.permanentNumber}</span>
+      <div class="f1-driver-info">
+        <span class="f1-driver-name">${driverName}</span>
+        <span class="f1-team-name">${esc(teamShort)}</span>
+      </div>
+      <span class="f1-time-gap" style="font-size:10px;min-width:80px;">${esc(teamShort.substring(0,10))}</span>
+      <span class="f1-time-gap">${esc(gap)}</span>
+    </div>`;
+});
 
-    const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
-    document.getElementById('f1-last-race-body').innerHTML = html;
+const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
+document.getElementById('f1-last-race-body').innerHTML = html;
+```
 
-  } catch(e) {
-    setError('f1-last-race-body', 'Could not load race results. ' + e.message);
-  }
+} catch(e) {
+setError(‘f1-last-race-body’, ’Could not load race results. ’ + e.message);
+}
 }
 
 async function loadF1DriverStandings() {
-  setLoading('f1-standings-body');
-  try {
-    const data = await f1Fetch('/2025/driverstandings');
-    const sl = data.MRData.StandingsTable.StandingsLists[0];
-    if (!sl) throw new Error('No standings yet');
+setLoading(‘f1-standings-body’);
+try {
+const data = await f1Fetch(’/2025/driverstandings’);
+const sl = data.MRData.StandingsTable.StandingsLists[0];
+if (!sl) throw new Error(‘No standings yet’);
 
-    document.getElementById('f1-standings-round').textContent = 'After R' + sl.round;
+```
+document.getElementById('f1-standings-round').textContent = 'After R' + sl.round;
 
-    const drivers = sl.DriverStandings.slice(0, 12);
-    const maxPts = parseFloat(drivers[0]?.points || 1);
+const drivers = sl.DriverStandings.slice(0, 12);
+const maxPts = parseFloat(drivers[0]?.points || 1);
 
-    let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>';
+let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>';
 
-    drivers.forEach(d => {
-      const pos = parseInt(d.position);
-      const cid = d.Constructors[0]?.constructorId || 'default';
-      const col = teamColor(cid);
-      const pts = parseFloat(d.points);
-      const barW = Math.round((pts / maxPts) * 100);
+drivers.forEach(d => {
+  const pos = parseInt(d.position);
+  const cid = d.Constructors[0]?.constructorId || 'default';
+  const col = teamColor(cid);
+  const pts = parseFloat(d.points);
+  const barW = Math.round((pts / maxPts) * 100);
 
-      html += `
-        <div class="f1-std-row">
-          <span class="f1-pos ${posClass(pos)}">${pos}</span>
-          <span class="f1-num" style="background:${col}22;color:${col}">${d.Driver.permanentNumber}</span>
-          <div class="f1-driver-info">
-            <span class="f1-driver-name">${d.Driver.familyName}</span>
-            <div class="f1-con-bar" style="margin-top:4px;"><div class="f1-con-fill" style="width:${barW}%;background:${col};"></div></div>
-          </div>
-          <span class="f1-wins">${d.wins}</span>
-          <span class="f1-pts" style="color:${pos<=3?col:'var(--txt-primary)'}">${pts}</span>
-        </div>`;
-    });
+  html += `
+    <div class="f1-std-row">
+      <span class="f1-pos ${posClass(pos)}">${pos}</span>
+      <span class="f1-num" style="background:${col}22;color:${col}">${d.Driver.permanentNumber}</span>
+      <div class="f1-driver-info">
+        <span class="f1-driver-name">${d.Driver.familyName}</span>
+        <div class="f1-con-bar" style="margin-top:4px;"><div class="f1-con-fill" style="width:${barW}%;background:${col};"></div></div>
+      </div>
+      <span class="f1-wins">${d.wins}</span>
+      <span class="f1-pts" style="color:${pos<=3?col:'var(--txt-primary)'}">${pts}</span>
+    </div>`;
+});
 
-    const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
-    document.getElementById('f1-standings-body').innerHTML = html;
+const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
+document.getElementById('f1-standings-body').innerHTML = html;
+```
 
-  } catch(e) {
-    setError('f1-standings-body', 'Could not load driver standings. ' + e.message);
-  }
+} catch(e) {
+setError(‘f1-standings-body’, ’Could not load driver standings. ’ + e.message);
+}
 }
 
 async function loadF1ConstructorStandings() {
-  setLoading('f1-constructors-body');
-  try {
-    const data = await f1Fetch('/2025/constructorstandings');
-    const sl = data.MRData.StandingsTable.StandingsLists[0];
-    if (!sl) throw new Error('No constructor standings yet');
+setLoading(‘f1-constructors-body’);
+try {
+const data = await f1Fetch(’/2025/constructorstandings’);
+const sl = data.MRData.StandingsTable.StandingsLists[0];
+if (!sl) throw new Error(‘No constructor standings yet’);
 
-    const constructors = sl.ConstructorStandings;
-    const maxPts = parseFloat(constructors[0]?.points || 1);
+```
+const constructors = sl.ConstructorStandings;
+const maxPts = parseFloat(constructors[0]?.points || 1);
 
-    let html = '';
-    constructors.forEach(c => {
-      const pos = parseInt(c.position);
-      const cid = c.Constructor.constructorId;
-      const col = teamColor(cid);
-      const pts = parseFloat(c.points);
-      const barW = Math.round((pts / maxPts) * 100);
+let html = '';
+constructors.forEach(c => {
+  const pos = parseInt(c.position);
+  const cid = c.Constructor.constructorId;
+  const col = teamColor(cid);
+  const pts = parseFloat(c.points);
+  const barW = Math.round((pts / maxPts) * 100);
 
-      html += `
-        <div class="f1-con-row">
-          <span class="f1-pos ${posClass(pos)}">${pos}</span>
-          <div>
-            <span style="font-weight:600;font-size:14px;">${esc(c.Constructor.name)}</span>
-            <div class="f1-con-bar"><div class="f1-con-fill" style="width:${barW}%;background:${col};"></div></div>
-          </div>
-          <span class="f1-pts" style="color:${pos<=3?col:'var(--txt-primary)'}">${pts}</span>
-        </div>`;
-    });
+  html += `
+    <div class="f1-con-row">
+      <span class="f1-pos ${posClass(pos)}">${pos}</span>
+      <div>
+        <span style="font-weight:600;font-size:14px;">${esc(c.Constructor.name)}</span>
+        <div class="f1-con-bar"><div class="f1-con-fill" style="width:${barW}%;background:${col};"></div></div>
+      </div>
+      <span class="f1-pts" style="color:${pos<=3?col:'var(--txt-primary)'}">${pts}</span>
+    </div>`;
+});
 
-    const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
-    document.getElementById('f1-constructors-body').innerHTML = html;
+const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
+document.getElementById('f1-constructors-body').innerHTML = html;
+```
 
-  } catch(e) {
-    setError('f1-constructors-body', 'Could not load constructor standings. ' + e.message);
-  }
+} catch(e) {
+setError(‘f1-constructors-body’, ’Could not load constructor standings. ’ + e.message);
+}
 }
 
 function loadF1Data() {
-  loadF1LastRace();
-  loadF1DriverStandings();
-  loadF1ConstructorStandings();
+loadF1LastRace();
+loadF1DriverStandings();
+loadF1ConstructorStandings();
 }
 
 // Auto-load when Sports tab is first opened
 const _origSwitch = switchTab;
 let f1Loaded = false;
 switchTab = function(tab) {
-  _origSwitch(tab);
-  if (tab === 'sports' && !f1Loaded) {
-    f1Loaded = true;
-    loadF1Data();
-  }
+_origSwitch(tab);
+if (tab === ‘sports’ && !f1Loaded) {
+f1Loaded = true;
+loadF1Data();
+}
 };
 
 /* ═══════════════════════════════════════════════════════
-   KEYBOARD dismiss on mobile
+KEYBOARD dismiss on mobile
 ════════════════════════════════════════════════════════ */
-document.querySelectorAll('.log-input').forEach(inp => {
-  inp.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      const panel = inp.closest('.tab-panel');
-      if (panel.id === 'panel-health') {
-        // determine which form
-        if (inp.id.startsWith('food-')) addFood();
-        else if (inp.id.startsWith('set-')) addSet();
-      }
-    }
-  });
+document.querySelectorAll(’.log-input’).forEach(inp => {
+inp.addEventListener(‘keydown’, e => {
+if (e.key === ‘Enter’) {
+const panel = inp.closest(’.tab-panel’);
+if (panel.id === ‘panel-health’) {
+// determine which form
+if (inp.id.startsWith(‘food-’)) addFood();
+else if (inp.id.startsWith(‘set-’)) addSet();
+}
+}
 });
-</script>
+});
 
+</script>
 </body>
 </html>
