@@ -148,7 +148,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>CONSENSUS WIRE</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>BROADCAST FEED</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -175,27 +175,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Cross-Network Verified Wire</span>
-          <span class="consensus-desc">Instant validation index (Single sources filtered out):</span>
+          <span class="consensus-title">Aggregated Network Footprint</span>
+          <span class="consensus-desc">Isolated chronologic feed (Zero main-thread overhead):</span>
         </div>
-        <span class="consensus-badge" id="source-node-count" style="background:var(--ig-blue)">Registry Mode</span>
+        <span class="consensus-badge" id="source-node-count" style="background:var(--purple)">Safe Stream</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Evaluating breaking sports lines...</span>
+          <span class="ticker-item">🏁 Connected to live sports nodes...</span>
         </div>
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🔥 Cross-Verified Consensus</p>
+        <p class="section-label" style="margin:0;">🔥 Stream Matrix</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
 
       <div class="card" id="feed-posts">
         <div class="f1-api-loading">
           <div class="f1-spinner"></div>
-          <span>Cross-checking network footprints...</span>
+          <span>Streaming headlines...</span>
         </div>
       </div>
     </div>
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
   try { startClock(); } catch(e){}
   
   setTimeout(() => {
-    loadNewsFeed().catch(err => {});
+    loadNewsFeed();
   }, 100);
 });
 
@@ -314,7 +314,7 @@ function switchTab(tab) {
       if (navBtn) navBtn.classList.toggle('active', t === tab);
     });
     if (tab === 'sports') { 
-      loadFootballScores().catch(e => {}); 
+      loadFootballScores(); 
       loadF1Data(); 
     }
   } catch(err) {
@@ -325,107 +325,88 @@ function switchTab(tab) {
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
   if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Cross-checking network footprints...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Streaming headlines...</span></div>';
   
-  // High-speed O(1) Index maps
-  const registry = {};
-  const outputList = [];
+  const displayList = [];
 
+  // Isolated try/catch parsing strategy
   const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
     try {
       const res = await fetch(RSS_API + encodeURIComponent(channel.url));
       if (!res.ok) return;
       const data = await res.json();
       
-      if (data && data.items) {
-        data.items.slice(0, 5).forEach(item => {
-          const title = item.title ? item.title.trim() : '';
-          if (!title) return;
-
-          // Generate an instantaneous alphanumeric unique signature key
-          const signatureKey = title.toLowerCase()
-            .replace(/[^a-z0-9]/g, '')
-            .substring(0, 45); // Trim signature length down to save memory lookup speed
-
-          if (!registry[signatureKey]) {
-            // First time seeing this wire item
-            registry[signatureKey] = {
-              title: title,
-              link: item.link || '#',
-              sources: [channel.name],
-              timestamp: item.pubDate ? Date.parse(item.pubDate) : Date.now()
-            };
-          } else {
-            // Instant index hit! Add network verification to existing slot
-            if (!registry[signatureKey].sources.includes(channel.name)) {
-              registry[signatureKey].sources.push(channel.name);
-            }
-          }
+      if (data && data.items && Array.isArray(data.items)) {
+        // Just take the top 2 absolute freshest items from each network. Zero text analysis lookup.
+        data.items.slice(0, 2).forEach(item => {
+          if (!item || !item.title) return;
+          
+          displayList.push({
+            title: String(item.title).trim(),
+            link: item.link || '#',
+            source: channel.name,
+            timestamp: item.pubDate ? Date.parse(item.pubDate) : Date.now()
+          });
         });
       }
-    } catch(e) {}
+    } catch(e) {
+      console.warn("Bypassed network channel fetch exception safely.");
+    }
   });
 
-  await Promise.allSettled(fetchPromises);
-
-  // Instantly dump registry map into linear array
-  for (const key in registry) {
-    const record = registry[key];
-    // FORCE CRITERIA: Dropping single-sourced items instantly. 
-    if (record.sources.length >= 2) {
-      outputList.push(record);
-    }
+  try {
+    await Promise.allSettled(fetchPromises);
+  } catch(e) {
+    console.error("Promise handling error contextualized safely.");
   }
 
-  // Linear quick sort
-  outputList.sort((a, b) => b.timestamp - a.timestamp);
+  // Pure safety wrapper for sorting and template string injection
+  try {
+    displayList.sort((a, b) => b.timestamp - a.timestamp);
 
-  let consensusHtml = "";
-  let validatedTicker = [];
+    let streamHtml = "";
+    let tickerTitles = [];
 
-  outputList.forEach(item => {
-    validatedTicker.push(item.title);
+    displayList.slice(0, 15).forEach(item => {
+      tickerTitles.push(item.title);
+      let formattedHeadline = item.title;
 
-    let formattedHeadline = item.title;
-    KEY_ENTITIES.forEach(entity => {
-      const regex = new RegExp(`\\b${entity}\\b`, 'gi');
-      formattedHeadline = formattedHeadline.replace(regex, `<strong>$&</strong>`);
+      KEY_ENTITIES.forEach(entity => {
+        const regex = new RegExp(`\\b${entity}\\b`, 'gi');
+        formattedHeadline = formattedHeadline.replace(regex, `<strong>$&</strong>`);
+      });
+
+      streamHtml += `
+        <div class="wire-item" onclick="window.open('${item.link}','_blank')">
+          <span class="wire-bullet">•</span>
+          <div class="wire-content">
+            <p class="wire-headline">${formattedHeadline}</p>
+            <div class="wire-meta-row" style="margin-top: 4px;">
+              <span class="outlet-tag" style="background:rgba(167,139,250,0.06); color:var(--purple); border-color:rgba(167,139,250,0.15)">${item.source}</span>
+            </div>
+          </div>
+        </div>`;
     });
 
-    const sourceBadges = item.sources.map(src => `<span class="outlet-tag">${src}</span>`).join('');
-
-    consensusHtml += `
-      <div class="wire-item" onclick="window.open('${item.link}','_blank')">
-        <span class="wire-bullet">•</span>
-        <div class="wire-content">
-          <p class="wire-headline">${formattedHeadline}</p>
-          <div class="wire-meta-row" style="margin-top: 4px;">
-            <span class="consensus-count-badge" style="background:${item.sources.length >= 3 ? 'var(--epl-green)' : 'var(--bg-raised)'; color:${item.sources.length >= 3 ? '#000' : 'var(--txt-secondary)'}">${item.sources.length} Channels Verified</span>
-            ${sourceBadges}
-          </div>
-        </div>
-      </div>`;
-  });
-
-  if (!consensusHtml) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
-        No direct network cross-matches detected on this cycle.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Single source noise filtered without performance costs.</span>
-      </div>`;
-    buildTicker(["Wire clean. Isolated source traffic bypassed."]);
-  } else {
-    container.innerHTML = consensusHtml;
-    buildTicker(validatedTicker);
+    if (!streamHtml) {
+      container.innerHTML = `<div class="empty-state">Stream temporarily empty. Click refresh to query networks.</div>`;
+      buildTicker(["Stream synced."]);
+    } else {
+      container.innerHTML = streamHtml;
+      buildTicker(tickerTitles);
+    }
+  } catch (renderingError) {
+    container.innerHTML = `<div class="f1-api-error">Data format exception inside parsing thread.</div>`;
   }
 }
 
 function buildTicker(titles) {
-  const tracker = document.getElementById('ticker');
-  if (!tracker || !titles || !titles.length) return;
-  const cleanStr = titles.slice(0, 6).map(t => `<span class="ticker-item">⚡ Verified: ${t}</span>`).join('');
-  tracker.innerHTML = cleanStr + cleanStr + cleanStr;
+  try {
+    const tracker = document.getElementById('ticker');
+    if (!tracker || !titles || !titles.length) return;
+    const cleanStr = titles.slice(0, 5).map(t => `<span class="ticker-item">⚡ ${t}</span>`).join('');
+    tracker.innerHTML = cleanStr + cleanStr + cleanStr;
+  } catch(e){}
 }
 
 async function loadFootballScores() {
@@ -455,41 +436,43 @@ async function loadFootballScores() {
 }
 
 function loadF1Data() {
-  const container = document.getElementById('f1-standings-body');
-  if (!container) return;
-  
-  const current2026Standings = [
-    { pos: 1, name: "Kimi Antonelli", team: "Mercedes", teamId: "mercedes", pts: 100, wins: 3, num: 12 },
-    { pos: 2, name: "George Russell", team: "Mercedes", teamId: "mercedes", pts: 80, wins: 1, num: 63 },
-    { pos: 3, name: "Charles Leclerc", team: "Ferrari", teamId: "ferrari", pts: 59, wins: 0, num: 16 },
-    { pos: 4, name: "Lando Norris", team: "McLaren", teamId: "mclaren", pts: 51, wins: 0, num: 4 },
-    { pos: 5, name: "Lewis Hamilton", team: "Ferrari", teamId: "ferrari", pts: 51, wins: 0, num: 44 },
-    { pos: 6, name: "Oscar Piastri", team: "McLaren", teamId: "mclaren", pts: 43, wins: 0, num: 81 }
-  ];
+  try {
+    const container = document.getElementById('f1-standings-body');
+    if (!container) return;
+    
+    const current2026Standings = [
+      { pos: 1, name: "Kimi Antonelli", team: "Mercedes", teamId: "mercedes", pts: 100, wins: 3, num: 12 },
+      { pos: 2, name: "George Russell", team: "Mercedes", teamId: "mercedes", pts: 80, wins: 1, num: 63 },
+      { pos: 3, name: "Charles Leclerc", team: "Ferrari", teamId: "ferrari", pts: 59, wins: 0, num: 16 },
+      { pos: 4, name: "Lando Norris", team: "McLaren", teamId: "mclaren", pts: 51, wins: 0, num: 4 },
+      { pos: 5, name: "Lewis Hamilton", team: "Ferrari", teamId: "ferrari", pts: 51, wins: 0, num: 44 },
+      { pos: 6, name: "Oscar Piastri", team: "McLaren", teamId: "mclaren", pts: 43, wins: 0, num: 81 }
+    ];
 
-  const roundLbl = document.getElementById('f1-standings-round');
-  if (roundLbl) roundLbl.textContent = "2026 CHAMPIONSHIP STANDINGS";
-  
-  let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">WINS</span><span style="text-align:right">PTS</span></div>';
-  
-  const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff8700', 'red_bull': '#3671c6', 'alpine': '#0093cc', 'haas': '#b6babd', 'williams': '#64c4ff', 'default': '#8a8fa8' };
+    const roundLbl = document.getElementById('f1-standings-round');
+    if (roundLbl) roundLbl.textContent = "2026 CHAMPIONSHIP STANDINGS";
+    
+    let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">WINS</span><span style="text-align:right">PTS</span></div>';
+    
+    const BRAND_MAP = { 'mercedes': '#00d2be', 'ferrari': '#e8002d', 'mclaren': '#ff8700', 'red_bull': '#3671c6', 'alpine': '#0093cc', 'haas': '#b6babd', 'williams': '#64c4ff', 'default': '#8a8fa8' };
 
-  current2026Standings.forEach(d => {
-    const col = BRAND_MAP[d.teamId] || BRAND_MAP.default;
-    html += `
-      <div class="f1-std-row">
-        <span class="f1-pos">${d.pos}</span>
-        <span class="f1-num" style="background:${col}22;color:${col}">${d.num}</span>
-        <div class="f1-driver-info">
-          <span class="f1-driver-name">${d.name}</span>
-          <div class="f1-con-bar"><div class="f1-con-fill" style="width:${(d.pts/100)*100}%;background:${col}"></div></div>
-        </div>
-        <span class="f1-wins">${d.wins}</span>
-        <span class="f1-pts">${d.pts}</span>
-      </div>`;
-  });
-  
-  container.innerHTML = html;
+    current2026Standings.forEach(d => {
+      const col = BRAND_MAP[d.teamId] || BRAND_MAP.default;
+      html += `
+        <div class="f1-std-row">
+          <span class="f1-pos">${d.pos}</span>
+          <span class="f1-num" style="background:${col}22;color:${col}">${d.num}</span>
+          <div class="f1-driver-info">
+            <span class="f1-driver-name">${d.name}</span>
+            <div class="f1-con-bar"><div class="f1-con-fill" style="width:${(d.pts/100)*100}%;background:${col}"></div></div>
+          </div>
+          <span class="f1-wins">${d.wins}</span>
+          <span class="f1-pts">${d.pts}</span>
+        </div>`;
+    });
+    
+    container.innerHTML = html;
+  } catch(e){}
 }
 
 function addFood() {
@@ -548,12 +531,15 @@ function renderSets() {
 }
 
 function startClock() {
-  const run = () => { 
-    const d = new Date(); 
+  const updateClock = () => {
+    const d = new Date();
     const clock = document.getElementById('clock');
-    if (clock) clock.textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); 
+    if (clock) {
+      clock.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    }
   };
-  run(); setInterval(run, 5000);
+  updateClock();
+  setInterval(updateClock, 1000); // Decoupled ticking frequency
 }
 function toast(msg) { const t = document.getElementById('toast'); if(!t)return; t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
 </script>
