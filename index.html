@@ -1074,7 +1074,6 @@ function initPulseTab(){
   const cached=load(PK,null);
   if(cached&&(Date.now()-cached.ts)<PT){pulseStories=cached.stories||[];renderPulseFeed();const el=document.getElementById('pulseUpdated');if(el)el.textContent='Updated '+fmtRel(cached.ts);return;}
   pulseFetch(false);
-  if(pulseInt)clearInterval(pulseInt);pulseInt=setInterval(()=>pulseFetch(false),60*60*1000);
 }
 function fmtRel(ts){const m=Math.floor((Date.now()-ts)/60000);if(m<1)return 'just now';if(m<60)return m+'m ago';return Math.floor(m/60)+'h ago';}
 async function pulseFetch(manual=false){
