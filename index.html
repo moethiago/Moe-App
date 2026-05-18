@@ -151,7 +151,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>NORMALIZED RE-ENGINE</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>TUNED CONFLICT FILTER</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -178,15 +178,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Normalized Classifiers</span>
-          <span class="consensus-desc">Sanitized text processing logic operating actively:</span>
+          <span class="consensus-title">Custom Calibration Matcher</span>
+          <span class="consensus-desc">Blocking apologies, updates, columns, and administrative alerts:</span>
         </div>
         <span class="consensus-badge" id="consensus-summary-badge">Ready</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Stream synchronization protocol online...</span>
+          <span class="ticker-item">🏁 Personal news wire engine engaged safely...</span>
         </div>
       </div>
 
@@ -200,7 +200,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 
       <p class="section-label">📊 General Sport Context</p>
       <div class="card" id="context-posts">
-        <div class="empty-state">Awaiting context matrix synchronization...</div>
+        <div class="empty-state">Awaiting updates...</div>
       </div>
     </div>
 
@@ -291,12 +291,12 @@ const SOCCER_STREAM = "https://feeds.bbci.co.uk/sport/football/rss.xml";
 const KEY_ENTITIES = [
   "Hamilton", "Verstappen", "Norris", "Leclerc", "Russell", "Antonelli", "Piastri", "Alonso",
   "Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Real Madrid", "Barcelona", "Bayern",
-  "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix"
+  "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix", "Mourinho"
 ];
 
-// Normalized Regex Engine Targets (Standard strings, boundary expressions bypassed)
-const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|undercard|ufc|boxing|fight|live commentary|live stream)/;
-const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|extends|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished)/;
+// Reconfigured Normalized Keyword Filters to Match Personal Preference Choices
+const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|hints at|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|build up|undercard|ufc|boxing|fight|live commentary|live stream|outage|chants|promise bans|admits error|admits to mistakes|told to sack|key questions)/;
+const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|extends|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft)/;
 
 let foodLog = [], setLog = [];
 
@@ -365,16 +365,13 @@ async function loadNewsFeed() {
 
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
         
-        // --- NORMALIZATION CORE PIPELINE ---
-        // Strip out typography differences, curly brackets, symbols, and tabs to completely secure the text sequence
         const sanitizedTitle = originalTitle
           .toLowerCase()
           .replace(/[\r\n\t]+/g, " ")
-          .replace(/[\u2018\u2019\u201c\u201d]/g, "'") // Map typographic quotes
-          .replace(/[^a-z0-9\s]/g, " ")              // Convert symbols to spaces to isolate clear characters
+          .replace(/[\u2018\u2019\u201c\u201d]/g, "'") 
+          .replace(/[^a-z0-9\s]/g, " ")              
           .trim();
 
-        // Safe rejection rules
         if (JUNK_KEYWORDS.test(sanitizedTitle)) return;
         if (sanitizedTitle.split(' ').filter(w => w.length > 0).length < 4) return;
 
@@ -408,7 +405,6 @@ async function loadNewsFeed() {
             matchedStory.time = parsedTime;
           }
         } else {
-          // Absolute Structural Lane Mapping
           let classification = "context";
           if (CRITICAL_KEYWORDS.test(sanitizedTitle)) {
             classification = "critical";
