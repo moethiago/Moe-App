@@ -1086,8 +1086,9 @@ async function pulseFetch(manual=false){
     all.sort((a,b)=>b.trend_score-a.trend_score);
     pulseStories=dedupeStories(all);save(PK,{ts:Date.now(),stories:pulseStories});
     if(updEl)updEl.textContent='Updated just now';renderPulseFeed();
-  }catch(err){
-        else{feedEl.innerHTML=`<div class="empty"><div style="font-size:24px;margin-bottom:8px">📡</div>No signals right now.<br><button class="btn bp" style="margin-top:14px;display:inline-block" onclick="pulseFetch(true)">↻ Retry</button></div>`;}
+   }catch(err){
+        if(pulseStories.length){renderPulseFeed();if(updEl)updEl.textContent='Using cached data';}
+    else{feedEl.innerHTML=
   }
 }
 async function fetchPulseStories(cat,cfg){
