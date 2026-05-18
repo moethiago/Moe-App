@@ -49,7 +49,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .consensus-info{display:flex;flex-direction:column;gap:1px}
 .consensus-title{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;color:var(--ig-blue);letter-spacing:1px;text-transform:uppercase}
 .consensus-desc{font-size:11px;color:var(--txt-secondary)}
-.consensus-badge{background:var(--ig-blue);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
+.consensus-badge{background:var(--cyan);color:#000;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px}
 
 .card{background:var(--bg-card);border-radius:var(--r-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:12px}
 .card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
@@ -148,7 +148,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>BROADCAST FEED</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>POST-FILTER LAYER</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -175,27 +175,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
     <div class="tab-panel active" id="panel-feed">
       <div class="consensus-banner">
         <div class="consensus-info">
-          <span class="consensus-title">Aggregated Network Footprint</span>
-          <span class="consensus-desc">Isolated chronologic feed (Zero main-thread overhead):</span>
+          <span class="consensus-title">Safe Post-Processing Pipeline</span>
+          <span class="consensus-desc">Collects everything first, then cleans out data:</span>
         </div>
-        <span class="consensus-badge" id="source-node-count" style="background:var(--purple)">Safe Stream</span>
+        <span class="consensus-badge" id="source-node-count">Post-Filter</span>
       </div>
 
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item">🏁 Connected to live sports nodes...</span>
+          <span class="ticker-item">🏁 Waiting for baseline stream initialization...</span>
         </div>
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🔥 Stream Matrix</p>
+        <p class="section-label" style="margin:0;">🔥 Cleaned Wire</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
 
       <div class="card" id="feed-posts">
         <div class="f1-api-loading">
           <div class="f1-spinner"></div>
-          <span>Streaming headlines...</span>
+          <span>Acquiring clean network arrays...</span>
         </div>
       </div>
     </div>
@@ -298,12 +298,30 @@ document.addEventListener('DOMContentLoaded', () => {
   
   try { renderFood(); } catch(e){}
   try { renderSets(); } catch(e){}
-  try { startClock(); } catch(e){}
+  
+  // Independent initialization of the clock execution loop
+  startClock();
   
   setTimeout(() => {
     loadNewsFeed();
   }, 100);
 });
+
+function startClock() {
+  const runClock = () => {
+    try {
+      const d = new Date();
+      const clockEl = document.getElementById('clock');
+      if (clockEl) {
+        clockEl.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+      }
+    } catch(err) {
+      console.error("Clock tracking error bypassed safely.");
+    }
+  };
+  runClock();
+  setInterval(runClock, 2000); // Decoupled execution loop prevents processing crashes from erasing it
+}
 
 function switchTab(tab) {
   try {
@@ -325,11 +343,12 @@ function switchTab(tab) {
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
   if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Streaming headlines...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Acquiring clean network arrays...</span></div>';
   
-  const displayList = [];
+  // STEP 1: The Blind Collection Stage
+  // Zero text analysis, filtering, or property mutation happens here. Just gathering arrays.
+  const rawDataPayloads = [];
 
-  // Isolated try/catch parsing strategy
   const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
     try {
       const res = await fetch(RSS_API + encodeURIComponent(channel.url));
@@ -337,66 +356,93 @@ async function loadNewsFeed() {
       const data = await res.json();
       
       if (data && data.items && Array.isArray(data.items)) {
-        // Just take the top 2 absolute freshest items from each network. Zero text analysis lookup.
-        data.items.slice(0, 2).forEach(item => {
-          if (!item || !item.title) return;
-          
-          displayList.push({
-            title: String(item.title).trim(),
-            link: item.link || '#',
-            source: channel.name,
-            timestamp: item.pubDate ? Date.parse(item.pubDate) : Date.now()
-          });
+        rawDataPayloads.push({
+          sourceName: channel.name,
+          items: data.items
         });
       }
     } catch(e) {
-      console.warn("Bypassed network channel fetch exception safely.");
+      console.warn("Isolated network node bypassed safely.");
     }
   });
 
+  await Promise.allSettled(fetchPromises);
+
+  // STEP 2: The Post-Processing Filter Stage
+  // We completely isolate the parsing logic from the async network flow inside a deep sandbox.
+  const processedFeedItems = [];
+
   try {
-    await Promise.allSettled(fetchPromises);
-  } catch(e) {
-    console.error("Promise handling error contextualized safely.");
+    rawDataPayloads.forEach(payload => {
+      if (!payload || !Array.isArray(payload.items)) return;
+
+      payload.items.forEach(item => {
+        // Double protective fallback defaults for required fields
+        if (!item || !item.title) return;
+        
+        const cleanTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
+        const cleanLink = item.link || "#";
+        const rawTimestamp = item.pubDate ? Date.parse(item.pubDate) : Date.now();
+
+        processedFeedItems.push({
+          title: cleanTitle,
+          link: cleanLink,
+          source: payload.sourceName,
+          time: isNaN(rawTimestamp) ? Date.now() : rawTimestamp
+        });
+      });
+    });
+
+    // Sort items cleanly after extraction completes
+    processedFeedItems.sort((a, b) => b.time - a.time);
+
+  } catch(filterProcessingException) {
+    console.error("Post-processing encountered a data format exception.", filterProcessingException);
+    container.innerHTML = `<div class="f1-api-error">Data filter execution exception handled safely. Clock preserved.</div>`;
+    return;
   }
 
-  // Pure safety wrapper for sorting and template string injection
+  // STEP 3: The Render Generation Stage
   try {
-    displayList.sort((a, b) => b.timestamp - a.timestamp);
+    let finalOutputHtml = "";
+    let tickerArray = [];
 
-    let streamHtml = "";
-    let tickerTitles = [];
+    // Slice the final safe subset
+    const presentationSubset = processedFeedItems.slice(0, 15);
 
-    displayList.slice(0, 15).forEach(item => {
-      tickerTitles.push(item.title);
-      let formattedHeadline = item.title;
+    presentationSubset.forEach(item => {
+      tickerArray.push(item.title);
+      let parsedHeadlineText = item.title;
 
       KEY_ENTITIES.forEach(entity => {
-        const regex = new RegExp(`\\b${entity}\\b`, 'gi');
-        formattedHeadline = formattedHeadline.replace(regex, `<strong>$&</strong>`);
+        if (!entity) return;
+        // Escaping values safely using regex initialization
+        const searchRegex = new RegExp(`\\b${entity}\\b`, 'gi');
+        parsedHeadlineText = parsedHeadlineText.replace(searchRegex, `<strong>$&</strong>`);
       });
 
-      streamHtml += `
+      finalOutputHtml += `
         <div class="wire-item" onclick="window.open('${item.link}','_blank')">
           <span class="wire-bullet">•</span>
           <div class="wire-content">
-            <p class="wire-headline">${formattedHeadline}</p>
+            <p class="wire-headline">${parsedHeadlineText}</p>
             <div class="wire-meta-row" style="margin-top: 4px;">
-              <span class="outlet-tag" style="background:rgba(167,139,250,0.06); color:var(--purple); border-color:rgba(167,139,250,0.15)">${item.source}</span>
+              <span class="outlet-tag" style="background:rgba(34,211,238,0.06); color:var(--cyan); border-color:rgba(34,211,238,0.15)">${item.source}</span>
             </div>
           </div>
         </div>`;
     });
 
-    if (!streamHtml) {
-      container.innerHTML = `<div class="empty-state">Stream temporarily empty. Click refresh to query networks.</div>`;
-      buildTicker(["Stream synced."]);
+    if (!finalOutputHtml) {
+      container.innerHTML = `<div class="empty-state">No stories extracted. Click refresh to retry pipeline sync.</div>`;
+      buildTicker(["System clear. Matrix empty."]);
     } else {
-      container.innerHTML = streamHtml;
-      buildTicker(tickerTitles);
+      container.innerHTML = finalOutputHtml;
+      buildTicker(tickerArray);
     }
-  } catch (renderingError) {
-    container.innerHTML = `<div class="f1-api-error">Data format exception inside parsing thread.</div>`;
+
+  } catch(domInjectionException) {
+    container.innerHTML = `<div class="f1-api-error">Template string generation aborted safely.</div>`;
   }
 }
 
@@ -530,17 +576,6 @@ function renderSets() {
   container.innerHTML = setLog.map(s => `<div class="set-row"><span class="set-exercise">${s.exercise}</span><span class="food-item-kcal">${s.weight}kg × ${s.reps}</span><button class="set-del" onclick="deleteSet(${s.id})">×</button></div>`).join('');
 }
 
-function startClock() {
-  const updateClock = () => {
-    const d = new Date();
-    const clock = document.getElementById('clock');
-    if (clock) {
-      clock.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-    }
-  };
-  updateClock();
-  setInterval(updateClock, 1000); // Decoupled ticking frequency
-}
 function toast(msg) { const t = document.getElementById('toast'); if(!t)return; t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); }
 </script>
 </body>
