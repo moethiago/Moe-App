@@ -116,9 +116,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .empty-state{text-align:center;padding:32px 20px;color:var(--txt-secondary);font-size:13px;line-height:1.6}
 .ring-track{fill:none;stroke:var(--bg-raised);stroke-width:12}
 .ring-prog{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease}
+
+/* TICKER SPEEDS SET TO 5s ANIMATION DURATION */
 .ticker-wrap{overflow:hidden;border-bottom:1px solid var(--border);background:var(--bg-void);padding:8px 0}
 .ticker-track{display:flex;white-space:nowrap;width:max-content;animation:ticker 5s linear infinite}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
+
 .ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
 .f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
 .f1-api-error{padding:20px 16px;text-align:center;color:var(--rose);font-size:13px}
