@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Moe's App</title>
-<link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-<link href="[https://fonts.googleapis.com/css2?family=Rajdhani:wght=400;500;600;700&family=DM+Sans:wght=300;400;500;600&family=JetBrains+Mono:wght=400;500&display=swap](https://fonts.googleapis.com/css2?family=Rajdhani:wght=400;500;600;700&family=DM+Sans:wght=300;400;500;600&family=JetBrains+Mono:wght=400;500&display=swap)" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght=400;500;600;700&family=DM+Sans:wght=300;400;500;600&family=JetBrains+Mono:wght=400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -301,7 +301,13 @@ border-bottom:1px solid var(--border);
         </div>
       </div>
 
-      <!-- Posts -->
+      <!-- Live Feed Control Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:10px;">
+        <p class="section-label" style="margin:0;">🔥 Live News Feed</p>
+        <button onclick="refreshNewsFeed()" style="background:rgba(79,156,249,0.12);border:1px solid rgba(79,156,249,0.3);color:var(--ig-blue);border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;">↻ REFRESH</button>
+      </div>
+
+      <!-- Posts Container -->
       <div class="card" id="feed-posts">
         <div id="news-loading" class="f1-api-loading">
           <div class="f1-spinner" style="border-top-color:var(--ig-blue)"></div>
@@ -765,8 +771,8 @@ function startClock() {
 /* ═══════════════════════════════════════════════════════
    F1 LIVE API · Jolpica (api.jolpi.ca)
 ════════════════════════════════════════════════════════ */
-const F1_BASE = '[https://api.jolpi.ca/ergast/f1](https://api.jolpi.ca/ergast/f1)';
-const CORS_PROXY = '[https://corsproxy.io/?url=](https://corsproxy.io/?url=)';
+const F1_BASE = 'https://api.jolpi.ca/ergast/f1';
+const CORS_PROXY = 'https://corsproxy.io/?url=';
 
 const TEAM_COLORS = {
   'red_bull':       '#3671c6',
@@ -942,13 +948,13 @@ switchTab = function(tab) {
 };
 
 /* ═══════════════════════════════════════════════════════
-   LIVE NEWS FEED · RSS via rss2json.com
+   LIVE NEWS FEED · RSS via rss2json.com (Bypassing cache)
 ════════════════════════════════════════════════════════ */
 const NEWS_SOURCES = [
-  { url: '[https://feeds.bbci.co.uk/sport/formula1/rss.xml](https://feeds.bbci.co.uk/sport/formula1/rss.xml)', name: 'BBC Sport F1',      badge: 'f1', icon: '🏎' },
-  { url: '[https://feeds.bbci.co.uk/sport/football/rss.xml](https://feeds.bbci.co.uk/sport/football/rss.xml)', name: 'BBC Sport Football', badge: 'ig', icon: '⚽' },
-  { url: '[https://www.skysports.com/rss/12040](https://www.skysports.com/rss/12040)',             name: 'Sky Sports F1',      badge: 'f1', icon: '🏎' },
-  { url: '[https://www.espn.com/espn/rss/f1/news](https://www.espn.com/espn/rss/f1/news)',           name: 'ESPN F1',            badge: 'f1', icon: '🏎' },
+  { url: 'https://feeds.bbci.co.uk/sport/formula1/rss.xml', name: 'BBC Sport F1',      badge: 'f1', icon: '🏎' },
+  { url: 'https://feeds.bbci.co.uk/sport/football/rss.xml', name: 'BBC Sport Football', badge: 'ig', icon: '⚽' },
+  { url: 'https://www.skysports.com/rss/12040',             name: 'Sky Sports F1',      badge: 'f1', icon: '🏎' },
+  { url: 'https://www.espn.com/espn/rss/f1/news',           name: 'ESPN F1',            badge: 'f1', icon: '🏎' },
 ];
 
 const FALLBACK_POSTS = [
@@ -1000,7 +1006,11 @@ function renderNewsPost(item, source) {
 
 async function fetchRSS(source) {
   try {
-    const res = await fetch(`[https://api.rss2json.com/v1/api.json?rss_url=$](https://api.rss2json.com/v1/api.json?rss_url=$){encodeURIComponent(source.url)}&count=4`);
+    // Force cache busting by passing an ever-changing timestamp parameter inside the target URL
+    const separator = source.url.includes('?') ? '&' : '?';
+    const liveTargetUrl = source.url + separator + '_cachebust=' + Date.now();
+    
+    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(liveTargetUrl)}&count=4`);
     const data = await res.json();
     if (data.status === 'ok' && data.items && data.items.length) return data.items;
   } catch(e) {}
@@ -1037,13 +1047,22 @@ async function loadNewsFeed() {
   container.innerHTML = html;
 }
 
+async function refreshNewsFeed() {
+  const container = document.getElementById('feed-posts');
+  container.innerHTML = `
+    <div class="f1-api-loading">
+      <div class="f1-spinner" style="border-top-color:var(--ig-blue)"></div>
+      <span>Scraping live articles...</span>
+    </div>`;
+  await loadNewsFeed();
+  toast('🔥 News feed updated live');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadNewsFeed();
 });
 
-/* ═══════════════════════════════════════════════════════
-   KEYBOARD ACTIONS
-════════════════════════════════════════════════════════ */
+/* ── KEYBOARD ACTIONS ── */
 document.querySelectorAll('.log-input').forEach(inp => {
   inp.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
