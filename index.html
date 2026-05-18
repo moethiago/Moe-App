@@ -413,7 +413,7 @@ async function loadNewsFeed() {
   // Sort clusters chronologically: Newest updates first
   clusterMap.sort((a, b) => b.timestamp - a.timestamp);
 
-  // SAFE DYNAMIC THRESHOLD EVALUATION (Blocks single source news strings safely)
+  // SAFE DYNAMIC THRESHOLD SCOPING (Declared here cleanly so empty feeds won't cause crashes)
   let dynamicThreshold = 2; 
   let maxClusterSize = 0;
 
@@ -429,7 +429,7 @@ async function loadNewsFeed() {
     }
   }
 
-  // Safe UI Badge Updates (Prevents app hanging/freezing your status lines)
+  // Safe UI Badge Updates (Prevents app hanging or clock stalling)
   const nodeBadge = document.getElementById('source-node-count');
   if (nodeBadge) {
     if (maxClusterSize >= 2) {
@@ -445,7 +445,7 @@ async function loadNewsFeed() {
   let validatedTicker = [];
 
   clusterMap.forEach(item => {
-    // Structural Guard: Skip anything under the cascade threshold or any single source entry
+    // Structural Guard: Skip anything under the calculated threshold or any stray single source item
     if (item.sources.length < dynamicThreshold || item.sources.length < 2) return; 
 
     validatedTicker.push(item.representativeTitle);
@@ -487,7 +487,7 @@ async function loadNewsFeed() {
 
 function buildTicker(titles) {
   const tracker = document.getElementById('ticker');
-  if (!titles.length) return;
+  if (!titles || !titles.length) return;
   const cleanStr = titles.slice(0, 10).map(t => `<span class="ticker-item">⚡ Consensus Match: ${t}</span>`).join('');
   tracker.innerHTML = cleanStr + cleanStr + cleanStr;
 }
