@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1074,6 +1074,7 @@ function initPulseTab(){
   const cached=load(PK,null);
   if(cached&&(Date.now()-cached.ts)<PT){pulseStories=cached.stories||[];renderPulseFeed();const el=document.getElementById('pulseUpdated');if(el)el.textContent='Updated '+fmtRel(cached.ts);return;}
   pulseFetch(false);
+  if(pulseInt)clearInterval(pulseInt);pulseInt=setInterval(()=>pulseFetch(false),60*60*1000);
 }
 function fmtRel(ts){const m=Math.floor((Date.now()-ts)/60000);if(m<1)return 'just now';if(m<60)return m+'m ago';return Math.floor(m/60)+'h ago';}
 async function pulseFetch(manual=false){
@@ -1081,33 +1082,23 @@ async function pulseFetch(manual=false){
   feedEl.innerHTML=`<div class="empty"><div style="font-size:24px;margin-bottom:8px">📡</div><div style="color:var(--t2)">Loading stories…</div><div style="font-size:11px;color:var(--t3);margin-top:4px">F1 · Bayern · AI</div></div>`;
   if(updEl)updEl.textContent='Fetching…';
   try{
-    const all=[];
-    for(const [cat,cfg] of Object.entries(PULSE_TOPICS)){const s=await fetchPulseStories(cat,cfg);all.push(...s);}
+    const results=await Promise.allSettled(
+      Object.keys(PULSE_TOPICS).map(cat=>
+        fetch('/api/pulse/'+cat).then(r=>r.ok?r.json():[]).catch(()=>[])
+      )
+    );
+    const all=results.flatMap(r=>r.status==='fulfilled'?r.value:[]);
     all.sort((a,b)=>b.trend_score-a.trend_score);
-    pulseStories=dedupeStories(all);save(PK,{ts:Date.now(),stories:pulseStories});
-    if(updEl)updEl.textContent='Updated just now';renderPulseFeed();
-   }catch(err){
-        if(pulseStories.length){renderPulseFeed();if(updEl)updEl.textContent='Using cached data';}
-    else{feedEl.innerHTML=
+    pulseStories=dedupeStories(all);
+    save(PK,{ts:Date.now(),stories:pulseStories});
+    if(updEl)updEl.textContent='Updated just now';
+    renderPulseFeed();
+    if(pulseInt)clearInterval(pulseInt);pulseInt=setInterval(()=>pulseFetch(false),60*60*1000);
+  }catch(err){
+    console.warn('Pulse fetch error:',err);
+    if(pulseStories.length){renderPulseFeed();if(updEl)updEl.textContent='Using cached data';}
+    else{feedEl.innerHTML=`<div class="empty"><div style="font-size:24px;margin-bottom:8px">📡</div><div style="font-weight:700;color:var(--t);margin-bottom:6px">No stories right now</div><div style="font-size:12px;color:var(--t2)">Check your connection and try again.</div><button class="btn bp" style="margin-top:14px;display:inline-block" onclick="pulseFetch(true)">↻ Retry</button></div>`;}
   }
-}
-async function fetchPulseStories(cat,cfg){
-  const prompt=`Search the web right now for the 3 most trending news stories today about: ${cfg.queries.join(', ')}.
-Return ONLY a JSON array (no other text, no markdown):
-[{"id":"${cat}_1","category":"${cat}","headline":"Max 12 words","trend_score":85,"direction":"rising","summary":{"what_happened":"2 sentences.","why_it_matters":"1 sentence.","why_trending":"1 sentence."},"published_at":"${new Date().toISOString()}"}]
-Rules: direction=rising/stable/cooling. Only stories scoring 60+.`;
-  try{
-    const r1=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:prompt}]})});
-    if(!r1.ok)throw new Error('API '+r1.status);
-    const d1=await r1.json();let ft='';
-    if(d1.stop_reason==='tool_use'){
-      const tr=d1.content.filter(b=>b.type==='tool_use').map(b=>({type:'tool_result',tool_use_id:b.id,content:JSON.stringify(b.input||{})}));
-      const r2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,tools:[{type:'web_search_20250305',name:'web_search'}],messages:[{role:'user',content:prompt},{role:'assistant',content:d1.content},{role:'user',content:tr}]})});
-      if(!r2.ok)throw new Error('API2 '+r2.status);const d2=await r2.json();ft=d2.content.filter(b=>b.type==='text').map(b=>b.text).join('');
-    }else{ft=d1.content.filter(b=>b.type==='text').map(b=>b.text).join('');}
-    const m=ft.match(/\[[\s\S]*?\]/);if(!m)throw new Error('No JSON');
-    return JSON.parse(m[0]).filter(s=>s.trend_score>=60).map((s,i)=>({...s,id:cat+'_'+Date.now()+'_'+i,category:cat}));
-  }catch(e){console.warn('Pulse fail:',cat,e);return [];}
 }
 function dedupeStories(stories){const seen=new Set();return stories.filter(s=>{const k=s.headline.toLowerCase().split(' ').slice(0,4).join(' ');if(seen.has(k))return false;seen.add(k);return true;});}
 function setPulseCat(cat,el){pulseFilter=cat;document.querySelectorAll('#pulseCatTabs .ctab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');renderPulseFeed();}
@@ -1175,3 +1166,5 @@ document.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
+
+
