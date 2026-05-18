@@ -173,7 +173,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🚨 SPORTS WIRE</p>
+        <p class="section-label" style="margin:0;">🚨 BREAKING NEWS</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
       <div class="card" id="critical-posts">
@@ -271,10 +271,10 @@ const KEY_ENTITIES = [
   "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix", "Mourinho"
 ];
 
-// BANNED FLUFF LIST - 7 words are strictly back in here
+// BANNED FLUFF LIST
 const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|hints at|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|build up|undercard|ufc|boxing|fight|live commentary|live stream|outage|chants|promise bans|admits error|admits to mistakes|told to sack|key questions)/;
 
-// GATEKEEPER CRITERIA - Must contain at least one of these to bypass the strict filter
+// GATEKEEPER CRITERIA
 const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft)/;
 
 let foodLog = [], setLog = [];
@@ -467,7 +467,7 @@ async function loadFootballScores() {
     if (data && data.items) {
       data.items.forEach(item => {
         if (!item.title) return;
-        const norm = item.title.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+        const norm = item.title.toLowerCase().replace(/[^a-z0-9s]/g, " ");
         if (JUNK_KEYWORDS.test(norm)) return;
         if (norm.split(' ').filter(w=>w.length>0).length < 4) return;
         
