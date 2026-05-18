@@ -177,7 +177,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
       <div class="consensus-banner">
         <div class="consensus-info">
           <span class="consensus-title">Zero-Noise Intelligence</span>
-          <span class="consensus-desc">Clickbait syntax, pundit essays, and speculation purged:</span>
+          <span class="consensus-desc">Live blogs, TV listings, and speculation deleted:</span>
         </div>
         <span class="consensus-badge" id="consensus-summary-badge">Analyzing</span>
       </div>
@@ -291,11 +291,11 @@ const KEY_ENTITIES = [
   "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", "GP", "Grand Prix"
 ];
 
-// Expanded Matrix Filter: Destroys transfer rumors, clickbait, pundit opinion essays, and fan drama
-const SPECULATION_BLACKLIST = /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|targets|target|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column)\b/i;
+// Re-engineered Multi-Sport Filter System: Deletes gossip columns, pundit arrays, live media commentary trackers, TV schedules, and alternative martial art networks
+const SPECULATION_BLACKLIST = /\b(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|targets|target|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|opens up about|left out of|verdict|opinion|column|live:|: live|where to watch|how to watch|stream|tv channel|kick-off time|prediction|preview|undercard|ufc|boxing|fight|clash live|match feed)\b/i;
 
-// Definitive Truth Markers: Hard facts that let a single network through instantly
-const CONFIRMED_WHITELIST = /\b(official|confirmed|signs|signed|statement|done deal|extends|contract|ruled out|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced)\b/i;
+// Firm Structural News Markers: Only corporate validation statements or injuries pass on a single link
+const CONFIRMED_WHITELIST = /\b(official|confirmed|signs|signed|statement|done deal|extends|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|stadium ban|fined|punished|apology)\b/i;
 
 let foodLog = [], setLog = [];
 
@@ -335,7 +335,7 @@ function switchTab(tab) {
 async function loadNewsFeed() {
   const container = document.getElementById('feed-posts');
   if (!container) return;
-  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Scrutinizing headlines...</span></div>';
+  container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Filtering out fluff and schedules...</span></div>';
   
   const rawDataPayloads = [];
 
@@ -361,7 +361,7 @@ async function loadNewsFeed() {
 
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
         
-        // 1. Blacklist Filtering Pass
+        // 1. Core Filter Pass
         if (SPECULATION_BLACKLIST.test(originalTitle)) return;
 
         const cleanLink = item.link || "#";
@@ -373,8 +373,14 @@ async function loadNewsFeed() {
           .split(' ')
           .filter(word => word.length > 3);
 
+        // Core Category Structural Match Tag
+        const isF1Source = payload.source.toLowerCase().includes('f1');
+
         let matchedStory = null;
         for (let story of uniqueStories) {
+          // Cross-Sport Guardrail: Never let an F1 feed join metrics with a football feed
+          if (story.isF1 !== isF1Source) continue;
+
           let overlapCount = 0;
           textFootprint.forEach(word => {
             if (story.signature.includes(word)) overlapCount++;
@@ -402,17 +408,21 @@ async function loadNewsFeed() {
             link: cleanLink,
             sources: [payload.source],
             time: parsedTime,
-            signature: textFootprint
+            signature: textFootprint,
+            isF1: isF1Source
           });
         }
       });
     });
 
-    // 2. Structural Gate Processing (Length and Verification rules)
+    // 2. Structural Length Guard & Double Safety Valve Passes
     const verifiedStories = uniqueStories.filter(story => {
       const standardTitle = story.title.toLowerCase();
       
-      // Structural Length Protection Rule: Block ultra-short clickbait hooks
+      // Secondary filter pass
+      if (SPECULATION_BLACKLIST.test(standardTitle)) return false;
+
+      // Token Length rule: Stop short clickbait hooks from leaking out
       const titleTokensCount = story.title.split(' ').length;
       if (titleTokensCount < 5 && !CONFIRMED_WHITELIST.test(standardTitle)) return false;
 
@@ -423,7 +433,6 @@ async function loadNewsFeed() {
 
     verifiedStories.sort((a, b) => b.time - a.time);
 
-    // Rendering output pass
     let finalHtml = "";
     let tickerArray = [];
     let absoluteVerificationCount = 0;
