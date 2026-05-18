@@ -260,24 +260,26 @@ const MASTER_CHANNELS = [
   { name: "Sky F1", url: "https://www.skysports.com/rss/12040" },
   { name: "Sky Football", url: "https://www.skysports.com/rss/11095" },
   { name: "TalkSport", url: "https://talksport.com/feed/" },
-  { name: "Independent", url: "https://www.independent.co.uk/sport/rss" }
+  { name: "Independent", url: "https://www.independent.co.uk/sport/rss" },
+  { name: "Arab News Sport", url: "https://www.arabnews.com/cat/5/rss.xml" }
 ];
 
 const SOCCER_STREAM = "https://feeds.bbci.co.uk/sport/football/rss.xml";
 
-// ADDED BAYERN MUNICH SPECIFIC HIGHLIGHT ENTITIES
+// UPDATED WITH REGIONAL HIGHLIGHT KSA TARGET TRIGGERS
 const KEY_ENTITIES = [
   "Hamilton", "Verstappen", "Norris", "Leclerc", "Russell", "Antonelli", "Piastri", "Alonso",
   "Arsenal", "Man City", "Liverpool", "Chelsea", "Man Utd", "Real Madrid", "Barcelona", "Bayern",
   "Bayern Munich", "Munich", "Kompany", "Mercedes", "Ferrari", "Red Bull", "McLaren", "Aston Martin", 
-  "GP", "Grand Prix", "Mourinho"
+  "GP", "Grand Prix", "Mourinho", "Al Nassr", "Al Hilal", "Al Ittihad", "Al Ahli", "Ronaldo", "Neymar", 
+  "Saudi Pro League", "SPL"
 ];
 
 // BANNED FLUFF LIST
 const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|hints at|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|build up|undercard|ufc|boxing|fight|live commentary|live stream|outage|chants|promise bans|admits error|admits to mistakes|told to sack|key questions)/;
 
 // GATEKEEPER CRITERIA
-const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft)/;
+const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft|cup champions|trophy|clinch)/;
 
 let foodLog = [], setLog = [];
 let tickerPosition = 0;
