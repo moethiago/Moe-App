@@ -58,8 +58,8 @@ border-bottom:1px solid var(--border);
 .logo span{-webkit-text-fill-color:var(--f1-red)}
 .header-right{display:flex;align-items:center;gap:10px}
 .hdr-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
-.hdr-live{background:rgba(232,0,45,0.15);color:var(--f1-red);border:1px solid rgba(232,0,45,0.3);display:flex;align-items:center;gap:5px}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--f1-red);animation:pulse 1.4s ease-in-out infinite}
+.hdr-live{background:rgba(56,211,106,0.15);color:var(--epl-green);border:1px solid rgba(56,211,106,0.3);display:flex;align-items:center;gap:5px}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--epl-green);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .hdr-time{color:var(--txt-secondary);font-size:12px;font-family:'JetBrains Mono',monospace}
 
@@ -75,7 +75,7 @@ border-bottom:1px solid var(--border);
 .badge-f1{background:rgba(232,0,45,0.12);color:var(--f1-red);border:1px solid rgba(232,0,45,0.2)}
 
 /* ── FEED ── */
-.post{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px}
+.post{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;cursor:pointer;transition:background 0.2s}
 .post:last-child{border-bottom:none}
 .post:active{background:var(--bg-raised)}
 .post-avatar{width:40px;height:40px;border-radius:50%;background:var(--bg-raised);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;position:relative;overflow:hidden}
@@ -83,80 +83,49 @@ border-bottom:1px solid var(--border);
 .post-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
 .post-name{font-weight:600;font-size:13px}
 .post-time{color:var(--txt-muted);font-size:11px;margin-left:auto}
-.post-text{font-size:14px;line-height:1.5;color:var(--txt-primary);margin-bottom:10px}
-.post-img{width:100%;border-radius:var(--r-sm);margin-bottom:10px;background:var(--bg-raised);height:160px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.post-img-gradient{position:absolute;inset:0;border-radius:var(--r-sm)}
-.post-img-label{position:relative;z-index:1;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:28px;letter-spacing:2px}
+.post-text{font-size:14px;line-height:1.5;font-weight:500;color:var(--txt-primary);margin-bottom:6px}
 .post-actions{display:flex;gap:16px}
-.post-action{display:flex;align-items:center;gap:5px;color:var(--txt-muted);font-size:12px;cursor:pointer;transition:color 0.15s}
-.post-action svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
-.post-action.liked{color:var(--rose)}
-.post-action.liked svg{fill:var(--rose);stroke:var(--rose)}
+.post-action{display:flex;align-items:center;gap:5px;color:var(--txt-muted);font-size:11px;cursor:pointer}
+.post-action svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
+
 .stories-row{display:flex;gap:12px;overflow-x:auto;padding:14px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .stories-row::-webkit-scrollbar{display:none}
 .story{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;cursor:pointer}
-.story-ring{width:54px;height:54px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center}
-.story-ring.seen{background:var(--bg-raised)}
+.story-ring{width:54px;height:54px;border-radius:50%;padding:2px;background:linear-gradient(135deg,var(--ig-blue),var(--purple));display:flex;align-items:center;justify-content:center}
 .story-avatar{width:100%;height:100%;border-radius:50%;background:var(--bg-raised);border:2px solid var(--bg-card);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:18px}
 .story-name{font-size:10px;color:var(--txt-secondary);max-width:54px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ── SPORTS ── */
 .match-card{padding:14px 16px;border-bottom:1px solid var(--border)}
 .match-card:last-child{border-bottom:none}
-.match-card:active{background:var(--bg-raised)}
 .match-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase}
-.league-epl{background:rgba(56,211,106,0.12);color:var(--epl-green);border:1px solid rgba(56,211,106,0.25)}
-.league-ucl{background:rgba(79,156,249,0.12);color:var(--ig-blue);border:1px solid rgba(79,156,249,0.25)}
-.league-ll{background:rgba(245,200,66,0.12);color:var(--gold);border:1px solid rgba(245,200,66,0.25)}
-.live-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--f1-red);font-family:'JetBrains Mono',monospace;margin-left:auto}
-.ft-badge{font-size:11px;font-weight:500;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;margin-left:auto}
+.league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border-hi)}
+.ft-badge{font-size:11px;font-weight:600;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;margin-left:auto}
 .match-score-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
 .match-team{display:flex;flex-direction:column;gap:3px}
 .match-team.away{align-items:flex-end}
-.team-name{font-weight:600;font-size:15px}
-.team-stat{font-size:11px;color:var(--txt-muted)}
-.score-box{display:flex;align-items:center;gap:8px;background:var(--bg-raised);border-radius:var(--r-sm);padding:6px 12px}
-.score-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:28px;line-height:1}
-.score-sep{color:var(--txt-muted);font-size:20px;font-weight:300}
-.match-events{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
-.event-chip{font-size:11px;background:var(--bg-raised);border-radius:20px;padding:3px 10px;color:var(--txt-secondary);display:flex;align-items:center;gap:4px}
+.team-name{font-weight:600;font-size:14px;color:var(--txt-primary)}
+.score-box{display:flex;align-items:center;gap:8px;background:var(--bg-raised);border-radius:var(--r-sm);padding:6px 14px;border:1px solid var(--border)}
+.score-num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:24px;line-height:1;color:var(--cyan)}
+.score-sep{color:var(--txt-muted);font-size:16px}
 
-/* ── F1 ── */
-.f1-header-row{display:grid;grid-template-columns:28px 28px 1fr 70px 70px;gap:6px;padding:8px 16px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--txt-muted);align-items:center}
-.f1-row{display:grid;grid-template-columns:28px 28px 1fr 70px 70px;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);align-items:center}
-.f1-row:last-child{border-bottom:none}
-.f1-pos{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:18px;text-align:center}
+/* ── F1 STANDINGS ── */
+.f1-result-header, .f1-std-header{display:grid;grid-template-columns:28px 28px 1fr 60px 60px;gap:6px;padding:8px 16px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--txt-muted)}
+.f1-result-row, .f1-std-row{display:grid;grid-template-columns:28px 28px 1fr 60px 60px;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);align-items:center}
+.f1-result-row:last-child, .f1-std-row:last-child{border-bottom:none}
+.f1-pos{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;text-align:center}
 .f1-pos.p1{color:var(--gold)}.f1-pos.p2{color:#c0c0c0}.f1-pos.p3{color:#cd7f32}
-.f1-num{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500}
-.f1-driver-info{display:flex;flex-direction:column;gap:1px}
-.f1-driver-name{font-weight:600;font-size:14px}
-.f1-team-name{font-size:10px;color:var(--txt-muted)}
-.f1-interval{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--txt-secondary);text-align:right}
-.f1-fastest{font-family:'JetBrains Mono',monospace;font-size:11px;text-align:right}
-.f1-fastest.is-fastest{color:var(--purple)}
-.f1-race-banner{padding:12px 16px;background:linear-gradient(90deg,rgba(232,0,45,0.08),transparent);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-.f1-banner-tag{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--f1-red);background:rgba(232,0,45,0.12);border:1px solid rgba(232,0,45,0.2);border-radius:4px;padding:3px 9px}
-.f1-banner-text{font-size:13px;font-weight:500}
-.f1-banner-sub{font-size:11px;color:var(--txt-secondary);margin-left:auto;font-family:'JetBrains Mono',monospace}
-.f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-muted);font-size:13px}
-.f1-api-error{padding:20px 16px;text-align:center;color:var(--rose);font-size:13px}
-.f1-spinner{width:24px;height:24px;border:2px solid var(--bg-raised);border-top-color:var(--f1-red);border-radius:50%;animation:spin 0.7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.f1-result-row{display:grid;grid-template-columns:28px 28px 1fr 80px 72px;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);align-items:center}
-.f1-result-row:last-child{border-bottom:none}
-.f1-result-header{display:grid;grid-template-columns:28px 28px 1fr 80px 72px;gap:6px;padding:8px 16px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--txt-muted)}
-.f1-std-row{display:grid;grid-template-columns:28px 28px 1fr 36px 56px;gap:6px;padding:10px 16px;border-bottom:1px solid var(--border);align-items:center}
-.f1-std-row:last-child{border-bottom:none}
-.f1-std-header{display:grid;grid-template-columns:28px 28px 1fr 36px 56px;gap:6px;padding:8px 16px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--txt-muted)}
+.f1-num{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600}
+.f1-driver-info{display:flex;flex-direction:column;gap:1px;min-width:0}
+.f1-driver-name{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f1-team-name{font-size:10px;color:var(--txt-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f1-time-gap, .f1-pts, .f1-wins{font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right}
+.f1-wins{color:var(--gold)}
 .f1-con-row{display:grid;grid-template-columns:28px 1fr 60px;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center}
 .f1-con-row:last-child{border-bottom:none}
-.f1-pts{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;text-align:right}
-.f1-wins{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);text-align:right}
-.f1-time-gap{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--txt-secondary);text-align:right}
-.f1-last-updated{text-align:center;padding:8px;font-size:10px;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;border-top:1px solid var(--border)}
-.f1-con-bar{height:4px;border-radius:2px;background:var(--bg-hover);overflow:hidden;margin-top:4px}
+.f1-con-bar{height:3px;border-radius:2px;background:var(--bg-hover);overflow:hidden;margin-top:4px}
 .f1-con-fill{height:100%;border-radius:2px;transition:width 0.6s ease}
+.f1-last-updated{text-align:center;padding:8px;font-size:10px;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;background:var(--bg-void)}
 
 /* ── HEALTH ── */
 .macro-ring-wrap{padding:20px 16px 16px;display:flex;flex-direction:column;align-items:center;gap:16px}
@@ -169,50 +138,46 @@ border-bottom:1px solid var(--border);
 .macro-pill{flex:1;background:var(--bg-raised);border-radius:var(--r-md);padding:12px;display:flex;flex-direction:column;gap:6px;border:1px solid var(--border)}
 .macro-pill-top{display:flex;align-items:center;justify-content:space-between}
 .macro-name{font-size:11px;color:var(--txt-muted);text-transform:uppercase;letter-spacing:0.5px}
-.macro-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:18px}
+.macro-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px}
 .macro-bar{height:4px;border-radius:2px;background:var(--bg-hover);overflow:hidden}
 .macro-fill{height:100%;border-radius:2px;transition:width 0.4s ease}
 .fill-protein{background:var(--ig-blue)}.fill-carbs{background:var(--epl-green)}.fill-fat{background:var(--gold)}
-.food-log-list{padding:0 16px 12px;display:flex;flex-direction:column;gap:2px}
-.food-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg-raised);border-radius:var(--r-sm);margin-bottom:2px;border:1px solid var(--border)}
-.food-item-name{font-size:13px;font-weight:500;flex:1}
+.food-log-list, .set-list{padding:0 16px 12px;display:flex;flex-direction:column;gap:4px}
+.food-item, .set-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-raised);border-radius:var(--r-sm);border:1px solid var(--border)}
+.food-item-name, .set-exercise{font-size:13px;font-weight:500;flex:1}
 .food-item-kcal{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--txt-secondary)}
 .food-item-p{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ig-blue)}
-.food-del{background:none;border:none;color:var(--txt-muted);cursor:pointer;font-size:16px;padding:0 2px}
+.food-del, .set-del{background:none;border:none;color:var(--txt-muted);cursor:pointer;font-size:16px;padding:0 4px}
 .log-form{padding:12px 16px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--border)}
 .log-form-row{display:flex;gap:8px}
-.log-input{flex:1;background:var(--bg-raised);border:1px solid var(--border-hi);border-radius:var(--r-sm);color:var(--txt-primary);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;outline:none;-webkit-appearance:none}
+.log-input{flex:1;background:var(--bg-raised);border:1px solid var(--border-hi);border-radius:var(--r-sm);color:var(--txt-primary);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;outline:none}
 .log-input::placeholder{color:var(--txt-muted)}
-.log-input:focus{border-color:var(--ig-blue);box-shadow:0 0 0 3px rgba(79,156,249,0.1)}
-.log-input.small{max-width:80px;text-align:center}
-.log-btn{background:linear-gradient(135deg,var(--ig-blue),var(--purple));border:none;border-radius:var(--r-sm);color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:10px 16px;cursor:pointer;white-space:nowrap}
+.log-input.small{max-width:75px;text-align:center}
+.log-btn{background:linear-gradient(135deg,var(--ig-blue),var(--purple));border:none;border-radius:var(--r-sm);color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:10px 16px;cursor:pointer}
 .log-btn.red{background:linear-gradient(135deg,var(--f1-red),var(--f1-orange))}
 .workout-stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:14px 16px}
 .wk-stat{background:var(--bg-raised);border-radius:var(--r-sm);padding:12px;text-align:center;border:1px solid var(--border)}
 .wk-stat-val{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:22px}
-.wk-stat-lbl{font-size:10px;color:var(--txt-muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
-.set-list{padding:0 16px 12px;display:flex;flex-direction:column;gap:4px}
-.set-row{display:flex;align-items:center;gap:10px;background:var(--bg-raised);border-radius:var(--r-sm);padding:10px 12px;border:1px solid var(--border);animation:slideIn 0.3s ease}
-@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.set-exercise{font-size:13px;font-weight:500;flex:1}
-.set-vol{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--txt-secondary)}
-.set-vol strong{color:var(--cyan)}
-.set-del{background:none;border:none;color:var(--txt-muted);cursor:pointer;font-size:16px}
-.empty-state{text-align:center;padding:32px 16px;color:var(--txt-muted);font-size:14px;display:flex;flex-direction:column;gap:8px;align-items:center}
-.empty-icon{font-size:32px}
+.wk-stat-lbl{font-size:10px;color:var(--txt-muted);text-transform:uppercase;margin-top:2px}
 .vol-total{padding:10px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--txt-secondary)}
 .vol-total strong{color:var(--txt-primary);font-family:'Rajdhani',sans-serif;font-size:18px}
+.empty-state{text-align:center;padding:24px 16px;color:var(--txt-muted);font-size:13px}
 .ring-track{fill:none;stroke:var(--bg-raised);stroke-width:12}
 .ring-prog{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease}
-.ticker-wrap{overflow:hidden;border-bottom:1px solid var(--border);background:var(--bg-void);padding:7px 0}
-.ticker-track{display:flex;gap:0;animation:ticker 28s linear infinite;white-space:nowrap}
-@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.ticker-item{padding:0 20px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:8px;border-right:1px solid var(--border)}
-.ticker-item .t-score{color:var(--txt-primary);font-weight:500}
-.ticker-item .t-live{color:var(--f1-red)}
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg-raised);border:1px solid var(--border-hi);color:var(--txt-primary);border-radius:var(--r-md);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.25s,transform 0.25s;z-index:9999;white-space:nowrap;max-width:calc(100vw - 40px)}
+
+/* ── SCROLLING TICKER ── */
+.ticker-wrap{overflow:hidden;border-bottom:1px solid var(--border);background:var(--bg-void);padding:8px 0}
+.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:ticker 45s linear infinite}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
+.ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
+
+/* ── CORE ENGINE STATES ── */
+.f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
+.f1-api-error{padding:20px 16px;text-align:center;color:var(--rose);font-size:13px}
+.f1-spinner{width:20px;height:20px;border:2px solid var(--bg-raised);border-top-color:var(--ig-blue);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg-raised);border:1px solid var(--border-hi);color:var(--txt-primary);border-radius:var(--r-md);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:9999}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.clock-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--txt-muted);text-align:center;padding:6px}
 </style>
 </head>
 <body>
@@ -222,7 +187,7 @@ border-bottom:1px solid var(--border);
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
       <div class="header-right">
-        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>LIVE</span>
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>LIVE FEED</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -248,231 +213,85 @@ border-bottom:1px solid var(--border);
   <div id="scroll-wrap">
     <!-- PANEL FEED -->
     <div class="tab-panel active" id="panel-feed">
-      <!-- Ticker -->
+      <!-- Dynamic Marquee Ticker -->
       <div class="ticker-wrap">
         <div class="ticker-track" id="ticker">
-          <span class="ticker-item"> EPL <span class="t-live">●</span> MAN CITY <span class="t-score">2–1</span> ARSENAL · 67'</span>
-          <span class="ticker-item">🏎 F1 MONACO <span class="t-live">●</span> LAP 43/78 · VER +0.0</span>
-          <span class="ticker-item"> EPL · CHELSEA <span class="t-score">0–0</span> SPURS · 23'</span>
-          <span class="ticker-item">🏆 UCL FINAL · REAL MAD <span class="t-score">FT 1–0</span> PSG</span>
-          <span class="ticker-item">🏎 HAM P4 +18.4s · NOR P2 +2.1s</span>
-          <span class="ticker-item">📸 IG · 847K reach · +12% vs yesterday</span>
-          <!-- duplicate for seamless loop -->
-          <span class="ticker-item"> EPL <span class="t-live">●</span> MAN CITY <span class="t-score">2–1</span> ARSENAL · 67'</span>
-          <span class="ticker-item">🏎 F1 MONACO <span class="t-live">●</span> LAP 43/78 · VER +0.0</span>
-          <span class="ticker-item"> EPL · CHELSEA <span class="t-score">0–0</span> SPURS · 23'</span>
-          <span class="ticker-item">🏆 UCL FINAL · REAL MAD <span class="t-score">FT 1–0</span> PSG</span>
-          <span class="ticker-item">🏎 HAM P4 +18.4s · NOR P2 +2.1s</span>
-          <span class="ticker-item">📸 IG · 847K reach · +12% vs yesterday</span>
+          <span class="ticker-item">⚡ Fetching live global sports streams...</span>
         </div>
       </div>
 
-      <!-- Stories -->
-      <div class="card" style="margin-bottom:12px; overflow:visible; background:transparent; border-color:transparent;">
-        <div class="stories-row">
-          <div class="story">
-            <div class="story-ring"><div class="story-avatar">🏎</div></div>
-            <span class="story-name">F1 App</span>
-          </div>
-          <div class="story">
-            <div class="story-ring"><div class="story-avatar">⚽</div></div>
-            <span class="story-name">FotMob</span>
-          </div>
-          <div class="story">
-            <div class="story-ring"><div class="story-avatar">VB</div></div>
-            <span class="story-name">Verstappen</span>
-          </div>
-          <div class="story">
-            <div class="story-ring"><div class="story-avatar">LN</div></div>
-            <span class="story-name">Lando N.</span>
-          </div>
-          <div class="story">
-            <div class="story-ring seen"><div class="story-avatar">MCA</div></div>
-            <span class="story-name">Man City</span>
-          </div>
-          <div class="story">
-            <div class="story-ring seen"><div class="story-avatar">CH</div></div>
-            <span class="story-name">Chelsea</span>
-          </div>
-          <div class="story">
-            <div class="story-ring"><div class="story-avatar">🏋️</div></div>
-            <span class="story-name">Training</span>
-          </div>
-        </div>
+      <!-- Stories Lineup -->
+      <div class="stories-row">
+        <div class="story"><div class="story-ring"><div class="story-avatar">🏎️</div></div><span class="story-name">F1 Live</span></div>
+        <div class="story"><div class="story-ring"><div class="story-avatar">⚽</div></div><span class="story-name">EPL Feed</span></div>
+        <div class="story"><div class="story-ring"><div class="story-avatar">LN</div></div><span class="story-name">Lando</span></div>
+        <div class="story"><div class="story-ring"><div class="story-avatar">MV</div></div><span class="story-name">Max</span></div>
+        <div class="story"><div class="story-ring"><div class="story-avatar">🥗</div></div><span class="story-name">Macros</span></div>
       </div>
 
-      <!-- Live Feed Control Header -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:10px;">
-        <p class="section-label" style="margin:0;">🔥 Live News Feed</p>
-        <button onclick="refreshNewsFeed()" style="background:rgba(79,156,249,0.12);border:1px solid rgba(79,156,249,0.3);color:var(--ig-blue);border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;">↻ REFRESH</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;margin-bottom:10px;">
+        <p class="section-label" style="margin:0;">🔥 Live Real-Time News</p>
+        <button onclick="loadNewsFeed()" style="background:rgba(79,156,249,0.12);border:1px solid rgba(79,156,249,0.3);color:var(--ig-blue);border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;">↻ BYPASS CACHE</button>
       </div>
 
-      <!-- Posts Container -->
       <div class="card" id="feed-posts">
-        <div id="news-loading" class="f1-api-loading">
+        <div class="f1-api-loading">
           <div class="f1-spinner" style="border-top-color:var(--ig-blue)"></div>
-          <span>Loading latest news...</span>
+          <span>Parsing live streams directly...</span>
         </div>
       </div>
     </div>
 
     <!-- PANEL SPORTS -->
     <div class="tab-panel" id="panel-sports">
-      <p class="section-label">⚽ Football · Live & Recent</p>
-
-      <!-- Match 1 · EPL LIVE -->
-      <div class="card">
-        <div class="match-card">
-          <div class="match-header">
-            <span class="league-badge league-epl">EPL</span>
-            <span style="font-size:11px;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;">Matchday 36</span>
-            <div class="live-badge"><span class="pulse-dot"></span>Live 67'</div>
-          </div>
-          <div class="match-score-row">
-            <div class="match-team">
-              <span class="team-name">Man City</span>
-              <span class="team-stat">4th · 71 pts</span>
-            </div>
-            <div class="score-box">
-              <span class="score-num" style="color:var(--epl-green)">2</span>
-              <span class="score-sep">–</span>
-              <span class="score-num">1</span>
-            </div>
-            <div class="match-team away">
-              <span class="team-name">Arsenal</span>
-              <span class="team-stat">2nd · 74 pts</span>
-            </div>
-          </div>
-          <div class="match-events">
-            <span class="event-chip">⚽ Haaland 42', 64'</span>
-            <span class="event-chip">⚽ Saka 51'</span>
-            <span class="event-chip">🟨 Rodri 38'</span>
-          </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <p class="section-label" style="margin:0;">⚽ Dynamic Football Scores</p>
+        <button onclick="loadFootballScores()" style="background:rgba(56,211,106,0.12);border:1px solid rgba(56,211,106,0.3);color:var(--epl-green);border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;">↻ REFRESH SCORES</button>
+      </div>
+      
+      <div class="card" id="football-scores-container">
+        <div class="f1-api-loading">
+          <div class="f1-spinner" style="border-top-color:var(--epl-green)"></div>
+          <span>Parsing live result nodes...</span>
         </div>
       </div>
 
-      <!-- Match 2 · EPL LIVE -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:20px;margin-bottom:10px;">
+        <p class="section-label" style="margin:0;">🏎️ F1 Global Engine (2026)</p>
+        <button onclick="loadF1Data()" style="background:rgba(232,0,45,0.12);border:1px solid rgba(232,0,45,0.3);color:var(--f1-red);border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;">↻ REFRESH F1</button>
+      </div>
+
+      <!-- Last Race Node -->
       <div class="card">
-        <div class="match-card">
-          <div class="match-header">
-            <span class="league-badge league-epl">EPL</span>
-            <span style="font-size:11px;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;">Matchday 36</span>
-            <div class="live-badge"><span class="pulse-dot"></span>Live 23'</div>
-          </div>
-          <div class="match-score-row">
-            <div class="match-team">
-              <span class="team-name">Chelsea</span>
-              <span class="team-stat">6th · 63 pts</span>
-            </div>
-            <div class="score-box">
-              <span class="score-num">0</span>
-              <span class="score-sep">–</span>
-              <span class="score-num">0</span>
-            </div>
-            <div class="match-team away">
-              <span class="team-name">Spurs</span>
-              <span class="team-stat">17th · 26 pts</span>
-            </div>
-          </div>
-          <div class="match-events">
-            <span class="event-chip" style="color:var(--txt-muted);font-size:11px;">No events yet</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Match 3 · UCL FT -->
-      <div class="card">
-        <div class="match-card">
-          <div class="match-header">
-            <span class="league-badge league-ucl">UCL FINAL</span>
-            <span class="ft-badge">FT</span>
-          </div>
-          <div class="match-score-row">
-            <div class="match-team">
-              <span class="team-name">Real Madrid</span>
-              <span class="team-stat">Winners 🏆</span>
-            </div>
-            <div class="score-box">
-              <span class="score-num" style="color:var(--gold)">1</span>
-              <span class="score-sep">–</span>
-              <span class="score-num">0</span>
-            </div>
-            <div class="match-team away">
-              <span class="team-name">PSG</span>
-              <span class="team-stat">Runners-up</span>
-            </div>
-          </div>
-          <div class="match-events">
-            <span class="event-chip">⚽ Vini Jr. 87'</span>
-            <span class="event-chip">🟥 Marquinhos 90+2'</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- F1 LIVE DATA -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:24px;margin-bottom:10px;">
-        <p class="section-label" style="margin:0;">🏎 F1 · 2026 Season</p>
-        <button onclick="loadF1Data()" style="background:rgba(232,0,45,0.12);border:1px solid rgba(232,0,45,0.3);color:var(--f1-red);border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;">↻ REFRESH</button>
-      </div>
-
-      <!-- Last Race Result -->
-      <div class="card" style="overflow:hidden;">
         <div class="card-header">
-          <span class="card-title">Last Race · Result</span>
+          <span class="card-title">Last Race Data Matrix</span>
           <span id="f1-last-race-name" style="font-size:11px;color:var(--txt-secondary);font-family:'JetBrains Mono',monospace;">—</span>
         </div>
-        <div id="f1-last-race-body">
-          <div class="f1-api-loading">
-            <div class="f1-spinner"></div>
-            <span>Fetching from Jolpica F1 API…</span>
-          </div>
-        </div>
+        <div id="f1-last-race-body"></div>
       </div>
 
-      <!-- Driver Championship Standings -->
-      <div class="card" style="overflow:hidden;margin-top:12px;">
+      <!-- Driver World Standings -->
+      <div class="card" style="margin-top:12px;">
         <div class="card-header">
-          <span class="card-title">Driver Championship · 2026</span>
+          <span class="card-title">Driver Standings Matrix</span>
           <span id="f1-standings-round" style="font-size:11px;color:var(--txt-secondary);font-family:'JetBrains Mono',monospace;">—</span>
         </div>
-        <div id="f1-standings-body">
-          <div class="f1-api-loading">
-            <div class="f1-spinner"></div>
-            <span>Fetching standings…</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Constructor Standings -->
-      <div class="card" style="overflow:hidden;margin-top:12px;margin-bottom:4px;">
-        <div class="card-header">
-          <span class="card-title">Constructor Championship · 2026</span>
-        </div>
-        <div id="f1-constructors-body">
-          <div class="f1-api-loading">
-            <div class="f1-spinner"></div>
-            <span>Fetching constructors…</span>
-          </div>
-        </div>
+        <div id="f1-standings-body"></div>
       </div>
     </div>
 
     <!-- PANEL HEALTH -->
     <div class="tab-panel" id="panel-health">
-      <p class="section-label">🥗 Nutrition · Today</p>
+      <p class="section-label">🥗 Nutrition Log</p>
       <div class="card">
         <div class="macro-ring-wrap">
           <div class="ring-outer">
             <svg viewBox="0 0 120 120">
               <circle class="ring-track" cx="60" cy="60" r="50"/>
-              <circle class="ring-prog" id="cal-ring" cx="60" cy="60" r="50"
-                stroke="url(#calGrad)"
-                stroke-dasharray="314"
-                stroke-dashoffset="314"/>
+              <circle class="ring-prog" id="cal-ring" cx="60" cy="60" r="50" stroke="url(#calGrad)" stroke-dasharray="314" stroke-dashoffset="314"/>
               <defs>
                 <linearGradient id="calGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#4f9cf9"/>
-                  <stop offset="100%" stop-color="#a78bfa"/>
+                  <stop offset="0%" stop-color="#4f9cf9"/><stop offset="100%" stop-color="#a78bfa"/>
                 </linearGradient>
               </defs>
             </svg>
@@ -483,80 +302,46 @@ border-bottom:1px solid var(--border);
           </div>
           <div class="macros-row">
             <div class="macro-pill">
-              <div class="macro-pill-top">
-                <span class="macro-name">Protein</span>
-                <span class="macro-val" id="prot-val">0g</span>
-              </div>
+              <div class="macro-pill-top"><span class="macro-name">Prot</span><span class="macro-val" id="prot-val">0g</span></div>
               <div class="macro-bar"><div class="macro-fill fill-protein" id="prot-bar" style="width:0%"></div></div>
-              <span style="font-size:10px;color:var(--txt-muted)" id="prot-target">/ 180g</span>
             </div>
             <div class="macro-pill">
-              <div class="macro-pill-top">
-                <span class="macro-name">Carbs</span>
-                <span class="macro-val" id="carb-val">0g</span>
-              </div>
+              <div class="macro-pill-top"><span class="macro-name">Carb</span><span class="macro-val" id="carb-val">0g</span></div>
               <div class="macro-bar"><div class="macro-fill fill-carbs" id="carb-bar" style="width:0%"></div></div>
-              <span style="font-size:10px;color:var(--txt-muted)" id="carb-target">/ 280g</span>
             </div>
             <div class="macro-pill">
-              <div class="macro-pill-top">
-                <span class="macro-name">Fat</span>
-                <span class="macro-val" id="fat-val">0g</span>
-              </div>
+              <div class="macro-pill-top"><span class="macro-name">Fat</span><span class="macro-val" id="fat-val">0g</span></div>
               <div class="macro-bar"><div class="macro-fill fill-fat" id="fat-bar" style="width:0%"></div></div>
-              <span style="font-size:10px;color:var(--txt-muted)" id="fat-target">/ 70g</span>
             </div>
           </div>
         </div>
-
         <div class="food-log-list" id="food-list"></div>
-
         <div class="log-form">
-          <input class="log-input" id="food-name" placeholder="Food item (e.g. Chicken Breast 200g)" type="text">
+          <input class="log-input" id="food-name" placeholder="Food item details..." type="text">
           <div class="log-form-row">
-            <input class="log-input small" id="food-kcal" placeholder="kcal" type="number" min="0">
-            <input class="log-input small" id="food-prot" placeholder="P (g)" type="number" min="0">
-            <input class="log-input small" id="food-carb" placeholder="C (g)" type="number" min="0">
-            <input class="log-input small" id="food-fat"  placeholder="F (g)" type="number" min="0">
-            <button class="log-btn" onclick="addFood()">+ Add</button>
+            <input class="log-input small" id="food-kcal" placeholder="kcal" type="number">
+            <input class="log-input small" id="food-prot" placeholder="P(g)" type="number">
+            <input class="log-input small" id="food-carb" placeholder="C(g)" type="number">
+            <input class="log-input small" id="food-fat" placeholder="F(g)" type="number">
+            <button class="log-btn" onclick="addFood()">+ Log</button>
           </div>
         </div>
       </div>
 
-      <p class="section-label" style="margin-top:20px;">🏋️ Workout · Progressive Overload</p>
+      <p class="section-label" style="margin-top:20px;">🏋️ Progressive Workout System</p>
       <div class="card">
         <div class="workout-stats-row">
-          <div class="wk-stat">
-            <div class="wk-stat-val" id="wk-sets">0</div>
-            <div class="wk-stat-lbl">Sets</div>
-          </div>
-          <div class="wk-stat">
-            <div class="wk-stat-val" id="wk-vol" style="color:var(--cyan)">0</div>
-            <div class="wk-stat-lbl">Vol (kg)</div>
-          </div>
-          <div class="wk-stat">
-            <div class="wk-stat-val" id="wk-exs">0</div>
-            <div class="wk-stat-lbl">Exercises</div>
-          </div>
+          <div class="wk-stat"><div class="wk-stat-val" id="wk-sets">0</div><div class="wk-stat-lbl">Sets</div></div>
+          <div class="wk-stat"><div class="wk-stat-val" id="wk-vol" style="color:var(--cyan)">0</div><div class="wk-stat-lbl">Volume (kg)</div></div>
+          <div class="wk-stat"><div class="wk-stat-val" id="wk-exs">0</div><div class="wk-stat-lbl">Exercises</div></div>
         </div>
-
-        <div class="set-list" id="set-list">
-          <div class="empty-state" id="set-empty">
-            <span class="empty-icon">🏋️</span>
-            <span>No sets logged yet.<br>Add your first exercise below.</span>
-          </div>
-        </div>
-
-        <div class="vol-total">
-          <span>Total Volume</span>
-          <strong id="vol-total-val">0 kg</strong>
-        </div>
-
+        <div class="set-list" id="set-list"></div>
+        <div class="vol-total"><span>Session Metrics Volume</span><strong id="vol-total-val">0 kg</strong></div>
         <div class="log-form">
-          <input class="log-input" id="set-exercise" placeholder="Exercise (e.g. Bench Press)" type="text">
+          <input class="log-input" id="set-exercise" placeholder="Exercise name..." type="text">
           <div class="log-form-row">
-            <input class="log-input" id="set-weight" placeholder="Weight (kg)" type="number" min="0" step="0.5">
-            <input class="log-input" id="set-reps"   placeholder="Reps" type="number" min="1">
+            <input class="log-input" id="set-weight" placeholder="Weight (kg)" type="number" step="0.5">
+            <input class="log-input" id="set-reps" placeholder="Reps" type="number">
             <button class="log-btn red" onclick="addSet()">+ Set</button>
           </div>
         </div>
@@ -568,509 +353,316 @@ border-bottom:1px solid var(--border);
 <div id="toast"></div>
 
 <script>
-/* ═══════════════════════════════════════════════════════
-   STATE
-════════════════════════════════════════════════════════ */
-const TARGETS = { kcal: 2500, prot: 180, carb: 280, fat: 70 };
-const LS_FOOD = 'nexus_food_v2';
-const LS_SETS = 'nexus_sets_v2';
+const PROXY = "https://corsproxy.io/?url=";
+const NEWS_FEEDS = [
+  { url: 'https://feeds.bbci.co.uk/sport/formula1/rss.xml', name: 'BBC F1 Racing', badge: 'f1', icon: '🏎️' },
+  { url: 'https://feeds.bbci.co.uk/sport/football/rss.xml', name: 'BBC Football News', badge: 'ig', icon: '⚽' },
+  { url: 'https://www.espn.com/espn/rss/f1/news', name: 'ESPN Formula 1', badge: 'f1', icon: '🏎️' }
+];
+const FOOTBALL_RESULTS_FEED = "https://feeds.bbci.co.uk/sport/football/results/rss.xml";
 
-let foodLog = [];
-let setLog  = [];
+let foodLog = [], setLog = [];
 
-/* ═══════════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════════════ */
-(function init() {
-  try { foodLog = JSON.parse(localStorage.getItem(LS_FOOD)) || []; } catch(e) { foodLog = []; }
-  try { setLog  = JSON.parse(localStorage.getItem(LS_SETS))  || []; } catch(e) { setLog  = []; }
+/* ── CORE STARTUP ── */
+document.addEventListener('DOMContentLoaded', () => {
+  try { foodLog = JSON.parse(localStorage.getItem('m_food')) || []; } catch(e){}
+  try { setLog = JSON.parse(localStorage.getItem('m_sets')) || []; } catch(e){}
   renderFood();
   renderSets();
   startClock();
-})();
+  loadNewsFeed();
+});
 
-/* ═══════════════════════════════════════════════════════
-   TAB SWITCH
-════════════════════════════════════════════════════════ */
 function switchTab(tab) {
   ['feed','sports','health'].forEach(t => {
     document.getElementById('panel-' + t).classList.toggle('active', t === tab);
     document.getElementById('nav-' + t).classList.toggle('active', t === tab);
   });
-  document.getElementById('scroll-wrap').scrollTop = 0;
+  if (tab === 'sports') {
+    loadFootballScores();
+    loadF1Data();
+  }
 }
 
-/* ═══════════════════════════════════════════════════════
-   LIKE TOGGLE
-════════════════════════════════════════════════════════ */
-function toggleLike(el) {
-  el.classList.toggle('liked');
-  const span = el.querySelector('span');
-  let n = parseInt(span.textContent.replace(/[^\d]/g,'')) || 0;
-  if (el.classList.contains('liked')) n++;
-  else n = Math.max(0, n - 1);
-  span.textContent = formatNum(n);
+/* ── DIRECT CLIENT-SIDE XML STREAM PARSER (BYPASSING CACHES) ── */
+async function fetchLiveXML(targetUrl) {
+  const cleanUrl = targetUrl + (targetUrl.includes('?') ? '&' : '?') + '_ts=' + Date.now();
+  const response = await fetch(PROXY + encodeURIComponent(cleanUrl));
+  if (!response.ok) throw new Error("Network stream dead");
+  const text = await response.text();
+  return new DOMParser().parseFromString(text, "text/xml");
 }
 
-function formatNum(n) {
-  if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'K';
-  return n.toString();
+/* ── DYNAMIC LIVE NEWS DECK ── */
+async function loadNewsFeed() {
+  const container = document.getElementById('feed-posts');
+  let compositeHTML = "";
+  let tickerItemsArray = [];
+
+  for (const feed of NEWS_FEEDS) {
+    try {
+      const xml = await fetchLiveXML(feed.url);
+      const items = Array.from(xml.querySelectorAll('item')).slice(0, 4);
+      
+      items.forEach(item => {
+        const title = item.querySelector('title')?.textContent || '';
+        const link = item.querySelector('link')?.textContent || '#';
+        const desc = item.querySelector('description')?.textContent || '';
+        const pubDate = item.querySelector('pubDate')?.textContent || '';
+        
+        tickerItemsArray.push(title);
+        
+        const initials = feed.name.split(' ').map(w => w[0]).join('');
+        const avatarBg = feed.badge === 'f1' ? 'background:var(--f1-red)' : 'background:var(--purple)';
+
+        compositeHTML += `
+          <div class="post" onclick="window.open('${link}','_blank')">
+            <div class="post-avatar" style="${avatarBg}">${initials}</div>
+            <div class="post-body">
+              <div class="post-meta">
+                <span class="post-name">${feed.name}</span>
+                <span class="platform-badge badge-${feed.badge}">${feed.icon}</span>
+                <span class="post-time">${formatTime(pubDate)}</span>
+              </div>
+              <p class="post-text">${title}</p>
+              <p style="font-size:12px;color:var(--txt-secondary);line-height:1.4;">${desc.replace(/<[^>]+>/g, '').substring(0, 110)}...</p>
+            </div>
+          </div>`;
+      });
+    } catch(e) {}
+  }
+
+  container.innerHTML = compositeHTML || `<div class="empty-state">Unable to parse live stream nodes. Try again.</div>`;
+  buildTicker(tickerItemsArray);
 }
 
-/* ═══════════════════════════════════════════════════════
-   NUTRITION
-════════════════════════════════════════════════════════ */
+function buildTicker(titles) {
+  const tracker = document.getElementById('ticker');
+  if (!titles.length) return;
+  // Combine headlines and duplicate them three times to prevent tracking gap jump anomalies during infinite CSS loops
+  const cleanTickerStr = titles.map(t => `<span class="ticker-item">🔥 ${t}</span>`).join('');
+  tracker.innerHTML = cleanTickerStr + cleanTickerStr + cleanTickerStr;
+}
+
+/* ── DYNAMIC FOOTBALL RESULTS ENGINE ── */
+async function loadFootballScores() {
+  const container = document.getElementById('football-scores-container');
+  try {
+    const xml = await fetchLiveXML(FOOTBALL_RESULTS_FEED);
+    const items = Array.from(xml.querySelectorAll('item')).slice(0, 5);
+    
+    let html = "";
+    items.forEach(item => {
+      const fullTitle = item.querySelector('title')?.textContent || ''; // Format: "Premier League: Match A 2-1 Match B"
+      let league = "FOOTBALL MATCH", coreTeams = fullTitle;
+      
+      if (fullTitle.includes(':')) {
+        const structuralSplits = fullTitle.split(':');
+        league = structuralSplits[0].trim();
+        coreTeams = structuralSplits[1].trim();
+      }
+
+      // Regex parser architecture to split out home team, score values, and away team dynamically
+      const scoreRegex = /^(.*?)\s+(\d+)\s*[-–]\s*(\d+)\s+(.*)$/;
+      const matchArray = coreTeams.match(scoreRegex);
+
+      if (matchArray) {
+        const team1 = matchArray[1].trim();
+        const score1 = matchArray[2];
+        const score2 = matchArray[3];
+        const team2 = matchArray[4].trim();
+
+        html += `
+          <div class="match-card">
+            <div class="match-header">
+              <span class="league-badge">${league}</span>
+              <span class="ft-badge">FINAL RESULT</span>
+            </div>
+            <div class="match-score-row">
+              <div class="match-team"><span class="team-name">${team1}</span></div>
+              <div class="score-box"><span class="score-num">${score1}</span><span class="score-sep">–</span><span class="score-num">${score2}</span></div>
+              <div class="match-team away"><span class="team-name">${team2}</span></div>
+            </div>
+          </div>`;
+      }
+    });
+
+    container.innerHTML = html || `<div class="empty-state">No dynamic match updates registered today.</div>`;
+  } catch(e) {
+    container.innerHTML = `<div class="f1-api-error">Failed loading live score stream node tree.</div>`;
+  }
+}
+
+/* ── F1 LIVE ENGINE DATA (JOLPICA) ── */
+const TEAM_MAP = {
+  'red_bull': '#3671c6', 'mclaren': '#ff8700', 'ferrari': '#e8002d', 'mercedes': '#00d2be',
+  'aston_martin': '#229971', 'alpine': '#0093cc', 'williams': '#64c4ff', 'rb': '#6692ff',
+  'kick_sauber': '#52e252', 'haas': '#b6babd', 'default': '#8a8fa8'
+};
+
+async function fetchF1Data(endpoint) {
+  const url = `https://api.jolpi.ca/ergast/f1${endpoint}.json?limit=10`;
+  const res = await fetch(PROXY + encodeURIComponent(url));
+  return res.json();
+}
+
+async function loadF1Data() {
+  document.getElementById('f1-last-race-body').innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Querying Jolpica 2026 Engine...</span></div>';
+  document.getElementById('f1-standings-body').innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Mapping Driver Standings...</span></div>';
+
+  try {
+    const raceData = await fetchF1Data('/current/last/results');
+    const race = raceData.MRData.RaceTable.Races[0];
+    if (race) {
+      document.getElementById('f1-last-race-name').textContent = `ROUND ${race.round} · ${race.raceName.toUpperCase()}`;
+      let html = '<div class="f1-result-header"><span>POS</span><span>NO</span><span>DRIVER</span><span>TEAM</span><span style="text-align:right">GAP</span></div>';
+      race.Results.slice(0, 5).forEach(r => {
+        const col = TEAM_MAP[r.Constructor.constructorId] || TEAM_MAP.default;
+        html += `
+          <div class="f1-result-row">
+            <span class="f1-pos">${r.position}</span>
+            <span class="f1-num" style="background:${col}22;color:${col}">${r.number}</span>
+            <div class="f1-driver-info"><span class="f1-driver-name">${r.Driver.familyName}</span></div>
+            <div class="f1-driver-info"><span class="f1-team-name">${r.Constructor.name}</span></div>
+            <span class="f1-time-gap">${r.Time ? r.Time.time : r.status}</span>
+          </div>`;
+      });
+      document.getElementById('f1-last-race-body').innerHTML = html;
+    }
+
+    const standingsData = await fetchF1Data('/current/driverstandings');
+    const list = standingsData.MRData.StandingsTable.StandingsLists[0];
+    if (list) {
+      document.getElementById('f1-standings-round').textContent = `SEASON ROUND ${list.round}`;
+      let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">WINS</span><span style="text-align:right">PTS</span></div>';
+      const standings = list.DriverStandings.slice(0, 6);
+      const topPts = parseFloat(standings[0].points || 1);
+      
+      standings.forEach(d => {
+        const col = TEAM_MAP[d.Constructors[0]?.constructorId] || TEAM_MAP.default;
+        const pct = (parseFloat(d.points) / topPts) * 100;
+        html += `
+          <div class="f1-std-row">
+            <span class="f1-pos">${d.position}</span>
+            <span class="f1-num" style="background:${col}22;color:${col}">${d.Driver.permanentNumber || '??'}</span>
+            <div class="f1-driver-info">
+              <span class="f1-driver-name">${d.Driver.familyName}</span>
+              <div class="f1-con-bar"><div class="f1-con-fill" style="width:${pct}%;background:${col}"></div></div>
+            </div>
+            <span class="f1-wins">${d.wins}</span>
+            <span class="f1-pts">${d.points}</span>
+          </div>`;
+      });
+      document.getElementById('f1-standings-body').innerHTML = html;
+    }
+  } catch(e) {
+    document.getElementById('f1-last-race-body').innerHTML = `<div class="f1-api-error">API structural stream dropped offline.</div>`;
+  }
+}
+
+/* ── NUTRITION & WORKOUT SYSTEMS ── */
 function addFood() {
   const name = document.getElementById('food-name').value.trim();
   const kcal = parseFloat(document.getElementById('food-kcal').value) || 0;
   const prot = parseFloat(document.getElementById('food-prot').value) || 0;
   const carb = parseFloat(document.getElementById('food-carb').value) || 0;
-  const fat  = parseFloat(document.getElementById('food-fat').value)  || 0;
-  if (!name) { toast('Enter a food name'); return; }
-  if (!kcal && !prot && !carb && !fat) { toast('Enter at least one value'); return; }
+  const fat = parseFloat(document.getElementById('food-fat').value) || 0;
+  if (!name) return toast("Missing item identifier name");
   foodLog.push({ id: Date.now(), name, kcal, prot, carb, fat });
-  saveFood();
+  localStorage.setItem('m_food', JSON.stringify(foodLog));
   renderFood();
-  clearInputs(['food-name','food-kcal','food-prot','food-carb','food-fat']);
-  toast('✅ ' + name + ' logged');
+  ['food-name','food-kcal','food-prot','food-carb','food-fat'].forEach(id => document.getElementById(id).value = "");
 }
 
 function deleteFood(id) {
   foodLog = foodLog.filter(f => f.id !== id);
-  saveFood();
+  localStorage.setItem('m_food', JSON.stringify(foodLog));
   renderFood();
 }
 
-function saveFood() { localStorage.setItem(LS_FOOD, JSON.stringify(foodLog)); }
-
 function renderFood() {
-  const totals = foodLog.reduce((acc, f) => {
-    acc.kcal += f.kcal; acc.prot += f.prot;
-    acc.carb += f.carb; acc.fat  += f.fat;
-    return acc;
-  }, { kcal:0, prot:0, carb:0, fat:0 });
-
-  const calPct = Math.min(totals.kcal / TARGETS.kcal, 1);
-  const circumference = 2 * Math.PI * 50;
-  const offset = circumference * (1 - calPct);
-  const ring = document.getElementById('cal-ring');
-  
-  if (ring) {
-    ring.style.strokeDasharray  = circumference;
-    ring.style.strokeDashoffset = offset;
-  }
+  const totals = foodLog.reduce((a, b) => ({ kcal: a.kcal+b.kcal, prot: a.prot+b.prot, carb: a.carb+b.carb, fat: a.fat+b.fat }), { kcal:0, prot:0, carb:0, fat:0 });
   document.getElementById('cal-display').textContent = Math.round(totals.kcal);
-
   document.getElementById('prot-val').textContent = Math.round(totals.prot) + 'g';
   document.getElementById('carb-val').textContent = Math.round(totals.carb) + 'g';
-  document.getElementById('fat-val').textContent  = Math.round(totals.fat)  + 'g';
-  document.getElementById('prot-bar').style.width = Math.min(totals.prot/TARGETS.prot*100,100) + '%';
-  document.getElementById('carb-bar').style.width = Math.min(totals.carb/TARGETS.carb*100,100) + '%';
-  document.getElementById('fat-bar').style.width  = Math.min(totals.fat /TARGETS.fat *100,100) + '%';
+  document.getElementById('fat-val').textContent = Math.round(totals.fat) + 'g';
+  
+  document.getElementById('prot-bar').style.width = Math.min((totals.prot/180)*100, 100) + '%';
+  document.getElementById('carb-bar').style.width = Math.min((totals.carb/280)*100, 100) + '%';
+  document.getElementById('fat-bar').style.width = Math.min((totals.fat/70)*100, 100) + '%';
 
-  const list = document.getElementById('food-list');
-  if (foodLog.length === 0) {
-    list.innerHTML = '<div class="empty-state" style="padding:20px;"><span class="empty-icon">🍽️</span><span>No foods logged yet</span></div>';
-    return;
-  }
-  list.innerHTML = foodLog.map(f => `<div class="food-item"> <span class="food-item-name">${esc(f.name)}</span> <span class="food-item-kcal">${f.kcal} kcal</span> <span class="food-item-p">${f.prot}P</span> <button class="food-del" onclick="deleteFood(${f.id})">×</button> </div>`).join('');
+  const offset = 314 * (1 - Math.min(totals.kcal / 2500, 1));
+  document.getElementById('cal-ring').style.strokeDashoffset = offset;
+
+  const container = document.getElementById('food-list');
+  if(!foodLog.length) { container.innerHTML = `<div class="empty-state">No nutrient units logged.</div>`; return; }
+  container.innerHTML = foodLog.map(f => `
+    <div class="food-item">
+      <span class="food-item-name">${f.name}</span>
+      <span class="food-item-kcal">${f.kcal} kcal</span>
+      <span class="food-item-p">${f.prot}g P</span>
+      <button class="food-del" onclick="deleteFood(${f.id})">×</button>
+    </div>`).join('');
 }
 
-/* ═══════════════════════════════════════════════════════
-   WORKOUT
-════════════════════════════════════════════════════════ */
 function addSet() {
-  const exercise = document.getElementById('set-exercise').value.trim();
-  const weight   = parseFloat(document.getElementById('set-weight').value) || 0;
-  const reps     = parseInt(document.getElementById('set-reps').value) || 0;
-  if (!exercise) { toast('Enter an exercise name'); return; }
-  if (!reps)     { toast('Enter number of reps'); return; }
-  setLog.push({ id: Date.now(), exercise, weight, reps });
-  saveSets();
+  const ex = document.getElementById('set-exercise').value.trim();
+  const wt = parseFloat(document.getElementById('set-weight').value) || 0;
+  const rp = parseInt(document.getElementById('set-reps').value) || 0;
+  if (!ex || !rp) return toast("Invalid logging properties");
+  setLog.push({ id: Date.now(), exercise: ex, weight: wt, reps: rp });
+  localStorage.setItem('m_sets', JSON.stringify(setLog));
   renderSets();
-  clearInputs(['set-weight','set-reps']);
-  document.getElementById('set-exercise').focus();
-  toast('💪 ' + exercise + ' — ' + weight + 'kg × ' + reps);
+  ['set-weight','set-reps'].forEach(id => document.getElementById(id).value = "");
 }
 
 function deleteSet(id) {
   setLog = setLog.filter(s => s.id !== id);
-  saveSets();
+  localStorage.setItem('m_sets', JSON.stringify(setLog));
   renderSets();
 }
 
-function saveSets() { localStorage.setItem(LS_SETS, JSON.stringify(setLog)); }
-
 function renderSets() {
-  const list  = document.getElementById('set-list');
-  const empty = document.getElementById('set-empty');
-  const totalVol = setLog.reduce((acc, s) => acc + s.weight * s.reps, 0);
+  const totalVol = setLog.reduce((a, b) => a + (b.weight * b.reps), 0);
   const uniqueEx = [...new Set(setLog.map(s => s.exercise.toLowerCase()))].length;
-
+  
   document.getElementById('wk-sets').textContent = setLog.length;
-  document.getElementById('wk-vol').textContent  = totalVol.toLocaleString();
-  document.getElementById('wk-exs').textContent  = uniqueEx;
+  document.getElementById('wk-vol').textContent = totalVol.toLocaleString();
+  document.getElementById('wk-exs').textContent = uniqueEx;
   document.getElementById('vol-total-val').textContent = totalVol.toLocaleString() + ' kg';
 
-  if (setLog.length === 0) {
-    if (empty) empty.style.display = 'flex';
-    list.querySelectorAll('.set-row').forEach(e => e.remove());
-    return;
-  }
-  if (empty) empty.style.display = 'none';
-
-  const grouped = {};
-  setLog.forEach(s => {
-    const k = s.exercise.toLowerCase();
-    if (!grouped[k]) grouped[k] = { name: s.exercise, sets: [] };
-    grouped[k].sets.push(s);
-  });
-
-  let html = '';
-  Object.values(grouped).forEach(g => {
-    g.sets.forEach((s, i) => {
-      const vol = (s.weight * s.reps).toFixed(0);
-      html += ` <div class="set-row" id="set-${s.id}"> <span class="set-exercise">${esc(s.exercise)} <span style="color:var(--txt-muted);font-size:11px;">#${i+1}</span></span> <span class="set-vol">${s.weight}kg × ${s.reps} = <strong>${vol}kg</strong></span> <button class="set-del" onclick="deleteSet(${s.id})">×</button> </div>`;
-    });
-  });
-
-  list.innerHTML = html;
-  if (empty) list.prepend(empty);
+  const container = document.getElementById('set-list');
+  if(!setLog.length) { container.innerHTML = `<div class="empty-state">Workout session vector is clear.</div>`; return; }
+  container.innerHTML = setLog.map(s => `
+    <div class="set-row">
+      <span class="set-exercise">${s.exercise}</span>
+      <span class="food-item-kcal">${s.weight}kg × ${s.reps}</span>
+      <button class="set-del" onclick="deleteSet(${s.id})">×</button>
+    </div>`).join('');
 }
 
-/* ═══════════════════════════════════════════════════════
-   UTILITIES
-════════════════════════════════════════════════════════ */
-function esc(s) {
-  if (!s) return '';
-  return s.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function clearInputs(ids) { ids.forEach(id => { document.getElementById(id).value = ''; }); }
-
-let toastTimer;
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
-}
-
-function startClock() {
-  function update() {
-    const now = new Date();
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    document.getElementById('clock').textContent = h + ':' + m;
-  }
-  update();
-  setInterval(update, 10000);
-}
-
-/* ═══════════════════════════════════════════════════════
-   F1 LIVE API · Jolpica (api.jolpi.ca)
-════════════════════════════════════════════════════════ */
-const F1_BASE = 'https://api.jolpi.ca/ergast/f1';
-const CORS_PROXY = 'https://corsproxy.io/?url=';
-
-const TEAM_COLORS = {
-  'red_bull':       '#3671c6',
-  'mclaren':        '#ff8700',
-  'ferrari':        '#e8002d',
-  'mercedes':       '#00d2be',
-  'aston_martin':   '#229971',
-  'alpine':         '#0093cc',
-  'williams':       '#64c4ff',
-  'rb':             '#6692ff',
-  'kick_sauber':    '#52e252',
-  'haas':           '#b6babd',
-  'default':        '#8a8fa8'
-};
-
-function teamColor(constructorId) { return TEAM_COLORS[constructorId] || TEAM_COLORS['default']; }
-function posClass(p) { return p === 1 ? 'p1' : p === 2 ? 'p2' : p === 3 ? 'p3' : ''; }
-
-async function f1Fetch(endpoint) {
-  const url = F1_BASE + endpoint + '.json?limit=20';
-  let res;
-  try {
-    res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('direct ' + res.status);
-  } catch(e) {
-    res = await fetch(CORS_PROXY + encodeURIComponent(url));
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-  }
-  return res.json();
-}
-
-function setLoading(id) {
-  document.getElementById(id).innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Loading…</span></div>';
-}
-
-function setError(id, msg) {
-  document.getElementById(id).innerHTML = '<div class="f1-api-error">⚠️ ' + msg + '</div>';
-}
-
-async function loadF1LastRace() {
-  setLoading('f1-last-race-body');
-  try {
-    const data = await f1Fetch('/current/last/results');
-    const race = data.MRData.RaceTable.Races[0];
-    if (!race) throw new Error('No race data yet');
-
-    document.getElementById('f1-last-race-name').textContent = 'R' + race.round + ' · ' + race.raceName.replace(' Grand Prix','').toUpperCase() + ' GP';
-    const results = race.Results.slice(0, 10);
-    const leaderTime = results[0]?.Time?.time || '';
-
-    let html = '<div class="f1-result-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">TEAM</span><span style="text-align:right">TIME/GAP</span></div>';
-    results.forEach(r => {
-      const pos = parseInt(r.position);
-      const cid = r.Constructor.constructorId;
-      const col = teamColor(cid);
-      const driverName = r.Driver.familyName;
-      const teamShort = r.Constructor.name.replace('Formula One','F1');
-      const gap = pos === 1 ? (leaderTime || 'Winner') : (r.Time ? r.Time.time : (r.status || 'DNF'));
-
-      html += `
-        <div class="f1-result-row">
-          <span class="f1-pos ${posClass(pos)}">${pos}</span>
-          <span class="f1-num" style="background:${col}22;color:${col}">${r.Driver.permanentNumber}</span>
-          <div class="f1-driver-info">
-            <span class="f1-driver-name">${driverName}</span>
-            <span class="f1-team-name">${esc(teamShort)}</span>
-          </div>
-          <span class="f1-time-gap" style="font-size:10px;min-width:80px;">${esc(teamShort.substring(0,10))}</span>
-          <span class="f1-time-gap">${esc(gap)}</span>
-        </div>`;
-    });
-
-    const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
-    document.getElementById('f1-last-race-body').innerHTML = html;
-  } catch(e) {
-    setError('f1-last-race-body', 'Could not load race results. ' + e.message);
-  }
-}
-
-async function loadF1DriverStandings() {
-  setLoading('f1-standings-body');
-  try {
-    const data = await f1Fetch('/current/driverstandings');
-    const sl = data.MRData.StandingsTable.StandingsLists[0];
-    if (!sl) throw new Error('No standings yet');
-
-    document.getElementById('f1-standings-round').textContent = 'After R' + sl.round;
-    const drivers = sl.DriverStandings.slice(0, 12);
-    const maxPts = parseFloat(drivers[0]?.points || 1);
-
-    let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>';
-    drivers.forEach(d => {
-      const pos = parseInt(d.position);
-      const cid = d.Constructors[0]?.constructorId || 'default';
-      const col = teamColor(cid);
-      const pts = parseFloat(d.points);
-      const barW = Math.round((pts / maxPts) * 100);
-
-      html += `
-        <div class="f1-std-row">
-          <span class="f1-pos ${posClass(pos)}">${pos}</span>
-          <span class="f1-num" style="background:${col}22;color:${col}">${d.Driver.permanentNumber}</span>
-          <div class="f1-driver-info">
-            <span class="f1-driver-name">${d.Driver.familyName}</span>
-            <div class="f1-con-bar" style="margin-top:4px;"><div class="f1-con-fill" style="width:${barW}%;background:${col};"></div></div>
-          </div>
-          <span class="f1-wins">${d.wins}</span>
-          <span class="f1-pts" style="color:${pos<=3?col:'var(--txt-primary)'}">${pts}</span>
-        </div>`;
-    });
-
-    const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
-    document.getElementById('f1-standings-body').innerHTML = html;
-  } catch(e) {
-    setError('f1-standings-body', 'Could not load driver standings. ' + e.message);
-  }
-}
-
-async function loadF1ConstructorStandings() {
-  setLoading('f1-constructors-body');
-  try {
-    const data = await f1Fetch('/current/constructorstandings');
-    const sl = data.MRData.StandingsTable.StandingsLists[0];
-    if (!sl) throw new Error('No constructor standings yet');
-
-    const constructors = sl.ConstructorStandings;
-    const maxPts = parseFloat(constructors[0]?.points || 1);
-
-    let html = '';
-    constructors.forEach(c => {
-      const pos = parseInt(c.position);
-      const cid = c.Constructor.constructorId;
-      const col = teamColor(cid);
-      const pts = parseFloat(c.points);
-      const barW = Math.round((pts / maxPts) * 100);
-
-      html += `
-        <div class="f1-con-row">
-          <span class="f1-pos ${posClass(pos)}">${pos}</span>
-          <div>
-            <span style="font-weight:600;font-size:14px;">${esc(c.Constructor.name)}</span>
-            <div class="f1-con-bar"><div class="f1-con-fill" style="width:${barW}%;background:${col};"></div></div>
-          </div>
-          <span class="f1-pts" style="color:${pos<=3?col:'var(--txt-primary)'}">${pts}</span>
-        </div>`;
-    });
-
-    const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-    html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
-    document.getElementById('f1-constructors-body').innerHTML = html;
-  } catch(e) {
-    setError('f1-constructors-body', 'Could not load constructor standings. ' + e.message);
-  }
-}
-
-function loadF1Data() {
-  loadF1LastRace();
-  loadF1DriverStandings();
-  loadF1ConstructorStandings();
-}
-
-// Intercept tab changes to lazy load data
-const _origSwitch = switchTab;
-let f1Loaded = false;
-switchTab = function(tab) {
-  _origSwitch(tab);
-  if (tab === 'sports' && !f1Loaded) {
-    f1Loaded = true;
-    loadF1Data();
-  }
-};
-
-/* ═══════════════════════════════════════════════════════
-   LIVE NEWS FEED · RSS via rss2json.com (Bypassing cache)
-════════════════════════════════════════════════════════ */
-const NEWS_SOURCES = [
-  { url: 'https://feeds.bbci.co.uk/sport/formula1/rss.xml', name: 'BBC Sport F1',      badge: 'f1', icon: '🏎' },
-  { url: 'https://feeds.bbci.co.uk/sport/football/rss.xml', name: 'BBC Sport Football', badge: 'ig', icon: '⚽' },
-  { url: 'https://www.skysports.com/rss/12040',             name: 'Sky Sports F1',      badge: 'f1', icon: '🏎' },
-  { url: 'https://www.espn.com/espn/rss/f1/news',           name: 'ESPN F1',            badge: 'f1', icon: '🏎' },
-];
-
-const FALLBACK_POSTS = [
-  { title: 'Lando Norris leads 2026 F1 Championship standings after dominant Monaco victory', source: 'BBC Sport F1', badge: 'f1', icon: '🏎', link: '#', time: '2h ago' },
-  { title: 'Max Verstappen fastest in qualifying at Spanish GP — Red Bull pace worrying rivals', source: 'Sky Sports F1', badge: 'f1', icon: '🏎', link: '#', time: '4h ago' },
-  { title: 'Arsenal close in on Premier League title with win at Etihad — Saka nets brace', source: 'BBC Sport Football', badge: 'ig', icon: '⚽', link: '#', time: '1h ago' }
-];
-
-function timeAgo(dateStr) {
-  if (!dateStr) return '1h ago';
-  const diff = (Date.now() - new Date(dateStr)) / 1000;
-  if (diff < 60) return 'just now';
+/* ── AUXILIARY SYSTEM CONTROLS ── */
+function formatTime(dStr) {
+  if(!dStr) return 'Now';
+  const diff = (Date.now() - new Date(dStr)) / 1000;
   if (diff < 3600) return Math.floor(diff/60) + 'm ago';
   if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
   return Math.floor(diff/86400) + 'd ago';
 }
 
-function truncate(str, n) {
-  if (!str) return '';
-  const plain = str.replace(/<[^>]+>/g, '');
-  return plain.length > n ? plain.substring(0, n) + '…' : plain;
+function startClock() {
+  const run = () => {
+    const d = new Date();
+    document.getElementById('clock').textContent = String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  };
+  run(); setInterval(run, 5000);
 }
 
-function renderNewsPost(item, source) {
-  const initials = source.name.split(' ').map(w => w[0]).join('').substring(0,3);
-  const avatarBg = source.badge === 'f1' ? 'background:linear-gradient(135deg,#e8002d,#ff5f00)' : 'background:linear-gradient(135deg,#f09433,#dc2743,#bc1888)';
-
-  return `
-    <div class="post" onclick="window.open('${esc(item.link || '#')}','_blank')">
-      <div style="flex-shrink:0;">
-        <div class="post-avatar" style="${avatarBg}">
-          <div style="position:absolute;inset:2px;border-radius:50%;background:#13151f;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;">${initials}</div>
-        </div>
-      </div>
-      <div class="post-body">
-        <div class="post-meta">
-          <span class="post-name">${esc(source.name)}</span>
-          <span class="platform-badge badge-${source.badge}">${source.icon}</span>
-          <span class="post-time">${timeAgo(item.pubDate)}</span>
-        </div>
-        <p class="post-text">${esc(item.title || '')}</p>
-        <p style="font-size:12px;color:var(--txt-secondary);line-height:1.5;margin-bottom:10px;">${truncate(item.description, 120)}</p>
-        <div class="post-actions">
-          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg><span>Read more</span></span>
-        </div>
-      </div>
-    </div>`;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
-
-async function fetchRSS(source) {
-  try {
-    // Force cache busting by passing an ever-changing timestamp parameter inside the target URL
-    const separator = source.url.includes('?') ? '&' : '?';
-    const liveTargetUrl = source.url + separator + '_cachebust=' + Date.now();
-    
-    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(liveTargetUrl)}&count=4`);
-    const data = await res.json();
-    if (data.status === 'ok' && data.items && data.items.length) return data.items;
-  } catch(e) {}
-  return [];
-}
-
-async function loadNewsFeed() {
-  const container = document.getElementById('feed-posts');
-  const loading = document.getElementById('news-loading');
-  const allItems = [];
-
-  await Promise.allSettled(
-    NEWS_SOURCES.map(async (source) => {
-      const items = await fetchRSS(source);
-      items.slice(0,3).forEach(item => allItems.push({ item, source }));
-    })
-  );
-
-  if (loading) loading.remove();
-
-  if (allItems.length === 0) {
-    let html = '';
-    FALLBACK_POSTS.forEach(p => {
-      const initials = p.source.split(' ').map(w=>w[0]).join('').substring(0,3);
-      html += `<div class="post"> <div style="flex-shrink:0;"><div class="post-avatar" style="background:#1d1d1d"> <div style="position:absolute;inset:2px;border-radius:50%;background:#13151f;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:12px;">${initials}</div> </div></div> <div class="post-body"> <div class="post-meta"> <span class="post-name">${p.source}</span> <span class="platform-badge badge-${p.badge}">${p.icon}</span> <span class="post-time">${p.time}</span> </div> <p class="post-text">${p.title}</p> </div> </div>`;
-    });
-    container.innerHTML = html;
-    return;
-  }
-
-  allItems.sort((a,b) => new Date(b.item.pubDate) - new Date(a.item.pubDate));
-  let html = '';
-  allItems.forEach(({item, source}) => { html += renderNewsPost(item, source); });
-  container.innerHTML = html;
-}
-
-async function refreshNewsFeed() {
-  const container = document.getElementById('feed-posts');
-  container.innerHTML = `
-    <div class="f1-api-loading">
-      <div class="f1-spinner" style="border-top-color:var(--ig-blue)"></div>
-      <span>Scraping live articles...</span>
-    </div>`;
-  await loadNewsFeed();
-  toast('🔥 News feed updated live');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  loadNewsFeed();
-});
-
-/* ── KEYBOARD ACTIONS ── */
-document.querySelectorAll('.log-input').forEach(inp => {
-  inp.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      if (inp.id.startsWith('food-')) addFood();
-      else if (inp.id.startsWith('set-')) addSet();
-    }
-  });
-});
 </script>
 </body>
 </html>
