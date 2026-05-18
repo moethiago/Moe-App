@@ -185,7 +185,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
           <span class="consensus-title">Cross-Network Verified Wire</span>
           <span class="consensus-desc">Requiring concurrent reports across sports providers:</span>
         </div>
-        <span class="consensus-badge" id="source-node-count">12 Nodes</span>
+        <span class="consensus-badge" id="source-node-count">12 Nodes Active</span>
       </div>
 
       <div class="ticker-wrap">
@@ -413,32 +413,40 @@ async function loadNewsFeed() {
   // Sort clusters chronologically: Newest updates first
   clusterMap.sort((a, b) => b.timestamp - a.timestamp);
 
-  // DYNAMIC CONSENSUS CASCADING THRESHOLD (Excluding Single Sources)
-  let dynamicThreshold = 4;
-  const maxClusterSize = clusterMap.reduce((max, item) => item.sources.length > max ? item.sources.length : max, 0);
-  
-  if (maxClusterSize >= 4) {
-    dynamicThreshold = 4;
-  } else if (maxClusterSize === 3) {
-    dynamicThreshold = 3;
-  } else if (maxClusterSize === 2) {
-    dynamicThreshold = 2;
-  } else {
-    dynamicThreshold = 2; // Strict guard: Never drop down to single-source articles (1)
+  // SAFE DYNAMIC THRESHOLD EVALUATION (Blocks single source news strings safely)
+  let dynamicThreshold = 2; 
+  let maxClusterSize = 0;
+
+  if (clusterMap.length > 0) {
+    maxClusterSize = clusterMap.reduce((max, item) => item.sources.length > max ? item.sources.length : max, 0);
+    
+    if (maxClusterSize >= 4) {
+      dynamicThreshold = 4;
+    } else if (maxClusterSize === 3) {
+      dynamicThreshold = 3;
+    } else {
+      dynamicThreshold = 2;
+    }
   }
 
-  // Update UI badge to reflect the engine's current adaptive filter level
+  // Safe UI Badge Updates (Prevents app hanging/freezing your status lines)
   const nodeBadge = document.getElementById('source-node-count');
   if (nodeBadge) {
-    nodeBadge.textContent = maxClusterSize >= 4 ? "4+ Source Match" : `${dynamicThreshold}-Node Wire`;
-    nodeBadge.style.background = dynamicThreshold >= 3 ? 'var(--epl-green)' : 'var(--ig-blue)';
+    if (maxClusterSize >= 2) {
+      nodeBadge.textContent = maxClusterSize >= 4 ? "4+ Source Match" : `${dynamicThreshold}-Node Wire`;
+      nodeBadge.style.background = dynamicThreshold >= 3 ? 'var(--epl-green)' : 'var(--ig-blue)';
+    } else {
+      nodeBadge.textContent = "12 Nodes Active";
+      nodeBadge.style.background = 'var(--bg-raised)';
+    }
   }
 
   let consensusHtml = "";
   let validatedTicker = [];
 
   clusterMap.forEach(item => {
-    if (item.sources.length < dynamicThreshold) return; 
+    // Structural Guard: Skip anything under the cascade threshold or any single source entry
+    if (item.sources.length < dynamicThreshold || item.sources.length < 2) return; 
 
     validatedTicker.push(item.representativeTitle);
 
@@ -467,10 +475,10 @@ async function loadNewsFeed() {
     container.innerHTML = `
       <div class="empty-state">
         <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
-        No cross-network sports consensus found within 72h.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">All matching layers are currently under a 2-source threshold.</span>
+        No multi-source cross-network stories found right now.<br>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Single-source updates are being intentionally hidden.</span>
       </div>`;
-    buildTicker(["Monitoring sports grids for concurrent breaking events..."]);
+    buildTicker(["Monitoring sports grids for verified multi-network events..."]);
   } else {
     container.innerHTML = consensusHtml;
     buildTicker(validatedTicker);
