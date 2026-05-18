@@ -176,9 +176,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
       <div class="consensus-banner">
         <div class="consensus-info">
           <span class="consensus-title">Cross-Network Verified Wire</span>
-          <span class="consensus-desc">Displaying entries found across multiple providers:</span>
+          <span class="consensus-desc">Instant validation index (Single sources filtered out):</span>
         </div>
-        <span class="consensus-badge" id="source-node-count" style="background:var(--epl-green)">Multi-Sourced</span>
+        <span class="consensus-badge" id="source-node-count" style="background:var(--ig-blue)">Registry Mode</span>
       </div>
 
       <div class="ticker-wrap">
@@ -327,10 +327,10 @@ async function loadNewsFeed() {
   if (!container) return;
   container.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Cross-checking network footprints...</span></div>';
   
-  let rawArticles = [];
-  const stopWords = new Set(['the','a','an','and','or','but','in','on','at','to','for','with','is','was','are','has','have','been','of','from','by','that','this','says','after','over','latest','news','sport']);
+  // High-speed O(1) Index maps
+  const registry = {};
+  const outputList = [];
 
-  // Clean, isolated async fetching using settled parameters
   const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
     try {
       const res = await fetch(RSS_API + encodeURIComponent(channel.url));
@@ -338,23 +338,29 @@ async function loadNewsFeed() {
       const data = await res.json();
       
       if (data && data.items) {
-        data.items.slice(0, 6).forEach(item => {
-          let title = item.title ? item.title.trim() : '';
+        data.items.slice(0, 5).forEach(item => {
+          const title = item.title ? item.title.trim() : '';
           if (!title) return;
-          
-          // Generate unique matching arrays
-          const tokens = title.toLowerCase()
-            .replace(/[^a-zA-Z0-9\s]/g, '')
-            .split(/\s+/)
-            .filter(t => t.length > 3 && !stopWords.has(t));
 
-          rawArticles.push({
-            title,
-            link: item.link || '#',
-            source: channel.name,
-            tokens,
-            timestamp: item.pubDate ? Date.parse(item.pubDate) : Date.now()
-          });
+          // Generate an instantaneous alphanumeric unique signature key
+          const signatureKey = title.toLowerCase()
+            .replace(/[^a-z0-9]/g, '')
+            .substring(0, 45); // Trim signature length down to save memory lookup speed
+
+          if (!registry[signatureKey]) {
+            // First time seeing this wire item
+            registry[signatureKey] = {
+              title: title,
+              link: item.link || '#',
+              sources: [channel.name],
+              timestamp: item.pubDate ? Date.parse(item.pubDate) : Date.now()
+            };
+          } else {
+            // Instant index hit! Add network verification to existing slot
+            if (!registry[signatureKey].sources.includes(channel.name)) {
+              registry[signatureKey].sources.push(channel.name);
+            }
+          }
         });
       }
     } catch(e) {}
@@ -362,50 +368,22 @@ async function loadNewsFeed() {
 
   await Promise.allSettled(fetchPromises);
 
-  // Linear Clustering (Runs once, no recursive iterations)
-  let clusters = [];
-
-  rawArticles.forEach(art => {
-    let targetCluster = null;
-    
-    for (let i = 0; i < clusters.length; i++) {
-      const matchCount = art.tokens.filter(t => clusters[i].tokens.includes(t)).length;
-      if (matchCount >= 2) {
-        targetCluster = clusters[i];
-        break;
-      }
+  // Instantly dump registry map into linear array
+  for (const key in registry) {
+    const record = registry[key];
+    // FORCE CRITERIA: Dropping single-sourced items instantly. 
+    if (record.sources.length >= 2) {
+      outputList.push(record);
     }
+  }
 
-    if (targetCluster) {
-      if (!targetCluster.sources.includes(art.source)) {
-        targetCluster.sources.push(art.source);
-      }
-      if (art.timestamp > targetCluster.timestamp) {
-        targetCluster.timestamp = art.timestamp;
-        targetCluster.title = art.title;
-        targetCluster.link = art.link;
-      }
-    } else {
-      clusters.push({
-        title: art.title,
-        link: art.link,
-        tokens: art.tokens,
-        sources: [art.source],
-        timestamp: art.timestamp
-      });
-    }
-  });
-
-  // Sort linearly by freshest timestamp
-  clusters.sort((a, b) => b.timestamp - a.timestamp);
+  // Linear quick sort
+  outputList.sort((a, b) => b.timestamp - a.timestamp);
 
   let consensusHtml = "";
   let validatedTicker = [];
 
-  clusters.forEach(item => {
-    // Rigid Multi-Source Condition: If it doesn't appear on at least 2 distinct networks, drop it.
-    if (item.sources.length < 2) return;
-
+  outputList.forEach(item => {
     validatedTicker.push(item.title);
 
     let formattedHeadline = item.title;
@@ -422,24 +400,21 @@ async function loadNewsFeed() {
         <div class="wire-content">
           <p class="wire-headline">${formattedHeadline}</p>
           <div class="wire-meta-row" style="margin-top: 4px;">
-            <span class="consensus-count-badge" style="background:${item.sources.length >= 3 ? 'var(--epl-green)' : 'var(--bg-raised)'; color:${item.sources.length >= 3 ? '#000' : 'var(--txt-secondary)'}">${item.sources.length} Network Trackers</span>
+            <span class="consensus-count-badge" style="background:${item.sources.length >= 3 ? 'var(--epl-green)' : 'var(--bg-raised)'; color:${item.sources.length >= 3 ? '#000' : 'var(--txt-secondary)'}">${item.sources.length} Channels Verified</span>
             ${sourceBadges}
           </div>
         </div>
       </div>`;
   });
 
-  const nodeBadge = document.getElementById('source-node-count');
-  if (nodeBadge) nodeBadge.textContent = "Consensus Engine Online";
-
   if (!consensusHtml) {
     container.innerHTML = `
       <div class="empty-state">
         <span style="font-size: 26px; display:block; margin-bottom: 10px;">🛡️</span>
-        No cross-network matching storylines right now.<br>
-        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Single source noise filtered successfully.</span>
+        No direct network cross-matches detected on this cycle.<br>
+        <span style="font-size:11px; color:var(--txt-muted); display:block; margin-top:6px;">Single source noise filtered without performance costs.</span>
       </div>`;
-    buildTicker(["Wire balanced. Single source reports dropped."]);
+    buildTicker(["Wire clean. Isolated source traffic bypassed."]);
   } else {
     container.innerHTML = consensusHtml;
     buildTicker(validatedTicker);
