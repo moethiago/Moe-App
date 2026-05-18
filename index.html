@@ -117,10 +117,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .ring-track{fill:none;stroke:var(--bg-raised);stroke-width:12}
 .ring-prog{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease}
 
-/* FIXED MOVEMENT SYSTEM SPECIFIED AT EXACTLY 15s */
+/* REMOVED CSS KEYFRAME ANIMATION TO FIX VELOCITY ISSUE */
 .ticker-wrap{overflow:hidden;border-bottom:1px solid var(--border);background:var(--bg-void);padding:8px 0}
-.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:ticker 15s linear infinite}
-@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-track{display:flex;white-space:nowrap;width:max-content;will-change:transform;}
 
 .ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
 .f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
@@ -273,9 +272,11 @@ const KEY_ENTITIES = [
 ];
 
 const JUNK_KEYWORDS = /(gossip|rumour|rumor|transfer column|paper talk|eyeing|eyes|ponder|plots|plotting|linked|swap|weighs up|monitoring|interested in|fans react|fans spot|goes viral|divides fans|insists|claims|warns|blasts|breaks silence|drops hint|hints at|opens up about|left out of|verdict|opinion|column|where to watch|how to watch|stream|tv channel|kick off time|kickoff|build up|undercard|ufc|boxing|fight|live commentary|live stream|outage|chants|promise bans|admits error|admits to mistakes|told to sack|key questions)/;
-const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done deal|extends|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft)/;
+const CRITICAL_KEYWORDS = /(official|confirmed|signs|signed|statement|done region|contract|sacked|appointed|injury|broken|fractured|ruled out|apologises|apologizes|announces|announced|fined|punished|agrees return|driveshaft)/;
 
 let foodLog = [], setLog = [];
+let tickerPosition = 0;
+let tickerAnimationId = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   try { foodLog = JSON.parse(localStorage.getItem('m_food')) || []; } catch(e){}
@@ -283,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
   try { renderFood(); } catch(e){}
   try { renderSets(); } catch(e){}
   startClock();
+  startTickerEngine(); // Start the dynamic engine loop
   setTimeout(() => { loadNewsFeed(); }, 100);
 });
 
@@ -315,7 +317,6 @@ async function loadNewsFeed() {
   if (!criticalContainer) return;
   
   criticalContainer.innerHTML = '<div class="f1-api-loading"><div class="f1-spinner"></div><span>Parsing and cross-checking streams...</span></div>';
-  
   const rawDataPayloads = [];
 
   const fetchPromises = MASTER_CHANNELS.map(async (channel) => {
@@ -330,7 +331,6 @@ async function loadNewsFeed() {
   });
 
   await Promise.allSettled(fetchPromises);
-
   const uniqueStories = [];
 
   try {
@@ -339,13 +339,7 @@ async function loadNewsFeed() {
         if (!item || !item.title) return;
 
         const originalTitle = String(item.title).replace(/[\r\n]+/g, " ").trim();
-        
-        const sanitizedTitle = originalTitle
-          .toLowerCase()
-          .replace(/[\r\n\t]+/g, " ")
-          .replace(/[\u2018\u2019\u201c\u201d]/g, "'") 
-          .replace(/[^a-z0-9\s]/g, " ")              
-          .trim();
+        const sanitizedTitle = originalTitle.toLowerCase().replace(/[\r\n\t]+/g, " ").replace(/[\u2018\u2019\u201c\u201d]/g, "'").replace(/[^a-z0-9\s]/g, " ").trim();
 
         if (JUNK_KEYWORDS.test(sanitizedTitle)) return;
         if (!CRITICAL_KEYWORDS.test(sanitizedTitle)) return;
@@ -354,41 +348,22 @@ async function loadNewsFeed() {
         const cleanLink = item.link || "#";
         const itemTimestamp = item.pubDate ? Date.parse(item.pubDate) : Date.now();
         const parsedTime = isNaN(itemTimestamp) ? Date.now() : itemTimestamp;
-
         const textFootprint = sanitizedTitle.split(' ').filter(word => word.length > 3);
         const isF1Source = payload.source.toLowerCase().includes('f1');
 
         let matchedStory = null;
         for (let story of uniqueStories) {
           if (story.isF1 !== isF1Source) continue;
-
           let overlapCount = 0;
-          textFootprint.forEach(word => {
-            if (story.signature.includes(word)) overlapCount++;
-          });
-
-          if (overlapCount >= 3 || (textFootprint.length <= 3 && overlapCount >= 2)) {
-            matchedStory = story;
-            break;
-          }
+          textFootprint.forEach(word => { if (story.signature.includes(word)) overlapCount++; });
+          if (overlapCount >= 3 || (textFootprint.length <= 3 && overlapCount >= 2)) { matchedStory = story; break; }
         }
 
         if (matchedStory) {
-          if (!matchedStory.sources.includes(payload.source)) {
-            matchedStory.sources.push(payload.source);
-          }
-          if (parsedTime > matchedStory.time) {
-            matchedStory.time = parsedTime;
-          }
+          if (!matchedStory.sources.includes(payload.source)) matchedStory.sources.push(payload.source);
+          if (parsedTime > matchedStory.time) matchedStory.time = parsedTime;
         } else {
-          uniqueStories.push({
-            title: originalTitle,
-            link: cleanLink,
-            sources: [payload.source],
-            time: parsedTime,
-            signature: textFootprint,
-            isF1: isF1Source
-          });
+          uniqueStories.push({ title: originalTitle, link: cleanLink, sources: [payload.source], time: parsedTime, signature: textFootprint, isF1: isF1Source });
         }
       });
     });
@@ -401,7 +376,6 @@ async function loadNewsFeed() {
     uniqueStories.forEach(story => {
       tickerArray.push(story.title);
       let parsedHeadlineText = story.title;
-
       KEY_ENTITIES.forEach(entity => {
         if (!entity) return;
         const searchRegex = new RegExp(`\\b${entity}\\b`, 'gi');
@@ -425,17 +399,54 @@ async function loadNewsFeed() {
   }
 }
 
-/* FIXING INFINITE LOOP PAIRING FOR EXACT 15s SPEEDS */
+/* JAVASCRIPT FIXED VELOCITY TICKER ENGINE */
 function buildTicker(titles) {
   try {
     const tracker = document.getElementById('ticker');
     if (!tracker || !titles || !titles.length) return;
     
-    // We duplicate the items exactly twice into two identical tracks so that 
-    // when translate(-50%) hits at 15s, it loops seamlessly without a cut off or jump
+    // Create identical double sets to seamlessly loop at the center boundaries
     const itemsHtml = titles.slice(0, 5).map(t => `<span class="ticker-item">⚡ ${t}</span>`).join('');
     tracker.innerHTML = itemsHtml + itemsHtml;
+    
+    // Reset spatial position tracker on feed rewrite
+    tickerPosition = 0;
   } catch(e){}
+}
+
+function startTickerEngine() {
+  const tracker = document.getElementById('ticker');
+  let lastTime = performance.now();
+  
+  // FIXED ANIMATION MOVEMENT SPEED VALUE (Pixels Per Second)
+  // Higher = faster, Lower = slower. 80-90px/sec matches a perfect 15s aesthetic read.
+  const SPEED_PIXELS_PER_SEC = 85; 
+
+  function step(now) {
+    if (!tracker) {
+      tickerAnimationId = requestAnimationFrame(step);
+      return;
+    }
+    
+    const delta = (now - lastTime) / 1000; // time elapsed in seconds
+    lastTime = now;
+
+    const halfWidth = tracker.scrollWidth / 2;
+    if (halfWidth > 0) {
+      // Advance position tracking linearly via time delta
+      tickerPosition += SPEED_PIXELS_PER_SEC * delta;
+      
+      // If position crossed the half-point limit boundary, wrap around instantly
+      if (tickerPosition >= halfWidth) {
+        tickerPosition = tickerPosition % halfWidth;
+      }
+      
+      tracker.style.transform = `translate3d(-${tickerPosition}px, 0, 0)`;
+    }
+    
+    tickerAnimationId = requestAnimationFrame(step);
+  }
+  tickerAnimationId = requestAnimationFrame(step);
 }
 
 async function loadFootballScores() {
