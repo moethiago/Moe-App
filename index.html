@@ -58,9 +58,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .wire-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
 .wire-headline{font-size:13.5px;line-height:1.45;color:var(--txt-primary);font-weight:400}
 .wire-headline strong{font-weight:600;color:#fff}
-.wire-meta-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-.outlet-tag{font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,0.04);color:var(--txt-secondary);border:1px solid var(--border-hi);text-transform:uppercase}
-.verified-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:var(--epl-green);color:#000;text-transform:uppercase;margin-right:4px}
 
 .league-badge{font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase;background:var(--bg-raised);color:var(--txt-secondary);border:1px solid var(--border-hi)}
 .ft-badge{font-size:11px;font-weight:600;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;margin-left:auto}
@@ -120,7 +117,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .ring-track{fill:none;stroke:var(--bg-raised);stroke-width:12}
 .ring-prog{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease}
 .ticker-wrap{overflow:hidden;border-bottom:1px solid var(--border);background:var(--bg-void);padding:8px 0}
-.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:ticker 25s linear infinite}
+.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:ticker 10s linear infinite}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
 .ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
 .f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
@@ -174,7 +171,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
       </div>
 
       <div class="headline-control-row">
-        <p class="section-label" style="margin:0;">🚨 Hard Checked Alerts</p>
+        <p class="section-label" style="margin:0;">🚨 BREAKING NEWS</p>
         <button class="btn-refresh-styled" onclick="loadNewsFeed()">REFRESH</button>
       </div>
       <div class="card" id="critical-posts">
@@ -397,7 +394,6 @@ async function loadNewsFeed() {
 
     let criticalHtml = "";
     let tickerArray = [];
-    let totalRendered = 0;
 
     uniqueStories.forEach(story => {
       tickerArray.push(story.title);
@@ -409,18 +405,11 @@ async function loadNewsFeed() {
         parsedHeadlineText = parsedHeadlineText.replace(searchRegex, `<strong>$&</strong>`);
       });
 
-      const sourceBadgesHtml = story.sources.map(src => `<span class="outlet-tag">${src}</span>`).join('');
-      totalRendered++;
-
       criticalHtml += `
         <div class="wire-item" onclick="window.open('${story.link}','_blank')">
           <span class="wire-bullet">•</span>
           <div class="wire-content">
             <p class="wire-headline">${parsedHeadlineText}</p>
-            <div class="wire-meta-row" style="margin-top: 4px; gap: 6px;">
-              <span class="verified-badge">VERIFIED ALERT</span>
-              ${sourceBadgesHtml}
-            </div>
           </div>
         </div>`;
     });
