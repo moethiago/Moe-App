@@ -117,10 +117,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .ring-track{fill:none;stroke:var(--bg-raised);stroke-width:12}
 .ring-prog{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease}
 
-/* TICKER SPEEDS SET TO 5s ANIMATION DURATION */
+/* FIXED MOVEMENT SYSTEM SPECIFIED AT EXACTLY 15s */
 .ticker-wrap{overflow:hidden;border-bottom:1px solid var(--border);background:var(--bg-void);padding:8px 0}
-.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:ticker 5s linear infinite}
-@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-33.33%)}}
+.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:ticker 15s linear infinite}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 .ticker-item{padding:0 24px;font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(--border)}
 .f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--txt-secondary);font-size:13px}
@@ -425,12 +425,16 @@ async function loadNewsFeed() {
   }
 }
 
+/* FIXING INFINITE LOOP PAIRING FOR EXACT 15s SPEEDS */
 function buildTicker(titles) {
   try {
     const tracker = document.getElementById('ticker');
     if (!tracker || !titles || !titles.length) return;
-    const cleanStr = titles.slice(0, 5).map(t => `<span class="ticker-item">⚡ ${t}</span>`).join('');
-    tracker.innerHTML = cleanStr + cleanStr + cleanStr;
+    
+    // We duplicate the items exactly twice into two identical tracks so that 
+    // when translate(-50%) hits at 15s, it loops seamlessly without a cut off or jump
+    const itemsHtml = titles.slice(0, 5).map(t => `<span class="ticker-item">⚡ ${t}</span>`).join('');
+    tracker.innerHTML = itemsHtml + itemsHtml;
   } catch(e){}
 }
 
