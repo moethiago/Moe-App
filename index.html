@@ -489,7 +489,10 @@ renderFood();
 renderSets();
 startClock();
 startCountdown();
-loadNewsFeed();
+// Show fallback news immediately - no waiting
+renderNewsFeed();
+// Then try to fetch real RSS in background
+setTimeout(function() { loadNewsFeed(); }, 100);
 loadFootballScores();
 loadF1Data();
 });
