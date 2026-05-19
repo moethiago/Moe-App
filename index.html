@@ -433,42 +433,11 @@ HEALTH TAB
 </div>
 <div id="toast"></div>
 <script>
+var foodLog = [], setLog = [], parsedStoriesCache = [], currentFilter = 'ALL', _feedLinks = [];
 
-// ── CONSTANTS ──────────────────────────────────────────
-const RSS_API = ‘https://api.rss2json.com/v1/api.json?rss_url=’;
-const F1_BASE = ‘https://api.jolpi.ca/ergast/f1’;
-const CORS    = ‘https://corsproxy.io/?url=’;
-
-const MASTER_CHANNELS = [
-{ name:‘BBC F1’,       url:‘https://feeds.bbci.co.uk/sport/formula1/rss.xml’, cat:‘F1’       },
-{ name:‘BBC Football’, url:‘https://feeds.bbci.co.uk/sport/football/rss.xml’,  cat:‘FOOTBALL’ },
-{ name:‘Sky F1’,       url:‘https://www.skysports.com/rss/12040’,              cat:‘F1’       },
-{ name:‘Sky Football’, url:‘https://www.skysports.com/rss/11095’,              cat:‘FOOTBALL’ },
-{ name:‘TalkSport’,    url:‘https://talksport.com/feed/’,                      cat:‘FOOTBALL’ },
-{ name:‘Arab News’,    url:‘https://www.arabnews.com/cat/5/rss.xml’,           cat:‘KSA’      },
-];
-
-const KEY_ENTITIES = [
-‘Hamilton’,‘Verstappen’,‘Norris’,‘Leclerc’,‘Russell’,‘Antonelli’,‘Piastri’,‘Alonso’,
-‘Arsenal’,‘Man City’,‘Liverpool’,‘Chelsea’,‘Real Madrid’,‘Barcelona’,‘Bayern’,
-‘Al Nassr’,‘Al Hilal’,‘Ronaldo’,‘Saudi Pro League’,‘Grand Prix’,‘McLaren’,‘Ferrari’,‘Mercedes’
-];
-
-const TEAM_COLORS = {
-mercedes:’#00d2be’, ferrari:’#e8002d’, red_bull:’#3671c6’,
-mclaren:’#ff8700’, aston_martin:’#229971’, alpine:’#0093cc’,
-williams:’#64c4ff’, rb:’#6692ff’, kick_sauber:’#52e252’, haas:’#b6babd’
-};
-
-const NEXT_RACE = {
-title: ‘Canadian Grand Prix’,
-location: ‘Circuit Gilles Villeneuve, Montreal’,
-date: ‘2026-05-24T20:00:00Z’
-};
-
-const FALLBACK_NEWS = [
+var FALLBACK_NEWS = [
 {title:“Kimi Antonelli leads F1 standings with 20pt advantage into Canadian GP”,src:“BBC F1”,cat:“F1”,link:“https://www.bbc.com/sport/formula1”,date:“May 19”},
-{title:“Canadian GP Sprint weekend confirmed - Race lights out Sunday May 24”,src:“Sky F1”,cat:“F1”,link:“https://www.skysports.com/f1”,date:“May 19”},
+{title:“Canadian GP Sprint weekend - Race lights out Sunday May 24 at 20:00 UTC”,src:“Sky F1”,cat:“F1”,link:“https://www.skysports.com/f1”,date:“May 19”},
 {title:“Arsenal beat Burnley 1-0 - Gunners go into final day level with Man City”,src:“BBC Sport”,cat:“FOOTBALL”,link:“https://www.bbc.com/sport/football”,date:“May 18”},
 {title:“McLaren bring major upgrade to Montreal - Norris targeting first 2026 win”,src:“Sky F1”,cat:“F1”,link:“https://www.skysports.com/f1”,date:“May 19”},
 {title:“Chelsea vs Tottenham - London derby to decide European qualification”,src:“Sky Sports”,cat:“FOOTBALL”,link:“https://www.skysports.com/football”,date:“May 19”},
@@ -481,634 +450,206 @@ const FALLBACK_NEWS = [
 {title:“Saudi Arabia 2034 World Cup infrastructure plans confirmed by FIFA”,src:“Arab News”,cat:“KSA”,link:“https://www.arabnews.com/sport”,date:“May 16”}
 ];
 
-// ── INIT ───────────────────────────────────────────────
+var TEAM_COLORS = {mercedes:”#00d2be”,ferrari:”#e8002d”,red_bull:”#3671c6”,mclaren:”#ff8700”,aston_martin:”#229971”,alpine:”#0093cc”,williams:”#64c4ff”,rb:”#6692ff”,kick_sauber:”#52e252”,haas:”#b6babd”};
+var KEY_ENTITIES = [“Hamilton”,“Verstappen”,“Norris”,“Leclerc”,“Russell”,“Antonelli”,“Piastri”,“Alonso”,“Arsenal”,“Man City”,“Liverpool”,“Chelsea”,“Real Madrid”,“Barcelona”,“Bayern”,“Al Nassr”,“Al Hilal”,“Ronaldo”,“Saudi Pro League”,“Grand Prix”,“McLaren”,“Ferrari”,“Mercedes”];
+var NEXT_RACE = {title:“Canadian Grand Prix”,location:“Circuit Gilles Villeneuve, Montreal”,date:“2026-05-24T20:00:00Z”};
+var F1_DATA = [{pos:1,num:12,name:“Antonelli”,cid:“mercedes”,pts:100,wins:3},{pos:2,num:63,name:“Russell”,cid:“mercedes”,pts:80,wins:1},{pos:3,num:16,name:“Leclerc”,cid:“ferrari”,pts:59,wins:0},{pos:4,num:4,name:“Norris”,cid:“mclaren”,pts:51,wins:0},{pos:5,num:44,name:“Hamilton”,cid:“ferrari”,pts:51,wins:0},{pos:6,num:81,name:“Piastri”,cid:“mclaren”,pts:43,wins:0},{pos:7,num:14,name:“Alonso”,cid:“aston_martin”,pts:24,wins:0},{pos:8,num:18,name:“Stroll”,cid:“aston_martin”,pts:12,wins:0},{pos:9,num:10,name:“Gasly”,cid:“alpine”,pts:10,wins:0},{pos:10,num:55,name:“Sainz”,cid:“williams”,pts:9,wins:0}];
+
 document.addEventListener(‘DOMContentLoaded’, function() {
 try { foodLog = JSON.parse(localStorage.getItem(‘m_food’) || ‘[]’); } catch(e) { foodLog = []; }
 try { setLog  = JSON.parse(localStorage.getItem(‘m_sets’) || ‘[]’); } catch(e) { setLog  = []; }
-try { renderFood(); } catch(e) {}
-try { renderSets(); } catch(e) {}
-try { startClock(); } catch(e) {}
-try { startCountdown(); } catch(e) {}
-try { renderNewsFeed(); } catch(e) {
-// Hard fallback - write directly if renderNewsFeed fails
-var c = document.getElementById(‘feed-container’);
-if (c) {
-var html = ‘’;
-FALLBACK_NEWS.forEach(function(s) {
-html += ‘<div class="grid-hero" style="margin-bottom:10px;cursor:pointer;" onclick="window.open(\'' + s.link + '\',\'_blank\')">’
-+ ‘<div class="grid-hero-icon" style="background:rgba(79,156,249,0.1);font-size:20px;">’ + (s.cat===‘F1’?‘🏎’:s.cat===‘KSA’?‘🌙’:‘⚽’) + ‘</div>’
-+ ‘<div><div style="font-size:10px;color:var(--ig-blue);margin-bottom:4px;">’ + s.src + ’ · ’ + s.date + ‘</div>’
-+ ‘<div style="font-size:14px;font-weight:600;color:#fff;">’ + s.title + ‘</div></div></div>’;
-});
-c.innerHTML = html;
-}
-}
-try { loadFootballScores(); } catch(e) {}
-try { loadF1Data(); } catch(e) {}
-setTimeout(function() { try { loadNewsFeed(); } catch(e) {} }, 500);
+renderFood(); renderSets(); startClock(); startCountdown();
+renderNewsFeed();
+loadFootballScores(); loadF1Data();
+setTimeout(function() { loadNewsFeed(); }, 1000);
 });
 
-// ── CLOCK ──────────────────────────────────────────────
 function startClock() {
 var el = document.getElementById(‘clock’);
-function tick() {
-var d = new Date();
-if (el) el.textContent = String(d.getHours()).padStart(2,‘0’) + ‘:’ + String(d.getMinutes()).padStart(2,‘0’);
-}
-tick();
-setInterval(tick, 10000);
+function tick() { var d = new Date(); if(el) el.textContent = String(d.getHours()).padStart(2,‘0’)+’:’+String(d.getMinutes()).padStart(2,‘0’); }
+tick(); setInterval(tick, 10000);
 }
 
-// ── TAB SWITCH ─────────────────────────────────────────
 function switchTab(tab) {
 [‘feed’,‘sports’,‘health’].forEach(function(t) {
-var panel = document.getElementById(‘panel-’ + t);
-var btn   = document.getElementById(‘nav-’ + t);
-if (panel) panel.classList.toggle(‘active’, t === tab);
-if (btn)   btn.classList.toggle(‘active’,   t === tab);
+var p = document.getElementById(‘panel-’+t); if(p) p.classList.toggle(‘active’, t===tab);
+var b = document.getElementById(‘nav-’+t);   if(b) b.classList.toggle(‘active’,   t===tab);
 });
 document.getElementById(‘scroll-wrap’).scrollTop = 0;
 }
 
-// ── COUNTDOWN ──────────────────────────────────────────
 function startCountdown() {
-var trackEl = document.getElementById(‘f1-next-track’);
-var sessEl  = document.getElementById(‘f1-next-session’);
-if (trackEl) trackEl.textContent = NEXT_RACE.title;
-if (sessEl)  sessEl.textContent  = NEXT_RACE.location;
-
+var tEl = document.getElementById(‘f1-next-track’), lEl = document.getElementById(‘f1-next-location’);
+if(tEl) tEl.textContent = NEXT_RACE.title;
+if(lEl) lEl.textContent = NEXT_RACE.location;
 function tick() {
-var diff = Date.parse(NEXT_RACE.date) - Date.now();
-if (diff <= 0) {
-[‘cd-days’,‘cd-hours’,‘cd-mins’,‘cd-secs’].forEach(function(id) {
-var el = document.getElementById(id);
-if (el) el.textContent = ‘00’;
-});
-return;
+var diff = Date.parse(NEXT_RACE.date) - Date.now(); if(diff<=0) return;
+var d=document.getElementById(‘cd-days’), h=document.getElementById(‘cd-hours’), m=document.getElementById(‘cd-mins’), s=document.getElementById(‘cd-secs’);
+if(d) d.textContent = String(Math.floor(diff/86400000)).padStart(2,‘0’);
+if(h) h.textContent = String(Math.floor(diff%86400000/3600000)).padStart(2,‘0’);
+if(m) m.textContent = String(Math.floor(diff%3600000/60000)).padStart(2,‘0’);
+if(s) s.textContent = String(Math.floor(diff%60000/1000)).padStart(2,‘0’);
 }
-var d = document.getElementById(‘cd-days’);
-var h = document.getElementById(‘cd-hours’);
-var m = document.getElementById(‘cd-mins’);
-var s = document.getElementById(‘cd-secs’);
-if (d) d.textContent = String(Math.floor(diff / 86400000)).padStart(2, ‘0’);
-if (h) h.textContent = String(Math.floor(diff % 86400000 / 3600000)).padStart(2, ‘0’);
-if (m) m.textContent = String(Math.floor(diff % 3600000 / 60000)).padStart(2, ‘0’);
-if (s) s.textContent = String(Math.floor(diff % 60000 / 1000)).padStart(2, ‘0’);
-}
-tick();
-setInterval(tick, 1000);
+tick(); setInterval(tick, 1000);
 }
 
-// ── TICKER (pure CSS driven, just set content) ─────────
 function setTickerContent(titles) {
-var track = document.getElementById(‘ticker’);
-if (!track || !titles.length) return;
-var items = titles.slice(0, 8).map(function(t) {
-return ‘<span class="ticker-item">• ’ + t.substring(0, 70) + ‘</span>’;
-}).join(’’);
+var track = document.getElementById(‘ticker’); if(!track||!titles.length) return;
+var items = titles.slice(0,8).map(function(t) { return ‘<span class="t-item">’+t.substring(0,70)+’</span>’; }).join(’’);
 track.innerHTML = items + items;
 }
 
-// ── F1 STANDINGS ───────────────────────────────────────
-async function loadF1Data() {
-var body    = document.getElementById(‘f1-standings-body’);
-var roundEl = document.getElementById(‘f1-standings-round’);
-if (!body) return;
-
-// Show real hardcoded data immediately — no spinner, no wait
-renderHardcodedStandings(body);
-if (roundEl) roundEl.textContent = ‘2026 · R4’;
-
-// Try to fetch live data in background and update if successful
-try {
-var controller = new AbortController();
-var timer = setTimeout(function() { controller.abort(); }, 5000);
-var url = F1_BASE + ‘/current/driverstandings.json?limit=20’;
-var res = await fetch(url, { signal: controller.signal });
-clearTimeout(timer);
-if (res.ok) {
-var data = await res.json();
-renderF1Standings(data, roundEl, body);
-}
-} catch(e) {
-// Hardcoded data already shown — no error needed
-}
+function catColor(cat) {
+if(cat===‘F1’)       return {bg:‘rgba(232,0,45,0.1)’,   txt:‘var(–f1-red)’,    icon:’🏎’};
+if(cat===‘FOOTBALL’) return {bg:‘rgba(56,211,106,0.1)’, txt:‘var(–epl-green)’, icon:’⚽’};
+if(cat===‘KSA’)      return {bg:‘rgba(34,211,238,0.1)’, txt:‘var(–cyan)’,       icon:’🌟’};
+return {bg:‘rgba(167,139,250,0.1)’,txt:‘var(–purple)’,icon:’📰’};
 }
 
-// Real 2026 standings after Round 4 (Miami GP) — updated May 19 2026
-var F1_STANDINGS_2026 = [
-{ pos:1, num:12, name:‘Antonelli’, team:‘Mercedes’,     cid:‘mercedes’,     pts:100, wins:3 },
-{ pos:2, num:63, name:‘Russell’,   team:‘Mercedes’,     cid:‘mercedes’,     pts:80,  wins:1 },
-{ pos:3, num:16, name:‘Leclerc’,   team:‘Ferrari’,      cid:‘ferrari’,      pts:59,  wins:0 },
-{ pos:4, num:4,  name:‘Norris’,    team:‘McLaren’,      cid:‘mclaren’,      pts:51,  wins:0 },
-{ pos:5, num:44, name:‘Hamilton’,  team:‘Ferrari’,      cid:‘ferrari’,      pts:51,  wins:0 },
-{ pos:6, num:81, name:‘Piastri’,   team:‘McLaren’,      cid:‘mclaren’,      pts:43,  wins:0 },
-{ pos:7, num:14, name:‘Alonso’,    team:‘Aston Martin’, cid:‘aston_martin’, pts:24,  wins:0 },
-{ pos:8, num:18, name:‘Stroll’,    team:‘Aston Martin’, cid:‘aston_martin’, pts:12,  wins:0 },
-{ pos:9, num:10, name:‘Gasly’,     team:‘Alpine’,       cid:‘alpine’,       pts:10,  wins:0 },
-{ pos:10,num:55, name:‘Sainz’,     team:‘Williams’,     cid:‘williams’,     pts:9,   wins:0 },
-];
-
-function renderF1Standings(data, roundEl, body) {
-// Try to parse live API data first
-var drivers = null;
-var round = ‘4’;
-try {
-var sl = data && data.MRData && data.MRData.StandingsTable && data.MRData.StandingsTable.StandingsLists[0];
-if (sl && sl.DriverStandings && sl.DriverStandings.length) {
-drivers = sl.DriverStandings.slice(0, 10);
-round = sl.round;
-}
-} catch(e) {}
-
-if (roundEl) roundEl.textContent = ‘2026 · R’ + round;
-
-// Fall back to hardcoded if API gave nothing useful
-if (!drivers || !drivers.length) {
-renderHardcodedStandings(body);
-return;
+function boldEntities(text) {
+KEY_ENTITIES.forEach(function(ent) { text = text.replace(new RegExp(’\b’+ent+’\b’,‘gi’),’<strong>$&</strong>’); });
+return text;
 }
 
-var maxPts = parseFloat(drivers[0].points) || 1;
-var html = ‘<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>’;
-drivers.forEach(function(d) {
-var pos = parseInt(d.position);
-var cid = d.Constructors && d.Constructors[0] ? d.Constructors[0].constructorId : ‘default’;
-var col = TEAM_COLORS[cid] || ‘#8a8fa8’;
-var pts = parseFloat(d.points);
-var barW = Math.round((pts / maxPts) * 100);
-var posClass = pos === 1 ? ‘p1’ : pos === 2 ? ‘p2’ : pos === 3 ? ‘p3’ : ‘’;
-html += ‘<div class="f1-std-row">’
-+ ‘<span class="f1-pos ' + posClass + '">’ + pos + ‘</span>’
-+ ‘<span class="f1-num" style="background:' + col + '22;color:' + col + '">’ + d.Driver.permanentNumber + ‘</span>’
-+ ‘<div class="f1-driver-info">’
-+   ‘<span class="f1-driver-name">’ + d.Driver.familyName + ‘</span>’
-+   ‘<div class="f1-con-bar"><div class="f1-con-fill" style="width:' + barW + '%;background:' + col + '"></div></div>’
-+ ‘</div>’
-+ ‘<span class="f1-wins">’ + d.wins + ‘</span>’
-+ ‘<span class="f1-pts">’ + pts + ‘</span>’
-+ ‘</div>’;
+function timeAgo(val) {
+if(typeof val===‘string’) return val;
+var diff = (Date.now()-val)/1000;
+if(diff<60) return ‘just now’;
+if(diff<3600) return Math.floor(diff/60)+‘m ago’;
+if(diff<86400) return Math.floor(diff/3600)+‘h ago’;
+return Math.floor(diff/86400)+‘d ago’;
+}
+
+function openFeedLink(idx) { var l=_feedLinks[idx]; if(l&&l!==’#’) window.open(l,’_blank’); }
+
+function renderGridFeed(items) {
+var container = document.getElementById(‘feed-container’);
+if(!container||!items.length) return;
+_feedLinks = items.map(function(i) { return i.link||’#’; });
+var hero = items[0], c = catColor(hero.cat), html = ‘’;
+html += ‘<div class="grid-hero" onclick="openFeedLink(0)">’;
+html += ‘<div class="grid-hero-icon" style="background:'+c.bg+'">’+c.icon+’</div>’;
+html += ‘<div><div class="grid-hero-cat" style="color:'+c.txt+'">’+hero.src+’ · ‘+timeAgo(hero.time)+’</div>’;
+html += ‘<div class="grid-hero-headline">’+boldEntities(hero.title)+’</div></div></div>’;
+if(items.length>1) {
+html += ‘<div class="grid-2col" style="margin-top:10px;">’;
+items.slice(1).forEach(function(story,idx) {
+var sc = catColor(story.cat);
+html += ‘<div class="grid-card" onclick="openFeedLink('+(idx+1)+')">’;
+html += ‘<span class="grid-cat" style="background:'+sc.bg+';color:'+sc.txt+'">’+story.cat+’</span>’;
+html += ‘<p class="grid-headline">’+boldEntities(story.title)+’</p>’;
+html += ‘<span class="grid-meta">’+story.src+’ · ‘+timeAgo(story.time)+’</span></div>’;
 });
-var t = new Date().toLocaleTimeString([], {hour:‘2-digit’, minute:‘2-digit’});
-html += ’<div class="f1-last-updated">Live · Jolpica F1 API · ’ + t + ‘</div>’;
-body.innerHTML = html;
+html += ‘</div>’;
 }
-
-function renderHardcodedStandings(body) {
-var maxPts = F1_STANDINGS_2026[0].pts;
-var html = ‘<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>’;
-F1_STANDINGS_2026.forEach(function(d) {
-var col = TEAM_COLORS[d.cid] || ‘#8a8fa8’;
-var barW = Math.round((d.pts / maxPts) * 100);
-var posClass = d.pos === 1 ? ‘p1’ : d.pos === 2 ? ‘p2’ : d.pos === 3 ? ‘p3’ : ‘’;
-html += ‘<div class="f1-std-row">’
-+ ‘<span class="f1-pos ' + posClass + '">’ + d.pos + ‘</span>’
-+ ‘<span class="f1-num" style="background:' + col + '22;color:' + col + '">’ + d.num + ‘</span>’
-+ ‘<div class="f1-driver-info">’
-+   ‘<span class="f1-driver-name">’ + d.name + ‘</span>’
-+   ‘<div class="f1-con-bar"><div class="f1-con-fill" style="width:' + barW + '%;background:' + col + '"></div></div>’
-+ ‘</div>’
-+ ‘<span class="f1-wins">’ + d.wins + ‘</span>’
-+ ‘<span class="f1-pts">’ + d.pts + ‘</span>’
-+ ‘</div>’;
-});
-html += ‘<div class="f1-last-updated">After R4 Miami · Updated May 19 2026</div>’;
-body.innerHTML = html;
-}
-
-// ── FOOTBALL ───────────────────────────────────────────
-function loadFootballScores() {
-var container = document.getElementById(‘football-scores-container’);
-if (!container) return;
-container.innerHTML = ‘<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Loading matches…</span></div>’;
-
-setTimeout(function() {
-var matches = [
-{ league:‘PREMIER LEAGUE’, status:‘Today 21:30 AST’, isLive:false, t1:‘Bournemouth’, s1:null, t2:‘Man City’,    s2:null, events:‘Kick-off soon · City favoured 57.8%’ },
-{ league:‘PREMIER LEAGUE’, status:‘Today 22:15 AST’, isLive:false, t1:‘Chelsea’,     s1:null, t2:‘Tottenham’,   s2:null, events:‘London derby · CFC 49.6% win prob’ },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Mon 18’,     isLive:false, t1:‘Arsenal’,     s1:1,    t2:‘Burnley’,     s2:0,    events:‘Goal: Arsenal 1-0’ },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Sun 17’,     isLive:false, t1:‘Newcastle’,   s1:3,    t2:‘West Ham’,    s2:1,    events:‘Goals: Isak 2', Gordon 55', Guimaraes 78'’ },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Sun 17’,     isLive:false, t1:‘Man Utd’,     s1:3,    t2:‘Nott'm Forest’, s2:2, events:‘Goals: Rashford 12', 45', Hojlund 67'’ },
-{ league:‘LA LIGA’,        status:‘FT · Sun 17’,     isLive:false, t1:‘Real Madrid’, s1:1,    t2:‘Sevilla’,     s2:0,    events:‘Goal: Bellingham 34'’ },
-{ league:‘LA LIGA’,        status:‘FT · Sun 17’,     isLive:false, t1:‘Barcelona’,   s1:3,    t2:‘Real Betis’,  s2:1,    events:‘Goals: Yamal 22', Lewandowski 55', 78'’ },
-];
-
-```
-var html = '';
-matches.forEach(function(m) {
-  var s1 = m.s1 === null ? '' : m.s1;
-  var s2 = m.s2 === null ? '' : m.s2;
-  var scoreHtml = m.s1 === null
-    ? '<div style="font-size:11px;color:var(--txt-muted);font-family:\'JetBrains Mono\',monospace;padding:4px 0;">vs</div>'
-    : '<div style="display:flex;gap:16px;align-items:center;padding:4px 0;">'
-      + '<span class="live-team-score">' + s1 + '</span>'
-      + '<span style="color:var(--txt-muted)">–</span>'
-      + '<span class="live-team-score">' + s2 + '</span>'
-      + '</div>';
-
-  html += '<div class="live-match-box">'
-    + '<div class="live-meta-row">'
-    +   '<span class="league-badge">' + m.league + '</span>'
-    +   '<span class="live-status-pill ' + (m.isLive ? 'active-game' : 'ft-game') + '">' + m.status + '</span>'
-    + '</div>'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;">'
-    +   '<div><div class="live-team-name">' + m.t1 + '</div><div class="live-team-name" style="margin-top:4px;">' + m.t2 + '</div></div>'
-    +   scoreHtml
-    + '</div>'
-    + '<div class="live-match-events">' + m.events + '</div>'
-    + '</div>';
-});
 container.innerHTML = html;
-```
-
-}, 300);
-}
-
-// ── NEWS RSS ────────────────────────────────────────────
-async function fetchRSS(channel) {
-try {
-var controller = new AbortController();
-var timer = setTimeout(function() { controller.abort(); }, 7000);
-var res = await fetch(RSS_API + encodeURIComponent(channel.url) + ‘&count=8’, {
-signal: controller.signal
-});
-clearTimeout(timer);
-var d = await res.json();
-if (d.status === ‘ok’ && d.items && d.items.length) return d.items;
-} catch(e) {}
-return [];
-}
-
-async function loadNewsFeed() {
-var container = document.getElementById(‘critical-posts’);
-if (!container) return;
-container.innerHTML = ‘<div class="f1-api-loading"><div class="f1-spinner"></div><span>Loading news…</span></div>’;
-parsedStoriesCache = [];
-
-for (var i = 0; i < MASTER_CHANNELS.length; i++) {
-var ch = MASTER_CHANNELS[i];
-try {
-var items = await fetchRSS(ch);
-for (var j = 0; j < items.length; j++) {
-var item = items[j];
-if (!item.title) continue;
-parsedStoriesCache.push({
-title: item.title.replace(/[\r\n]+/g, ’ ’).trim(),
-link:  item.link || ‘#’,
-time:  item.pubDate ? Date.parse(item.pubDate) : Date.now(),
-cat:   ch.cat,
-src:   ch.name
-});
-}
-} catch(e) {}
-}
-
-parsedStoriesCache.sort(function(a, b) { return b.time - a.time; });
-renderNewsFeed();
 }
 
 function setFeedFilter(cat, el) {
 currentFilter = cat;
 document.querySelectorAll(’.fpill’).forEach(function(p) { p.classList.remove(‘active’); });
-if (el) el.classList.add(‘active’);
+if(el) el.classList.add(‘active’);
 renderNewsFeed();
 }
 
-function timeAgo(ms) {
-if (!ms || isNaN(ms)) return ‘’;
-var diff = (Date.now() - ms) / 1000;
-if (diff < 60)    return ‘just now’;
-if (diff < 3600)  return Math.floor(diff / 60) + ‘m ago’;
-if (diff < 86400) return Math.floor(diff / 3600) + ‘h ago’;
-return Math.floor(diff / 86400) + ‘d ago’;
-}
-
-function boldEntities(text) {
-KEY_ENTITIES.forEach(function(ent) {
-text = text.replace(new RegExp(’\b’ + ent + ‘\b’, ‘gi’), ‘<strong>$&</strong>’);
-});
-return text;
-}
-
-function makeWireItem(title, src, timeMs, link) {
-return ‘<div class="wire-item" onclick="window.open(\'' + link + '\',\'_blank\')">’
-+ ‘<span class="wire-bullet">•</span>’
-+ ‘<div class="wire-content">’
-+   ‘<p class="wire-headline">’ + boldEntities(title) + ‘</p>’
-+   ‘<div class="wire-meta">’
-+     ‘<span class="wire-source">’ + src + ‘</span>’
-+     ‘<span class="wire-time">’ + timeAgo(timeMs) + ‘</span>’
-+   ‘</div>’
-+ ‘</div>’
-+ ‘</div>’;
-}
-
-// ── NUTRITION ──────────────────────────────────────────
-var TARGETS = { kcal:2500, prot:180, carb:280, fat:70 };
-
-function addFood() {
-var name = document.getElementById(‘food-name’).value.trim();
-var kcal = parseFloat(document.getElementById(‘food-kcal’).value) || 0;
-var prot = parseFloat(document.getElementById(‘food-prot’).value) || 0;
-var carb = parseFloat(document.getElementById(‘food-carb’).value) || 0;
-var fat  = parseFloat(document.getElementById(‘food-fat’).value)  || 0;
-if (!name) return;
-foodLog.push({ id: Date.now(), name: name, kcal: kcal, prot: prot, carb: carb, fat: fat });
-localStorage.setItem(‘m_food’, JSON.stringify(foodLog));
-renderFood();
-[‘food-name’,‘food-kcal’,‘food-prot’,‘food-carb’,‘food-fat’].forEach(function(id) {
-document.getElementById(id).value = ‘’;
-});
-}
-
-function deleteFood(id) {
-foodLog = foodLog.filter(function(f) { return f.id !== id; });
-localStorage.setItem(‘m_food’, JSON.stringify(foodLog));
-renderFood();
-}
-
-function renderFood() {
-var totals = foodLog.reduce(function(a, b) {
-return { kcal: a.kcal+b.kcal, prot: a.prot+b.prot, carb: a.carb+b.carb, fat: a.fat+b.fat };
-}, { kcal:0, prot:0, carb:0, fat:0 });
-
-var pct  = Math.min(totals.kcal / TARGETS.kcal, 1);
-var ring = document.getElementById(‘cal-ring’);
-if (ring) { ring.style.strokeDasharray = ‘314’; ring.style.strokeDashoffset = 314 * (1 - pct); }
-
-var calEl = document.getElementById(‘cal-display’);
-if (calEl) calEl.textContent = Math.round(totals.kcal);
-
-var setBar = function(valId, barId, val, target) {
-var ve = document.getElementById(valId);
-var be = document.getElementById(barId);
-if (ve) ve.textContent = Math.round(val) + ‘g’;
-if (be) be.style.width = Math.min(val / target * 100, 100) + ‘%’;
-};
-setBar(‘prot-val’, ‘prot-bar’, totals.prot, TARGETS.prot);
-setBar(‘carb-val’, ‘carb-bar’, totals.carb, TARGETS.carb);
-setBar(‘fat-val’,  ‘fat-bar’,  totals.fat,  TARGETS.fat);
-
-var list = document.getElementById(‘food-list’);
-if (!list) return;
-if (!foodLog.length) { list.innerHTML = ‘<div class="empty-state">No foods logged yet.</div>’; return; }
-list.innerHTML = foodLog.map(function(f) {
-return ‘<div class="food-item">’
-+ ‘<span class="food-item-name">’ + f.name + ‘</span>’
-+ ‘<span class="food-item-kcal">’ + f.kcal + ’ kcal</span>’
-+ ‘<button class="food-del" onclick="deleteFood(' + f.id + ')">×</button>’
-+ ‘</div>’;
-}).join(’’);
-}
-
-// ── WORKOUT ────────────────────────────────────────────
-function addSet() {
-var ex = document.getElementById(‘set-exercise’).value.trim();
-var wt = parseFloat(document.getElementById(‘set-weight’).value) || 0;
-var rp = parseInt(document.getElementById(‘set-reps’).value)     || 0;
-if (!ex || !rp) return;
-setLog.push({ id: Date.now(), exercise: ex, weight: wt, reps: rp });
-localStorage.setItem(‘m_sets’, JSON.stringify(setLog));
-renderSets();
-[‘set-weight’,‘set-reps’].forEach(function(id) { document.getElementById(id).value = ‘’; });
-}
-
-function deleteSet(id) {
-setLog = setLog.filter(function(s) { return s.id !== id; });
-localStorage.setItem(‘m_sets’, JSON.stringify(setLog));
-renderSets();
-}
-
-function renderSets() {
-var totalVol = setLog.reduce(function(a, b) { return a + b.weight * b.reps; }, 0);
-var uniqueEx = new Set(setLog.map(function(s) { return s.exercise.toLowerCase(); })).size;
-
-var setsEl  = document.getElementById(‘wk-sets’);
-var volEl   = document.getElementById(‘wk-vol’);
-var exsEl   = document.getElementById(‘wk-exs’);
-var totalEl = document.getElementById(‘vol-total-val’);
-if (setsEl)  setsEl.textContent  = setLog.length;
-if (volEl)   volEl.textContent   = totalVol;
-if (exsEl)   exsEl.textContent   = uniqueEx;
-if (totalEl) totalEl.textContent = totalVol + ’ kg’;
-
-var list = document.getElementById(‘set-list’);
-if (!list) return;
-if (!setLog.length) { list.innerHTML = ‘<div class="empty-state">No sets logged yet.</div>’; return; }
-list.innerHTML = setLog.map(function(s) {
-return ‘<div class="set-row">’
-+ ‘<span class="set-exercise">’ + s.exercise + ‘</span>’
-+ ‘<span class="food-item-kcal">’ + s.weight + ‘kg x ’ + s.reps + ’ = ’ + (s.weight * s.reps) + ‘kg</span>’
-+ ‘<button class="set-del" onclick="deleteSet(' + s.id + ')">×</button>’
-+ ‘</div>’;
-}).join(’’);
-}
-
-// ── OVERRIDE renderNewsFeed to use grid layout ──────────
 function renderNewsFeed() {
-var container = document.getElementById(‘feed-container’);
-if (!container) return;
-
-var filtered = currentFilter === ‘ALL’
-? parsedStoriesCache
-: parsedStoriesCache.filter(function(s) { return s.cat === currentFilter; });
-
-var shown = filtered.slice(0, 20);
-
-if (!shown.length) {
-var fbFiltered = currentFilter === ‘ALL’
-? FALLBACK_NEWS
-: FALLBACK_NEWS.filter(function(s) { return s.cat === currentFilter; });
-
-```
-renderGridFeed(fbFiltered.map(function(s) {
-  return { title:s.title, src:s.src, time:s.date || '', cat:s.cat, link:s.link };
-}));
-setTickerContent(fbFiltered.map(function(s) { return s.title; }));
-return;
-```
-
+var container = document.getElementById(‘feed-container’); if(!container) return;
+var source = parsedStoriesCache.length ? parsedStoriesCache : FALLBACK_NEWS;
+var filtered = currentFilter===‘ALL’ ? source : source.filter(function(s) { return s.cat===currentFilter; });
+if(!filtered.length) { container.innerHTML = ‘<div class="empty-state">No headlines</div>’; return; }
+var items = filtered.slice(0,20).map(function(s) { return {title:s.title,src:s.src,cat:s.cat,link:s.link||’#’,time:s.time||s.date||’’}; });
+renderGridFeed(items);
+setTickerContent(filtered.map(function(s) { return s.title; }));
 }
 
-renderGridFeed(shown);
-setTickerContent(shown.slice(0,8).map(function(s) { return s.title; }));
+async function fetchRSS(channel) {
+try {
+var controller = new AbortController();
+var timer = setTimeout(function() { controller.abort(); }, 7000);
+var res = await fetch(‘https://api.rss2json.com/v1/api.json?rss_url=’+encodeURIComponent(channel.url)+’&count=8’, {signal:controller.signal});
+clearTimeout(timer);
+var d = await res.json();
+if(d.status===‘ok’&&d.items&&d.items.length) return d.items;
+} catch(e) {}
+return [];
 }
 
-function catColor(cat) {
-if (cat === ‘F1’)       return { bg:‘rgba(232,0,45,0.1)’,   txt:‘var(–f1-red)’,    icon:‘🏎’ };
-if (cat === ‘FOOTBALL’) return { bg:‘rgba(56,211,106,0.1)’, txt:‘var(–epl-green)’, icon:‘⚽’ };
-if (cat === ‘KSA’)      return { bg:‘rgba(34,211,238,0.1)’, txt:‘var(–cyan)’,       icon:‘🌙’ };
-return { bg:‘rgba(167,139,250,0.1)’, txt:‘var(–purple)’, icon:‘📰’ };
+async function loadNewsFeed() {
+parsedStoriesCache = [];
+var channels = [{name:‘BBC F1’,url:‘https://feeds.bbci.co.uk/sport/formula1/rss.xml’,cat:‘F1’},{name:‘BBC Football’,url:‘https://feeds.bbci.co.uk/sport/football/rss.xml’,cat:‘FOOTBALL’},{name:‘Sky F1’,url:‘https://www.skysports.com/rss/12040’,cat:‘F1’},{name:‘Sky Football’,url:‘https://www.skysports.com/rss/11095’,cat:‘FOOTBALL’},{name:‘Arab News’,url:‘https://www.arabnews.com/cat/5/rss.xml’,cat:‘KSA’}];
+for(var i=0;i<channels.length;i++) {
+var ch=channels[i], items=await fetchRSS(ch);
+for(var j=0;j<items.length;j++) {
+var item=items[j]; if(!item.title) continue;
+parsedStoriesCache.push({title:item.title.replace(/[\r\n]+/g,’ ‘).trim(),link:item.link||’#’,time:item.pubDate?Date.parse(item.pubDate):Date.now(),cat:ch.cat,src:ch.name});
+}
+}
+parsedStoriesCache.sort(function(a,b) { return b.time-a.time; });
+if(parsedStoriesCache.length) renderNewsFeed();
 }
 
-// Store links globally so onclick can reference by index
-var _feedLinks = [];
-
-function renderGridFeed(items) {
-var container = document.getElementById(‘feed-container’);
-if (!container || !items.length) return;
-_feedLinks = items.map(function(i){ return i.link || ‘#’; });
-
-var html = ‘’;
-var hero = items[0];
-var c = catColor(hero.cat);
-
-html += ‘<div class="grid-hero" onclick="openFeedLink(0)">’
-+ ‘<div class="grid-hero-icon" style="background:' + c.bg + '">’ + c.icon + ‘</div>’
-+ ‘<div>’
-+ ‘<div class="grid-hero-cat" style="color:' + c.txt + '">’ + hero.src + ’ · ’ + (typeof hero.time === ‘string’ ? hero.time : timeAgo(hero.time)) + ‘</div>’
-+ ‘<div class="grid-hero-headline">’ + boldEntities(hero.title) + ‘</div>’
-+ ‘</div></div>’;
-
-if (items.length > 1) {
-html += ‘<div class="grid-2col" style="margin-top:10px;">’;
-items.slice(1).forEach(function(story, idx) {
-var sc = catColor(story.cat);
-html += ‘<div class="grid-card" onclick="openFeedLink(' + (idx+1) + ')">’
-+ ‘<span class="grid-cat" style="background:' + sc.bg + ';color:' + sc.txt + '">’ + story.cat + ‘</span>’
-+ ‘<p class="grid-headline">’ + boldEntities(story.title) + ‘</p>’
-+ ‘<span class="grid-meta">’ + story.src + ’ · ’ + (typeof story.time === ‘string’ ? story.time : timeAgo(story.time)) + ‘</span>’
-+ ‘</div>’;
-});
-html += ‘</div>’;
-}
-
-container.innerHTML = html;
-}
-
-function openFeedLink(idx) {
-var link = _feedLinks[idx];
-if (link && link !== ‘#’) window.open(link, ‘_blank’);
-}
-
-// ── OVERRIDE renderSets to use set-grid ────────────────
-function renderSets() {
-var totalVol = setLog.reduce(function(a,b){ return a + b.weight*b.reps; }, 0);
-var uniqueEx = new Set(setLog.map(function(s){ return s.exercise.toLowerCase(); })).size;
-var se = document.getElementById(‘wk-sets’);   if(se) se.textContent = setLog.length;
-var ve = document.getElementById(‘wk-vol’);    if(ve) ve.textContent = totalVol;
-var xe = document.getElementById(‘wk-exs’);    if(xe) xe.textContent = uniqueEx;
-var list = document.getElementById(‘set-list’);
-if (!list) return;
-if (!setLog.length) {
-list.innerHTML = ‘<div class="empty-state" style="grid-column:1/-1;">No sets logged yet.</div>’;
-return;
-}
-list.innerHTML = setLog.map(function(s) {
-var vol = s.weight * s.reps;
-return ‘<div class="set-card">’
-+ ‘<div class="set-ex">’ + s.exercise + ‘</div>’
-+ ‘<div class="set-vol">’ + s.weight + ‘kg × ’ + s.reps + ‘</div>’
-+ ‘<div style="display:flex;align-items:center;justify-content:space-between;">’
-+   ‘<div class="set-sub">’ + vol + ‘kg vol</div>’
-+   ‘<button class="set-del" onclick="deleteSet(' + s.id + ')">×</button>’
-+ ‘</div>’
-+ ‘</div>’;
-}).join(’’);
-}
-
-// ── OVERRIDE renderFood for new layout ─────────────────
-function renderFood() {
-var TARGETS = { kcal:2500, prot:180, carb:280, fat:70 };
-var totals = foodLog.reduce(function(a,b){
-return { kcal:a.kcal+b.kcal, prot:a.prot+b.prot, carb:a.carb+b.carb, fat:a.fat+b.fat };
-}, {kcal:0,prot:0,carb:0,fat:0});
-
-var pct = Math.min(totals.kcal/TARGETS.kcal,1);
-var ring = document.getElementById(‘cal-ring’);
-if (ring) { ring.style.strokeDasharray=‘251’; ring.style.strokeDashoffset=251*(1-pct); }
-var cd = document.getElementById(‘cal-display’); if(cd) cd.textContent = Math.round(totals.kcal);
-
-var setMacro = function(vid,bid,val,tgt) {
-var ve=document.getElementById(vid); if(ve) ve.textContent=Math.round(val)+‘g’;
-var be=document.getElementById(bid); if(be) be.style.width=Math.min(val/tgt*100,100)+’%’;
-};
-setMacro(‘prot-val’,‘prot-bar’,totals.prot,TARGETS.prot);
-setMacro(‘carb-val’,‘carb-bar’,totals.carb,TARGETS.carb);
-setMacro(‘fat-val’, ‘fat-bar’, totals.fat, TARGETS.fat);
-
-var list = document.getElementById(‘food-list’);
-if (!list) return;
-list.innerHTML = foodLog.map(function(f) {
-return ‘<div class="food-item">’
-+ ‘<span class="food-item-name">’ + f.name + ‘</span>’
-+ ‘<span class="food-item-kcal">’ + f.kcal + ’ kcal</span>’
-+ ‘<button class="food-del" onclick="deleteFood(' + f.id + ')">×</button>’
-+ ‘</div>’;
-}).join(’’);
-}
-
-// ── OVERRIDE football scores for match grid ─────────────
-loadFootballScores = function() {
-var container = document.getElementById(‘football-scores-container’);
-if (!container) return;
-container.innerHTML = ‘<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Loading…</span></div>’;
-
-setTimeout(function() {
-var matches = [
-{ league:‘PREMIER LEAGUE’, status:‘21:30 AST’, statusType:‘soon’, t1:‘Bournemouth’, s1:null, t2:‘Man City’,       s2:null },
-{ league:‘PREMIER LEAGUE’, status:‘22:15 AST’, statusType:‘soon’, t1:‘Chelsea’,     s1:null, t2:‘Tottenham’,      s2:null },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Mon’,  statusType:‘ft’,   t1:‘Arsenal’,     s1:1,    t2:‘Burnley’,        s2:0    },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Sun’,  statusType:‘ft’,   t1:‘Newcastle’,   s1:3,    t2:‘West Ham’,       s2:1    },
-{ league:‘LA LIGA’,        status:‘FT · Sun’,  statusType:‘ft’,   t1:‘Real Madrid’, s1:1,    t2:‘Sevilla’,        s2:0    },
-{ league:‘LA LIGA’,        status:‘FT · Sun’,  statusType:‘ft’,   t1:‘Barcelona’,   s1:3,    t2:‘Real Betis’,     s2:1    },
-];
-
-```
-var html = '<div class="match-grid">';
-matches.forEach(function(m) {
-  var sc = m.s1 === null ? '<span class="match-score dash">–</span>' : '<span class="match-score">' + m.s1 + '</span>';
-  var sc2 = m.s2 === null ? '<span class="match-score dash">–</span>' : '<span class="match-score">' + m.s2 + '</span>';
-  html += '<div class="match-card">'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">'
-    +   '<span class="match-league">' + m.league + '</span>'
-    +   '<span class="match-status status-' + m.statusType + '">' + m.status + '</span>'
-    + '</div>'
-    + '<div class="match-teams">'
-    +   '<div class="match-team-row"><span class="match-team-name">' + m.t1 + '</span>' + sc  + '</div>'
-    +   '<div class="match-team-row"><span class="match-team-name">' + m.t2 + '</span>' + sc2 + '</div>'
-    + '</div>'
-    + '</div>';
-});
-html += '</div>';
-container.innerHTML = html;
-```
-
-}, 300);
-};
-
-// ── OVERRIDE renderF1Standings for new layout ──────────
-function renderHardcodedStandings(body) {
-var F1_DATA = [
-{ pos:1, num:12, name:‘Antonelli’, cid:‘mercedes’, pts:100, wins:3 },
-{ pos:2, num:63, name:‘Russell’,   cid:‘mercedes’, pts:80,  wins:1 },
-{ pos:3, num:16, name:‘Leclerc’,   cid:‘ferrari’,  pts:59,  wins:0 },
-{ pos:4, num:4,  name:‘Norris’,    cid:‘mclaren’,  pts:51,  wins:0 },
-{ pos:5, num:44, name:‘Hamilton’,  cid:‘ferrari’,  pts:51,  wins:0 },
-{ pos:6, num:81, name:‘Piastri’,   cid:‘mclaren’,  pts:43,  wins:0 },
-{ pos:7, num:14, name:‘Alonso’,    cid:‘aston_martin’, pts:24, wins:0 },
-{ pos:8, num:18, name:‘Stroll’,    cid:‘aston_martin’, pts:12, wins:0 },
-{ pos:9, num:10, name:‘Gasly’,     cid:‘alpine’,   pts:10,  wins:0 },
-{ pos:10,num:55, name:‘Sainz’,     cid:‘williams’, pts:9,   wins:0 },
-];
-var maxPts = F1_DATA[0].pts;
-var html = ‘<div class="f1-hdr"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>’;
+function loadF1Data() {
+var body=document.getElementById(‘f1-standings-body’), roundEl=document.getElementById(‘f1-standings-round’);
+if(!body) return;
+if(roundEl) roundEl.textContent=‘2026 · R4’;
+var maxPts=F1_DATA[0].pts, html=’<div class="f1-hdr"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>’;
 F1_DATA.forEach(function(d) {
-var col = TEAM_COLORS[d.cid] || ‘#8a8fa8’;
-var barW = Math.round((d.pts/maxPts)*100);
-var posClass = d.pos===1?‘p1’:d.pos===2?‘p2’:d.pos===3?‘p3’:’’;
-html += ‘<div class="f1-row">’
-+ ‘<span class="f1-pos ' + posClass + '">’ + d.pos + ‘</span>’
-+ ‘<span class="f1-num" style="background:' + col + '22;color:' + col + '">’ + d.num + ‘</span>’
-+ ‘<div class="f1-info"><div class="f1-name">’ + d.name + ‘</div>’
-+   ‘<div class="f1-bar-wrap"><div class="f1-bar" style="width:' + barW + '%;background:' + col + '"></div></div>’
-+ ‘</div>’
-+ ‘<span class="f1-wins">’ + d.wins + ‘</span>’
-+ ‘<span class="f1-pts">’ + d.pts + ‘</span>’
-+ ‘</div>’;
+var col=TEAM_COLORS[d.cid]||’#8a8fa8’, barW=Math.round((d.pts/maxPts)*100), pc=d.pos===1?‘p1’:d.pos===2?‘p2’:d.pos===3?‘p3’:’’;
+html+=’<div class="f1-row"><span class="f1-pos '+pc+'">’+d.pos+’</span><span class="f1-num" style="background:'+col+'22;color:'+col+'">’+d.num+’</span><div class="f1-info"><div class="f1-name">’+d.name+’</div><div class="f1-bar-wrap"><div class="f1-bar" style="width:'+barW+'%;background:'+col+'"></div></div></div><span class="f1-wins">’+d.wins+’</span><span class="f1-pts">’+d.pts+’</span></div>’;
 });
-html += ‘<div class="f1-updated">After R4 Miami · Auto-updated every 6h</div>’;
-body.innerHTML = html;
+html+=’<div class="f1-updated">After R4 Miami · May 19 2026</div>’;
+body.innerHTML=html;
+}
+
+function loadFootballScores() {
+var container=document.getElementById(‘football-scores-container’); if(!container) return;
+container.innerHTML=’<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Loading…</span></div>’;
+setTimeout(function() {
+var matches=[{league:‘PREMIER LEAGUE’,status:‘Today 21:30’,statusType:‘soon’,t1:‘Bournemouth’,s1:null,t2:‘Man City’,s2:null},{league:‘PREMIER LEAGUE’,status:‘Today 22:15’,statusType:‘soon’,t1:‘Chelsea’,s1:null,t2:‘Tottenham’,s2:null},{league:‘PREMIER LEAGUE’,status:‘FT Mon’,statusType:‘ft’,t1:‘Arsenal’,s1:1,t2:‘Burnley’,s2:0},{league:‘PREMIER LEAGUE’,status:‘FT Sun’,statusType:‘ft’,t1:‘Newcastle’,s1:3,t2:‘West Ham’,s2:1},{league:‘LA LIGA’,status:‘FT Sun’,statusType:‘ft’,t1:‘Real Madrid’,s1:1,t2:‘Sevilla’,s2:0},{league:‘LA LIGA’,status:‘FT Sun’,statusType:‘ft’,t1:‘Barcelona’,s1:3,t2:‘Real Betis’,s2:1}];
+var html=’<div class="match-grid">’;
+matches.forEach(function(m) {
+var s1=m.s1===null?’<span class="match-score dash">-</span>’:’<span class="match-score">’+m.s1+’</span>’;
+var s2=m.s2===null?’<span class="match-score dash">-</span>’:’<span class="match-score">’+m.s2+’</span>’;
+html+=’<div class="match-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span class="match-league">’+m.league+’</span><span class="match-status status-'+m.statusType+'">’+m.status+’</span></div><div class="match-teams"><div class="match-team-row"><span class="match-team-name">’+m.t1+’</span>’+s1+’</div><div class="match-team-row"><span class="match-team-name">’+m.t2+’</span>’+s2+’</div></div></div>’;
+});
+html+=’</div>’; container.innerHTML=html;
+}, 300);
+}
+
+var TARGETS = {kcal:2500,prot:180,carb:280,fat:70};
+function addFood() {
+var name=document.getElementById(‘food-name’).value.trim(), kcal=parseFloat(document.getElementById(‘food-kcal’).value)||0, prot=parseFloat(document.getElementById(‘food-prot’).value)||0, carb=parseFloat(document.getElementById(‘food-carb’).value)||0, fat=parseFloat(document.getElementById(‘food-fat’).value)||0;
+if(!name) return;
+foodLog.push({id:Date.now(),name:name,kcal:kcal,prot:prot,carb:carb,fat:fat});
+localStorage.setItem(‘m_food’,JSON.stringify(foodLog)); renderFood();
+[‘food-name’,‘food-kcal’,‘food-prot’,‘food-carb’,‘food-fat’].forEach(function(id) { document.getElementById(id).value=’’; });
+}
+function deleteFood(id) { foodLog=foodLog.filter(function(f) { return f.id!==id; }); localStorage.setItem(‘m_food’,JSON.stringify(foodLog)); renderFood(); }
+function renderFood() {
+var totals=foodLog.reduce(function(a,b) { return {kcal:a.kcal+b.kcal,prot:a.prot+b.prot,carb:a.carb+b.carb,fat:a.fat+b.fat}; },{kcal:0,prot:0,carb:0,fat:0});
+var pct=Math.min(totals.kcal/TARGETS.kcal,1), ring=document.getElementById(‘cal-ring’);
+if(ring) { ring.style.strokeDasharray=‘251’; ring.style.strokeDashoffset=251*(1-pct); }
+var cd=document.getElementById(‘cal-display’); if(cd) cd.textContent=Math.round(totals.kcal);
+var sm=function(vid,bid,val,tgt) { var ve=document.getElementById(vid); if(ve) ve.textContent=Math.round(val)+‘g’; var be=document.getElementById(bid); if(be) be.style.width=Math.min(val/tgt*100,100)+’%’; };
+sm(‘prot-val’,‘prot-bar’,totals.prot,TARGETS.prot); sm(‘carb-val’,‘carb-bar’,totals.carb,TARGETS.carb); sm(‘fat-val’,‘fat-bar’,totals.fat,TARGETS.fat);
+var list=document.getElementById(‘food-list’); if(!list) return;
+list.innerHTML=foodLog.map(function(f) { return ‘<div class="food-item"><span class="food-item-name">’+f.name+’</span><span class="food-item-kcal">’+f.kcal+’ kcal</span><button class="food-del" onclick="deleteFood('+f.id+')">x</button></div>’; }).join(’’);
+}
+function addSet() {
+var ex=document.getElementById(‘set-exercise’).value.trim(), wt=parseFloat(document.getElementById(‘set-weight’).value)||0, rp=parseInt(document.getElementById(‘set-reps’).value)||0;
+if(!ex||!rp) return;
+setLog.push({id:Date.now(),exercise:ex,weight:wt,reps:rp}); localStorage.setItem(‘m_sets’,JSON.stringify(setLog)); renderSets();
+[‘set-weight’,‘set-reps’].forEach(function(id) { document.getElementById(id).value=’’; });
+}
+function deleteSet(id) { setLog=setLog.filter(function(s) { return s.id!==id; }); localStorage.setItem(‘m_sets’,JSON.stringify(setLog)); renderSets(); }
+function renderSets() {
+var totalVol=setLog.reduce(function(a,b) { return a+b.weight*b.reps; },0), uniqueEx=new Set(setLog.map(function(s) { return s.exercise.toLowerCase(); })).size;
+var se=document.getElementById(‘wk-sets’); if(se) se.textContent=setLog.length;
+var ve=document.getElementById(‘wk-vol’);  if(ve) ve.textContent=totalVol;
+var xe=document.getElementById(‘wk-exs’);  if(xe) xe.textContent=uniqueEx;
+var list=document.getElementById(‘set-list’); if(!list) return;
+if(!setLog.length) { list.innerHTML=’<div class="empty-state" style="grid-column:1/-1">No sets logged yet.</div>’; return; }
+list.innerHTML=setLog.map(function(s) { return ‘<div class="set-card"><div class="set-ex">’+s.exercise+’</div><div class="set-vol">’+s.weight+‘kg x ‘+s.reps+’</div><div style="display:flex;align-items:center;justify-content:space-between;"><div class="set-sub">’+(s.weight*s.reps)+‘kg vol</div><button class="set-del" onclick="deleteSet('+s.id+')">x</button></div></div>’; }).join(’’);
 }
 </script>
 
