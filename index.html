@@ -37,7 +37,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt
 .tab-panel{display:none;padding:14px;padding-bottom:30px}
 .tab-panel.active{display:block}
 
-.logo{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:20px;letter-spacing:2px;background:linear-gradient(90deg,var(–ig-blue),var(–purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:20px;letter-spacing:2px;background:linear-gradient(90deg,var(–ig-blue),var(–red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .logo span{-webkit-text-fill-color:var(–f1-red)}
 .header-right{display:flex;align-items:center;gap:10px}
 .hdr-badge{font-family:‘JetBrains Mono’,monospace;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
@@ -367,17 +367,6 @@ const NEXT_RACE = {
   location: 'Circuit Gilles Villeneuve, Montreal',
   date: '2026-05-24T20:00:00Z'
 };
-
-const FALLBACK_NEWS = [
-  { title:'Kimi Antonelli leads F1 standings with 20pt advantage heading into Canadian GP', src:'F1', cat:'F1', link:'https://www.formula1.com', ago: 3600000 },
-  { title:'Canadian GP Sprint weekend: Race lights out Sunday May 24 at 20:00 UTC', src:'Sky F1', cat:'F1', link:'https://www.skysports.com/f1', ago: 7200000 },
-  { title:'George Russell seeking form reversal in Montreal after difficult Miami GP', src:'BBC F1', cat:'F1', link:'https://www.bbc.com/sport/formula1', ago: 10800000 },
-  { title:'McLaren close gap to Mercedes — Norris pushes Antonelli to the limit in Miami', src:'BBC F1', cat:'F1', link:'https://www.bbc.com/sport/formula1', ago: 14400000 },
-  { title:'Arsenal beat Burnley 1-0 — Gunners strengthen title push ahead of final day', src:'BBC Sport', cat:'FOOTBALL', link:'https://www.bbc.com/sport/football', ago: 18000000 },
-  { title:'Chelsea vs Tottenham tonight — London derby to decide European qualification', src:'Sky Sports', cat:'FOOTBALL', link:'https://www.skysports.com/football', ago: 21600000 },
-  { title:'Man City vs Bournemouth: Guardiola warns of difficult test at Vitality Stadium', src:'BBC Sport', cat:'FOOTBALL', link:'https://www.bbc.com/sport/football', ago: 25200000 },
-  { title:'Real Madrid beat Sevilla 1-0 — Bellingham goal keeps La Liga title hopes alive', src:'BBC Sport', cat:'FOOTBALL', link:'https://www.bbc.com/sport/football', ago: 28800000 },
-];
 
 // ── STATE ──────────────────────────────────────────────
 let foodLog = [], setLog = [];
