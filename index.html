@@ -466,8 +466,20 @@ location: ‘Circuit Gilles Villeneuve, Montreal’,
 date: ‘2026-05-24T20:00:00Z’
 };
 
-const FALLBACK_NEWS = JSON.parse(’[{“title”:“Kimi Antonelli leads F1 standings”,“src”:“BBC F1”,“cat”:“F1”,“link”:“https://www.bbc.com/sport/formula1”,“date”:“May 19”},{“title”:“Canadian GP Sprint weekend — Race Sunday May 24”,“src”:“Sky F1”,“cat”:“F1”,“link”:“https://www.skysports.com/f1”,“date”:“May 19”},{“title”:“Arsenal beat Burnley 1-0 — title race final day set up”,“src”:“BBC Sport”,“cat”:“FOOTBALL”,“link”:“https://www.bbc.com/sport/football”,“date”:“May 18”},{“title”:“Chelsea vs Tottenham tonight — European spots at stake”,“src”:“Sky Sports”,“cat”:“FOOTBALL”,“link”:“https://www.skysports.com/football”,“date”:“May 19”},{“title”:“Al Hilal win Saudi Pro League 2026 — Mitrovic golden boot”,“src”:“Arab News”,“cat”:“KSA”,“link”:“https://www.arabnews.com/sport”,“date”:“May 18”},{“title”:“McLaren close gap to Mercedes ahead of Canadian GP”,“src”:“BBC F1”,“cat”:“F1”,“link”:“https://www.bbc.com/sport/formula1”,“date”:“May 19”},{“title”:“Man City vs Bournemouth — Guardiola must win tonight”,“src”:“BBC Sport”,“cat”:“FOOTBALL”,“link”:“https://www.bbc.com/sport/football”,“date”:“May 19”},{“title”:“Al Nassr exit Saudi title race — Ronaldo vows return”,“src”:“Arab News”,“cat”:“KSA”,“link”:“https://www.arabnews.com/sport”,“date”:“May 18”}]’)
-let currentFilter = ‘ALL’;
+const FALLBACK_NEWS = [
+{title:“Kimi Antonelli leads F1 standings with 20pt advantage into Canadian GP”,src:“BBC F1”,cat:“F1”,link:“https://www.bbc.com/sport/formula1”,date:“May 19”},
+{title:“Canadian GP Sprint weekend confirmed - Race lights out Sunday May 24”,src:“Sky F1”,cat:“F1”,link:“https://www.skysports.com/f1”,date:“May 19”},
+{title:“Arsenal beat Burnley 1-0 - Gunners go into final day level with Man City”,src:“BBC Sport”,cat:“FOOTBALL”,link:“https://www.bbc.com/sport/football”,date:“May 18”},
+{title:“McLaren bring major upgrade to Montreal - Norris targeting first 2026 win”,src:“Sky F1”,cat:“F1”,link:“https://www.skysports.com/f1”,date:“May 19”},
+{title:“Chelsea vs Tottenham - London derby to decide European qualification”,src:“Sky Sports”,cat:“FOOTBALL”,link:“https://www.skysports.com/football”,date:“May 19”},
+{title:“Al Hilal crowned Saudi Pro League champions 2026 - Mitrovic wins golden boot”,src:“Arab News”,cat:“KSA”,link:“https://www.arabnews.com/sport”,date:“May 18”},
+{title:“Leclerc and Hamilton both on 51 points - Ferrari internal battle intensifies”,src:“Sky F1”,cat:“F1”,link:“https://www.skysports.com/f1”,date:“May 18”},
+{title:“Man City vs Bournemouth - Guardiola says title race not over”,src:“BBC Sport”,cat:“FOOTBALL”,link:“https://www.bbc.com/sport/football”,date:“May 19”},
+{title:“Al Nassr miss out on Saudi title - Ronaldo vows to return stronger”,src:“Arab News”,cat:“KSA”,link:“https://www.arabnews.com/sport”,date:“May 18”},
+{title:“Russell hunting first win since Australia at Circuit Gilles Villeneuve”,src:“BBC F1”,cat:“F1”,link:“https://www.bbc.com/sport/formula1”,date:“May 19”},
+{title:“Newcastle beat West Ham 3-1 - Isak hat-trick fires Magpies into top four”,src:“BBC Sport”,cat:“FOOTBALL”,link:“https://www.bbc.com/sport/football”,date:“May 17”},
+{title:“Saudi Arabia 2034 World Cup infrastructure plans confirmed by FIFA”,src:“Arab News”,cat:“KSA”,link:“https://www.arabnews.com/sport”,date:“May 16”}
+];
 
 // ── INIT ───────────────────────────────────────────────
 document.addEventListener(‘DOMContentLoaded’, function() {
@@ -1093,7 +1105,7 @@ var F1_DATA = [
 { pos:1, num:12, name:‘Antonelli’, cid:‘mercedes’, pts:100, wins:3 },
 { pos:2, num:63, name:‘Russell’,   cid:‘mercedes’, pts:80,  wins:1 },
 { pos:3, num:16, name:‘Leclerc’,   cid:‘ferrari’,  pts:59,  wins:0 },
-{ pos:4, num:4,  name:‘NorriS’,    cid:‘mclaren’,  pts:51,  wins:0 },
+{ pos:4, num:4,  name:‘Norris’,    cid:‘mclaren’,  pts:51,  wins:0 },
 { pos:5, num:44, name:‘Hamilton’,  cid:‘ferrari’,  pts:51,  wins:0 },
 { pos:6, num:81, name:‘Piastri’,   cid:‘mclaren’,  pts:43,  wins:0 },
 { pos:7, num:14, name:‘Alonso’,    cid:‘aston_martin’, pts:24, wins:0 },
