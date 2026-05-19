@@ -485,16 +485,27 @@ const FALLBACK_NEWS = [
 document.addEventListener(‘DOMContentLoaded’, function() {
 try { foodLog = JSON.parse(localStorage.getItem(‘m_food’) || ‘[]’); } catch(e) { foodLog = []; }
 try { setLog  = JSON.parse(localStorage.getItem(‘m_sets’) || ‘[]’); } catch(e) { setLog  = []; }
-renderFood();
-renderSets();
-startClock();
-startCountdown();
-// Show fallback news immediately - no waiting
-renderNewsFeed();
-// Then try to fetch real RSS in background
-setTimeout(function() { loadNewsFeed(); }, 100);
-loadFootballScores();
-loadF1Data();
+try { renderFood(); } catch(e) {}
+try { renderSets(); } catch(e) {}
+try { startClock(); } catch(e) {}
+try { startCountdown(); } catch(e) {}
+try { renderNewsFeed(); } catch(e) {
+// Hard fallback - write directly if renderNewsFeed fails
+var c = document.getElementById(‘feed-container’);
+if (c) {
+var html = ‘’;
+FALLBACK_NEWS.forEach(function(s) {
+html += ‘<div class="grid-hero" style="margin-bottom:10px;cursor:pointer;" onclick="window.open(\'' + s.link + '\',\'_blank\')">’
++ ‘<div class="grid-hero-icon" style="background:rgba(79,156,249,0.1);font-size:20px;">’ + (s.cat===‘F1’?‘🏎’:s.cat===‘KSA’?‘🌙’:‘⚽’) + ‘</div>’
++ ‘<div><div style="font-size:10px;color:var(--ig-blue);margin-bottom:4px;">’ + s.src + ’ · ’ + s.date + ‘</div>’
++ ‘<div style="font-size:14px;font-weight:600;color:#fff;">’ + s.title + ‘</div></div></div>’;
+});
+c.innerHTML = html;
+}
+}
+try { loadFootballScores(); } catch(e) {}
+try { loadF1Data(); } catch(e) {}
+setTimeout(function() { try { loadNewsFeed(); } catch(e) {} }, 500);
 });
 
 // ── CLOCK ──────────────────────────────────────────────
@@ -790,42 +801,6 @@ return ‘<div class="wire-item" onclick="window.open(\'' + link + '\',\'_blank\
 +   ‘</div>’
 + ‘</div>’
 + ‘</div>’;
-}
-
-function _oldRenderNewsFeed() {
-var container = document.getElementById(‘critical-posts’);
-if (!container) return;
-
-var filtered = currentFilter === ‘ALL’
-? parsedStoriesCache
-: parsedStoriesCache.filter(function(s) { return s.cat === currentFilter; });
-
-var shown = filtered.slice(0, 20);
-
-if (!shown.length) {
-// Show real fallback headlines
-var fbFiltered = currentFilter === ‘ALL’
-? FALLBACK_NEWS
-: FALLBACK_NEWS.filter(function(s) { return s.cat === currentFilter; });
-
-```
-var fbHtml = '';
-fbFiltered.forEach(function(s) {
-  fbHtml += makeWireItem(s.title, s.src, Date.now() - s.ago, s.link);
-});
-container.innerHTML = fbHtml || '<div class="empty-state">No headlines — tap REFRESH</div>';
-setTickerContent(fbFiltered.map(function(s) { return s.title; }));
-return;
-```
-
-}
-
-var html = ‘’;
-shown.forEach(function(story) {
-html += makeWireItem(story.title, story.src, story.time, story.link);
-});
-container.innerHTML = html;
-setTickerContent(shown.map(function(s) { return s.title; }));
 }
 
 // ── NUTRITION ──────────────────────────────────────────
