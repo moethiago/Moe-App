@@ -1,1 +1,69 @@
+name: Update F1 Standings
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch and update F1 standings
+        run: |
+          python3 << 'PYEOF'
+          import json, re, urllib.request, sys
+
+          try:
+            url = "https://api.jolpi.ca/ergast/f1/current/driverstandings.json?limit=20"
+            with urllib.request.urlopen(url, timeout=10) as r:
+              data = json.loads(r.read())
+            sl = data['MRData']['StandingsTable']['StandingsLists'][0]
+            round_num = sl['round']
+            drivers = sl['DriverStandings'][:10]
+          except Exception as e:
+            print(f"Fetch failed: {e}")
+            sys.exit(0)
+
+          lines = []
+          for d in drivers:
+            pos  = int(d['position'])
+            num  = d['Driver']['permanentNumber']
+            name = d['Driver']['familyName']
+            cid  = d['Constructors'][0]['constructorId'] if d['Constructors'] else 'default'
+            team = d['Constructors'][0]['name'] if d['Constructors'] else ''
+            pts  = float(d['points'])
+            wins = int(d['wins'])
+            lines.append(f"  {{ pos:{pos}, num:{num}, name:'{name}', team:'{team}', cid:'{cid}', pts:{pts}, wins:{wins} }},")
+
+          new_block = "// Real 2026 standings — Auto-updated by GitHub Actions · Round " + round_num + "\nvar F1_STANDINGS_2026 = [\n" + "\n".join(lines) + "\n];"
+
+          with open('index.html', 'r') as f:
+            content = f.read()
+
+          updated = re.sub(r'// Real 2026 standings.*?var F1_STANDINGS_2026 = \[.*?\];', new_block, content, flags=re.DOTALL)
+
+          if updated == content:
+            print("Pattern not found")
+            sys.exit(0)
+
+          with open('index.html', 'w') as f:
+            f.write(updated)
+
+          print(f"Updated — Round {round_num}, {len(drivers)} drivers")
+          PYEOF
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Auto-update F1 standings [skip ci]"
+          git push
 
