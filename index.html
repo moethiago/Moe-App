@@ -5,226 +5,214 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Moe's App</title>
-<!-- moesapp-v7 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-–bg-void:#07080d;–bg-base:#0d0f18;–bg-card:#13151f;–bg-raised:#1a1d2a;–bg-hover:#21253a;
-–border:rgba(255,255,255,0.06);–border-hi:rgba(255,255,255,0.12);
-–txt-primary:#eeeef2;–txt-secondary:#8a8fa8;–txt-muted:#484d65;
-–f1-red:#e8002d;–f1-orange:#ff5f00;–epl-green:#38d36a;–ig-blue:#4f9cf9;
-–purple:#a78bfa;–cyan:#22d3ee;–gold:#f5c842;–rose:#fb7185;
-–safe-top:env(safe-area-inset-top,0px);
-–header-h:56px;–nav-h:52px;
-–r-sm:8px;–r-md:12px;–r-lg:16px;
+  --bg-void:#07080d;--bg-base:#0d0f18;--bg-card:#13151f;--bg-raised:#1a1d2a;--bg-hover:#21253a;
+  --border:rgba(255,255,255,0.06);--border-hi:rgba(255,255,255,0.12);
+  --txt-primary:#eeeef2;--txt-secondary:#8a8fa8;--txt-muted:#484d65;
+  --f1-red:#e8002d;--f1-orange:#ff5f00;--epl-green:#38d36a;--ig-blue:#4f9cf9;
+  --x-white:#e7e9ea;--gold:#f5c842;--purple:#a78bfa;--cyan:#22d3ee;--rose:#fb7185;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+  --header-h:56px;--nav-h:52px;
+  --r-sm:10px;--r-md:14px;--r-lg:18px;
 }
-html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(–txt-primary);font-family:‘DM Sans’,sans-serif;-webkit-font-smoothing:antialiased}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;color:var(--txt-primary);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
 
-#app{width:100%;max-width:430px;height:100%;margin:0 auto;background:var(–bg-base);display:flex;flex-direction:column;overflow:hidden}
-
-/* ── HEADER ── */
-#header{flex-shrink:0;padding-top:var(–safe-top);background:rgba(13,15,24,0.97);border-bottom:1px solid var(–border-hi)}
+/* ── CORE LAYOUT ── */
+#app{
+width:100%;max-width:430px;height:100%;
+margin:0 auto;
+background:var(–bg-base);
+display:flex;
+flex-direction:column;
+overflow:hidden;
+}
+#header{
+flex-shrink:0;
+padding-top:var(–safe-top);
+background:rgba(13,15,24,0.97);
+border-bottom:1px solid var(–border);
+}
 #header-inner{height:var(–header-h);display:flex;align-items:center;justify-content:space-between;padding:0 18px}
-.logo{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:22px;letter-spacing:2px;background:linear-gradient(90deg,var(–ig-blue),var(–purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#top-nav{
+flex-shrink:0;
+background:rgba(13,15,24,0.97);
+border-bottom:1px solid var(–border);
+}
+.nav-inner{height:var(–nav-h);display:flex;align-items:stretch}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(–txt-muted);transition:color 0.2s;position:relative}
+.nav-btn.active{color:var(–txt-primary)}
+.nav-btn.active::after{content:’’;position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:28px;height:2px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,var(–ig-blue),var(–purple))}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.nav-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-label{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+#scroll-wrap{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#scroll-wrap::-webkit-scrollbar{display:none}
+.tab-panel{display:none;padding:14px;padding-bottom:30px}
+.tab-panel.active{display:block}
+
+/* ── LOGO / HEADER ── */
+.logo{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:20px;letter-spacing:2px;background:linear-gradient(90deg,var(–ig-blue),var(–purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .logo span{-webkit-text-fill-color:var(–f1-red)}
-.hdr-right{display:flex;align-items:center;gap:8px}
-.live-pill{display:flex;align-items:center;gap:5px;background:rgba(232,0,45,0.12);border:1px solid rgba(232,0,45,0.3);color:var(–f1-red);font-family:‘JetBrains Mono’,monospace;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px}
-.pulse{width:6px;height:6px;border-radius:50%;background:var(–f1-red);animation:pulse 1.4s ease-in-out infinite}
+.header-right{display:flex;align-items:center;gap:10px}
+.hdr-badge{font-family:‘JetBrains Mono’,monospace;font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
+.hdr-live{background:rgba(232,0,45,0.15);color:var(–f1-red);border:1px solid rgba(232,0,45,0.3);display:flex;align-items:center;gap:5px}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:var(–f1-red);animation:pulse 1.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 .hdr-time{color:var(–txt-secondary);font-size:12px;font-family:‘JetBrains Mono’,monospace}
 
-/* ── NAV ── */
-#top-nav{flex-shrink:0;background:rgba(13,15,24,0.97);border-bottom:1px solid var(–border-hi)}
-.nav-inner{height:var(–nav-h);display:flex;align-items:stretch}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(–txt-muted);transition:color 0.2s;position:relative;pointer-events:all}
-.nav-btn.active{color:var(–ig-blue)}
-.nav-btn.active::after{content:’’;position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:32px;height:2px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,var(–ig-blue),var(–purple))}
-.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.nav-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.nav-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;pointer-events:none}
+/* ── CARDS ── */
+.card{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid var(–border);overflow:hidden;margin-bottom:12px}
+.card-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(–border)}
+.card-title{font-family:‘Rajdhani’,sans-serif;font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(–txt-secondary)}
+.section-label{font-family:‘Rajdhani’,sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(–txt-muted);margin:18px 0 10px}
+.section-label:first-child{margin-top:0}
+.platform-badge{font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:500;padding:2px 7px;border-radius:4px;letter-spacing:0.5px;text-transform:uppercase}
+.badge-x{background:rgba(231,233,234,0.1);color:var(–x-white);border:1px solid rgba(231,233,234,0.15)}
+.badge-ig{background:rgba(79,156,249,0.12);color:var(–ig-blue);border:1px solid rgba(79,156,249,0.2)}
+.badge-f1{background:rgba(232,0,45,0.12);color:var(–f1-red);border:1px solid rgba(232,0,45,0.2)}
 
-/* ── SCROLL ── */
-#scroll-wrap{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-#scroll-wrap::-webkit-scrollbar{display:none}
-.tab-panel{display:none;padding-bottom:30px}
-.tab-panel.active{display:block}
+/* ── FEED ── */
+.post{padding:14px 16px;border-bottom:1px solid var(–border);display:flex;gap:12px}
+.post:last-child{border-bottom:none}
+.post:active{background:var(–bg-raised)}
+.post-avatar{width:40px;height:40px;border-radius:50%;background:var(–bg-raised);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:16px;position:relative;overflow:hidden}
+.post-body{flex:1;min-width:0}
+.post-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.post-name{font-weight:600;font-size:13px}
+.post-time{color:var(–txt-muted);font-size:11px;margin-left:auto}
+.post-text{font-size:14px;line-height:1.5;color:var(–txt-primary);margin-bottom:10px}
+.post-img{width:100%;border-radius:var(–r-sm);margin-bottom:10px;background:var(–bg-raised);height:160px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.post-img-gradient{position:absolute;inset:0;border-radius:var(–r-sm)}
+.post-img-label{position:relative;z-index:1;font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:28px;letter-spacing:2px}
+.post-actions{display:flex;gap:16px}
+.post-action{display:flex;align-items:center;gap:5px;color:var(–txt-muted);font-size:12px;cursor:pointer;transition:color 0.15s}
+.post-action svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+.post-action.liked{color:var(–rose)}
+.post-action.liked svg{fill:var(–rose);stroke:var(–rose)}
+.stories-row{display:flex;gap:12px;overflow-x:auto;padding:14px 16px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.stories-row::-webkit-scrollbar{display:none}
+.story{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;cursor:pointer}
+.story-ring{width:54px;height:54px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center}
+.story-ring.seen{background:var(–bg-raised)}
+.story-avatar{width:100%;height:100%;border-radius:50%;background:var(–bg-raised);border:2px solid var(–bg-card);display:flex;align-items:center;justify-content:center;font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:18px}
+.story-name{font-size:10px;color:var(–txt-secondary);max-width:54px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* ── TICKER ── */
-.ticker-wrap{overflow:hidden;background:var(–bg-void);padding:8px 0;border-bottom:1px solid var(–border)}
-.ticker-track{display:flex;white-space:nowrap;width:max-content;animation:tickerScroll 35s linear infinite}
-@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.t-item{padding:0 20px;font-size:10px;font-family:‘JetBrains Mono’,monospace;color:var(–txt-secondary);display:inline-flex;align-items:center;gap:6px;border-right:1px solid var(–border);flex-shrink:0}
+/* ── SPORTS ── */
+.match-card{padding:14px 16px;border-bottom:1px solid var(–border)}
+.match-card:last-child{border-bottom:none}
+.match-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.league-badge{font-size:9px;font-weight:600;font-family:‘JetBrains Mono’,monospace;padding:2px 7px;border-radius:4px;letter-spacing:1px;text-transform:uppercase}
+.league-epl{background:rgba(56,211,106,0.12);color:var(–epl-green);border:1px solid rgba(56,211,106,0.25)}
+.league-ucl{background:rgba(79,156,249,0.12);color:var(–ig-blue);border:1px solid rgba(79,156,249,0.25)}
+.league-ll{background:rgba(245,200,66,0.12);color:var(–gold);border:1px solid rgba(245,200,66,0.25)}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(–f1-red);font-family:‘JetBrains Mono’,monospace;margin-left:auto}
+.ft-badge{font-size:11px;font-weight:500;color:var(–txt-muted);font-family:‘JetBrains Mono’,monospace;margin-left:auto}
+.match-score-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+.match-team{display:flex;flex-direction:column;gap:3px}
+.match-team.away{align-items:flex-end}
+.team-name{font-weight:600;font-size:15px}
+.team-stat{font-size:11px;color:var(–txt-muted)}
+.score-box{display:flex;align-items:center;gap:8px;background:var(–bg-raised);border-radius:var(–r-sm);padding:6px 12px}
+.score-num{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:28px;line-height:1}
+.score-sep{color:var(–txt-muted);font-size:20px;font-weight:300}
+.match-events{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.event-chip{font-size:11px;background:var(–bg-raised);border-radius:20px;padding:3px 10px;color:var(–txt-secondary);display:flex;align-items:center;gap:4px}
 
-/* ── FILTER PILLS ── */
-.filter-row{display:flex;gap:6px;overflow-x:auto;padding:12px 14px;scrollbar-width:none;border-bottom:1px solid var(–border)}
-.filter-row::-webkit-scrollbar{display:none}
-.fpill{flex-shrink:0;font-family:‘JetBrains Mono’,monospace;font-size:10px;font-weight:600;padding:6px 14px;border-radius:20px;border:1px solid var(–border-hi);background:var(–bg-raised);color:var(–txt-secondary);cursor:pointer;letter-spacing:0.5px;transition:all 0.15s}
-.fpill.active{background:linear-gradient(135deg,var(–ig-blue),var(–purple));color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(79,156,249,0.2)}
-
-/* ── SECTION LABEL ── */
-.sec-label{font-family:‘Rajdhani’,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(–txt-muted);padding:14px 14px 8px}
-
-/* ══════════════════════════════
-FEED — GRID LAYOUT
-══════════════════════════════ */
-.grid-wrap{padding:0 14px;display:flex;flex-direction:column;gap:10px;padding-bottom:10px}
-
-/* Hero row — full width */
-.grid-hero{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid var(–border);padding:14px;cursor:pointer;display:flex;gap:14px;align-items:center;transition:background 0.15s}
-.grid-hero:active{background:var(–bg-raised)}
-.grid-hero-icon{width:52px;height:52px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px}
-.grid-hero-cat{font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
-.grid-hero-headline{font-size:14px;font-weight:600;line-height:1.35;color:#fff}
-.grid-hero-meta{font-family:‘JetBrains Mono’,monospace;font-size:10px;color:var(–txt-muted);margin-top:5px}
-
-/* 2-col grid */
-.grid-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid-card{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid var(–border);padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:background 0.15s;min-height:120px}
-.grid-card:active{background:var(–bg-raised)}
-.grid-cat{font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:4px;display:inline-block;align-self:flex-start}
-.grid-headline{font-size:12px;font-weight:500;line-height:1.4;color:var(–txt-primary);flex:1}
-.grid-headline strong{color:#fff;font-weight:700}
-.grid-meta{font-family:‘JetBrains Mono’,monospace;font-size:9px;color:var(–txt-muted)}
-
-/* ══════════════════════════════
-SPORTS TAB
-══════════════════════════════ */
-.sports-wrap{padding:0 14px;display:flex;flex-direction:column;gap:10px}
-
-/* Countdown */
-.cd-card{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid rgba(232,0,45,0.2);overflow:hidden;background:linear-gradient(135deg,#130005,#0d0f18)}
-.cd-top{padding:16px 16px 12px;display:flex;align-items:flex-start;justify-content:space-between}
-.cd-label{font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(–f1-red);text-transform:uppercase;display:flex;align-items:center;gap:5px;margin-bottom:6px}
-.cd-title{font-family:‘Rajdhani’,sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:0.5px}
-.cd-sub{font-family:‘JetBrains Mono’,monospace;font-size:10px;color:var(–txt-muted);margin-top:3px}
-.cd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 14px 16px}
-.cd-seg{background:rgba(255,255,255,0.04);border:1px solid var(–border-hi);border-radius:10px;padding:10px 6px;text-align:center}
-.cd-num{font-family:‘JetBrains Mono’,monospace;font-size:24px;font-weight:600;color:#fff;line-height:1}
-.cd-lbl{font-size:9px;color:var(–txt-muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-top:3px}
-
-/* Match grid — 2 col for live, full for results */
-.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.match-card{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid var(–border);padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:8px}
-.match-league{font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:700;letter-spacing:0.5px;color:var(–txt-muted);text-transform:uppercase}
-.match-status{font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;align-self:flex-start}
-.status-live{background:rgba(56,211,106,0.1);color:var(–epl-green);border:1px solid rgba(56,211,106,0.25)}
-.status-ft{background:var(–bg-raised);color:var(–txt-muted);border:1px solid var(–border)}
-.status-soon{background:rgba(79,156,249,0.1);color:var(–ig-blue);border:1px solid rgba(79,156,249,0.25)}
-.match-teams{display:flex;flex-direction:column;gap:5px;flex:1}
-.match-team-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.match-team-name{font-size:12px;font-weight:600;color:var(–txt-primary);flex:1;line-height:1.2}
-.match-score{font-family:‘JetBrains Mono’,monospace;font-size:16px;font-weight:700;color:#fff;min-width:16px;text-align:right}
-.match-score.dash{color:var(–txt-muted);font-size:12px}
-
-/* F1 standings grid */
-.f1-grid{display:flex;flex-direction:column;gap:2px}
-.f1-row{display:grid;grid-template-columns:24px 24px 1fr 32px 48px;gap:6px;padding:10px 14px;border-bottom:1px solid var(–border);align-items:center}
+/* ── F1 ── */
+.f1-header-row{display:grid;grid-template-columns:28px 28px 1fr 70px 70px;gap:6px;padding:8px 16px;border-bottom:1px solid var(–border);font-family:‘JetBrains Mono’,monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(–txt-muted);align-items:center}
+.f1-row{display:grid;grid-template-columns:28px 28px 1fr 70px 70px;gap:6px;padding:10px 16px;border-bottom:1px solid var(–border);align-items:center}
 .f1-row:last-child{border-bottom:none}
-.f1-pos{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:15px;text-align:center}
+.f1-pos{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:18px;text-align:center}
 .f1-pos.p1{color:var(–gold)}.f1-pos.p2{color:#c0c0c0}.f1-pos.p3{color:#cd7f32}
-.f1-num{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:‘JetBrains Mono’,monospace;font-size:10px;font-weight:600}
-.f1-info{min-width:0}
-.f1-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.f1-bar-wrap{height:3px;background:var(–bg-hover);border-radius:2px;margin-top:3px;overflow:hidden}
-.f1-bar{height:100%;border-radius:2px;transition:width 0.6s ease}
-.f1-wins{font-family:‘JetBrains Mono’,monospace;font-size:11px;color:var(–gold);text-align:right}
-.f1-pts{font-family:‘JetBrains Mono’,monospace;font-size:12px;font-weight:600;text-align:right}
-.f1-hdr{display:grid;grid-template-columns:24px 24px 1fr 32px 48px;gap:6px;padding:8px 14px;border-bottom:1px solid var(–border);font-family:‘JetBrains Mono’,monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(–txt-muted)}
-.f1-updated{text-align:center;padding:8px;font-size:10px;color:var(–txt-muted);font-family:‘JetBrains Mono’,monospace;border-top:1px solid var(–border)}
+.f1-num{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:‘JetBrains Mono’,monospace;font-size:10px;font-weight:500}
+.f1-driver-info{display:flex;flex-direction:column;gap:1px}
+.f1-driver-name{font-weight:600;font-size:14px}
+.f1-team-name{font-size:10px;color:var(–txt-muted)}
+.f1-interval{font-family:‘JetBrains Mono’,monospace;font-size:12px;color:var(–txt-secondary);text-align:right}
+.f1-fastest{font-family:‘JetBrains Mono’,monospace;font-size:11px;text-align:right}
+.f1-fastest.is-fastest{color:var(–purple)}
+.f1-race-banner{padding:12px 16px;background:linear-gradient(90deg,rgba(232,0,45,0.08),transparent);border-bottom:1px solid var(–border);display:flex;align-items:center;gap:12px}
+.f1-banner-tag{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(–f1-red);background:rgba(232,0,45,0.12);border:1px solid rgba(232,0,45,0.2);border-radius:4px;padding:3px 9px}
+.f1-banner-text{font-size:13px;font-weight:500}
+.f1-banner-sub{font-size:11px;color:var(–txt-secondary);margin-left:auto;font-family:‘JetBrains Mono’,monospace}
+.f1-api-loading{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(–txt-muted);font-size:13px}
+.f1-api-error{padding:20px 16px;text-align:center;color:var(–rose);font-size:13px}
+.f1-spinner{width:24px;height:24px;border:2px solid var(–bg-raised);border-top-color:var(–f1-red);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.f1-result-row{display:grid;grid-template-columns:28px 28px 1fr 80px 72px;gap:6px;padding:10px 16px;border-bottom:1px solid var(–border);align-items:center}
+.f1-result-row:last-child{border-bottom:none}
+.f1-result-header{display:grid;grid-template-columns:28px 28px 1fr 80px 72px;gap:6px;padding:8px 16px;border-bottom:1px solid var(–border);font-family:‘JetBrains Mono’,monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(–txt-muted)}
+.f1-std-row{display:grid;grid-template-columns:28px 28px 1fr 36px 56px;gap:6px;padding:10px 16px;border-bottom:1px solid var(–border);align-items:center}
+.f1-std-row:last-child{border-bottom:none}
+.f1-std-header{display:grid;grid-template-columns:28px 28px 1fr 36px 56px;gap:6px;padding:8px 16px;border-bottom:1px solid var(–border);font-family:‘JetBrains Mono’,monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(–txt-muted)}
+.f1-con-row{display:grid;grid-template-columns:28px 1fr 60px;gap:8px;padding:12px 16px;border-bottom:1px solid var(–border);align-items:center}
+.f1-con-row:last-child{border-bottom:none}
+.f1-pts{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:16px;text-align:right}
+.f1-wins{font-family:‘JetBrains Mono’,monospace;font-size:12px;color:var(–gold);text-align:right}
+.f1-time-gap{font-family:‘JetBrains Mono’,monospace;font-size:11px;color:var(–txt-secondary);text-align:right}
+.f1-last-updated{text-align:center;padding:8px;font-size:10px;color:var(–txt-muted);font-family:‘JetBrains Mono’,monospace;border-top:1px solid var(–border)}
+.f1-con-bar{height:4px;border-radius:2px;background:var(–bg-hover);overflow:hidden;margin-top:4px}
+.f1-con-fill{height:100%;border-radius:2px;transition:width 0.6s ease}
 
-/* ══════════════════════════════
-HEALTH TAB
-══════════════════════════════ */
-.health-wrap{padding:0 14px;display:flex;flex-direction:column;gap:10px}
-
-/* Calorie ring */
-.ring-card{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid var(–border);padding:16px}
-.ring-top{display:flex;align-items:center;gap:16px}
-.ring-outer{position:relative;width:100px;height:100px;flex-shrink:0}
+/* ── HEALTH ── */
+.macro-ring-wrap{padding:20px 16px 16px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.ring-outer{position:relative;width:140px;height:140px;flex-shrink:0}
 .ring-outer svg{width:100%;height:100%;transform:rotate(-90deg)}
-.ring-track{fill:none;stroke:var(–bg-raised);stroke-width:10}
-.ring-prog{fill:none;stroke-width:10;stroke-linecap:round}
-.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-val{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:22px;line-height:1}
-.ring-sub{font-size:9px;color:var(–txt-muted);text-align:center}
-.ring-macros{flex:1;display:flex;flex-direction:column;gap:10px}
-.macro-row{display:flex;flex-direction:column;gap:4px}
-.macro-top{display:flex;justify-content:space-between;align-items:center}
-.macro-name{font-size:11px;color:var(–txt-muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
-.macro-val{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:15px}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.ring-val{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:28px;line-height:1}
+.ring-sub{font-size:11px;color:var(–txt-muted)}
+.macros-row{display:flex;gap:12px;width:100%}
+.macro-pill{flex:1;background:var(–bg-raised);border-radius:var(–r-md);padding:12px;display:flex;flex-direction:column;gap:6px;border:1px solid var(–border)}
+.macro-pill-top{display:flex;align-items:center;justify-content:space-between}
+.macro-name{font-size:11px;color:var(–txt-muted);text-transform:uppercase;letter-spacing:0.5px}
+.macro-val{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:18px}
 .macro-bar{height:4px;border-radius:2px;background:var(–bg-hover);overflow:hidden}
-.macro-fill{height:100%;border-radius:2px}
-
-/* Workout stats grid */
-.wk-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.wk-stat{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid var(–border);padding:14px;text-align:center;display:flex;flex-direction:column;gap:4px}
-.wk-val{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:26px;line-height:1}
-.wk-lbl{font-size:9px;color:var(–txt-muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
-
-/* Set list 2-col –>*/
-.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.set-card{background:var(–bg-card);border-radius:var(–r-md);border:1px solid var(–border);padding:12px;display:flex;flex-direction:column;gap:6px}
-.set-ex{font-size:12px;font-weight:600;color:#fff}
-.set-vol{font-family:‘JetBrains Mono’,monospace;font-size:11px;color:var(–cyan)}
-.set-sub{font-family:‘JetBrains Mono’,monospace;font-size:10px;color:var(–txt-muted)}
-
-/* Log form */
-.log-card{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid var(–border);padding:14px;display:flex;flex-direction:column;gap:10px}
-.log-card-title{font-family:‘Rajdhani’,sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(–txt-secondary)}
-.log-row{display:flex;gap:8px}
-.log-input{flex:1;background:var(–bg-raised);border:1px solid var(–border-hi);border-radius:var(–r-sm);color:var(–txt-primary);font-family:‘DM Sans’,sans-serif;font-size:13px;padding:9px 12px;outline:none;-webkit-appearance:none}
-.log-input::placeholder{color:var(–txt-muted)}
-.log-input:focus{border-color:var(–ig-blue)}
-.log-input.sm{max-width:70px;text-align:center;font-size:12px;padding:9px 6px}
-.log-btn{background:linear-gradient(135deg,var(–ig-blue),var(–purple));border:none;border-radius:var(–r-sm);color:#fff;font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;padding:9px 14px;cursor:pointer;white-space:nowrap}
-.log-btn.red{background:linear-gradient(135deg,var(–f1-red),var(–f1-orange))}
-
-/* Shared card wrapper */
-.s-card{background:var(–bg-card);border-radius:var(–r-lg);border:1px solid var(–border);overflow:hidden}
-.s-card-header{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(–border)}
-.s-card-title{font-family:‘Rajdhani’,sans-serif;font-weight:600;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(–txt-secondary)}
-.refresh-btn{font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:700;letter-spacing:0.5px;padding:5px 12px;border-radius:6px;border:1px solid var(–border-hi);background:var(–bg-raised);color:var(–txt-secondary);cursor:pointer}
-
-.empty-state{text-align:center;padding:24px;color:var(–txt-muted);font-size:12px;line-height:1.6}
-
-/* ── FEED WIRE ITEMS (RSS fallback) ── */
-.wire-item{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(–border);cursor:pointer;align-items:flex-start}
-.wire-item:last-child{border-bottom:none}
-.wire-item:active{opacity:0.7}
-.wire-bullet{color:var(–cyan);font-size:13px;line-height:1.4;flex-shrink:0;margin-top:1px}
-.wire-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
-.wire-headline{font-size:13px;line-height:1.4;color:var(–txt-primary)}
-.wire-headline strong{color:#fff;font-weight:700}
-.wire-meta{display:flex;gap:8px;font-family:‘JetBrains Mono’,monospace;font-size:10px;color:var(–txt-muted)}
-
-/* ── FOOD LOG ITEMS ── */
-.food-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(–bg-raised);border-radius:var(–r-sm);border:1px solid var(–border);margin-bottom:4px}
+.macro-fill{height:100%;border-radius:2px;transition:width 0.4s ease}
+.fill-protein{background:var(–ig-blue)}.fill-carbs{background:var(–epl-green)}.fill-fat{background:var(–gold)}
+.food-log-list{padding:0 16px 12px;display:flex;flex-direction:column;gap:2px}
+.food-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(–bg-raised);border-radius:var(–r-sm);margin-bottom:2px;border:1px solid var(–border)}
 .food-item-name{font-size:13px;font-weight:500;flex:1}
 .food-item-kcal{font-family:‘JetBrains Mono’,monospace;font-size:12px;color:var(–txt-secondary)}
-.food-del,.set-del{background:none;border:none;color:var(–txt-muted);cursor:pointer;font-size:16px;padding:0 4px}
-
-/* ── SPORTS SPECIFIC ── */
-.btn-refresh{font-family:‘JetBrains Mono’,monospace;font-size:9px;font-weight:700;letter-spacing:0.5px;padding:5px 12px;border-radius:6px;border:1px solid var(–border-hi);background:var(–bg-raised);color:var(–txt-secondary);cursor:pointer}
-.f1-api-loading{padding:24px;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(–txt-secondary);font-size:13px}
-.f1-api-error{padding:20px;text-align:center;color:var(–rose);font-size:13px}
-.f1-spinner{width:20px;height:20px;border:2px solid var(–bg-raised);border-top-color:var(–f1-red);border-radius:50%;animation:spin 0.7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Isolate webkit fill from logo gradient bleeding into pills */
-.fpill{-webkit-text-fill-color:var(–txt-secondary) !important}
-.fpill.active{-webkit-text-fill-color:#fff !important}
-.btn-refresh{-webkit-text-fill-color:var(–txt-secondary) !important}
-.nav-lbl{-webkit-text-fill-color:currentColor !important}
-.nav-btn.active .nav-lbl{-webkit-text-fill-color:var(–ig-blue) !important}
-
-/* Ticker gap fix */
-.ticker-wrap{display:block !important}
-
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(–bg-raised);border:1px solid var(–border-hi);color:var(–txt-primary);border-radius:var(–r-md);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:9999}
+.food-item-p{font-family:‘JetBrains Mono’,monospace;font-size:11px;color:var(–ig-blue)}
+.food-del{background:none;border:none;color:var(–txt-muted);cursor:pointer;font-size:16px;padding:0 2px}
+.log-form{padding:12px 16px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(–border)}
+.log-form-row{display:flex;gap:8px}
+.log-input{flex:1;background:var(–bg-raised);border:1px solid var(–border-hi);border-radius:var(–r-sm);color:var(–txt-primary);font-family:‘DM Sans’,sans-serif;font-size:14px;padding:10px 12px;outline:none;-webkit-appearance:none}
+.log-input::placeholder{color:var(–txt-muted)}
+.log-input:focus{border-color:var(–ig-blue);box-shadow:0 0 0 3px rgba(79,156,249,0.1)}
+.log-input.small{max-width:80px;text-align:center}
+.log-btn{background:linear-gradient(135deg,var(–ig-blue),var(–purple));border:none;border-radius:var(–r-sm);color:#fff;font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:14px;letter-spacing:1px;text-transform:uppercase;padding:10px 16px;cursor:pointer;white-space:nowrap}
+.log-btn.red{background:linear-gradient(135deg,var(–f1-red),var(–f1-orange))}
+.workout-stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:14px 16px}
+.wk-stat{background:var(–bg-raised);border-radius:var(–r-sm);padding:12px;text-align:center;border:1px solid var(–border)}
+.wk-stat-val{font-family:‘Rajdhani’,sans-serif;font-weight:700;font-size:22px}
+.wk-stat-lbl{font-size:10px;color:var(–txt-muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.set-list{padding:0 16px 12px;display:flex;flex-direction:column;gap:4px}
+.set-row{display:flex;align-items:center;gap:10px;background:var(–bg-raised);border-radius:var(–r-sm);padding:10px 12px;border:1px solid var(–border);animation:slideIn 0.3s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.set-exercise{font-size:13px;font-weight:500;flex:1}
+.set-vol{font-family:‘JetBrains Mono’,monospace;font-size:12px;color:var(–txt-secondary)}
+.set-vol strong{color:var(–cyan)}
+.set-del{background:none;border:none;color:var(–txt-muted);cursor:pointer;font-size:16px}
+.empty-state{text-align:center;padding:32px 16px;color:var(–txt-muted);font-size:14px;display:flex;flex-direction:column;gap:8px;align-items:center}
+.empty-icon{font-size:32px}
+.vol-total{padding:10px 16px;border-top:1px solid var(–border);display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(–txt-secondary)}
+.vol-total strong{color:var(–txt-primary);font-family:‘Rajdhani’,sans-serif;font-size:18px}
+.ring-track{fill:none;stroke:var(–bg-raised);stroke-width:12}
+.ring-prog{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 0.8s ease}
+.ticker-wrap{overflow:hidden;border-bottom:1px solid var(–border);background:var(–bg-void);padding:7px 0}
+.ticker-track{display:flex;gap:0;animation:ticker 28s linear infinite;white-space:nowrap}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{padding:0 20px;font-size:11px;font-family:‘JetBrains Mono’,monospace;color:var(–txt-secondary);display:inline-flex;align-items:center;gap:8px;border-right:1px solid var(–border)}
+.ticker-item .t-score{color:var(–txt-primary);font-weight:500}
+.ticker-item .t-live{color:var(–f1-red)}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(–bg-raised);border:1px solid var(–border-hi);color:var(–txt-primary);border-radius:var(–r-md);padding:10px 18px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.25s,transform 0.25s;z-index:9999;white-space:nowrap;max-width:calc(100vw - 40px)}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.clock-label{font-family:‘JetBrains Mono’,monospace;font-size:10px;color:var(–txt-muted);text-align:center;padding:6px}
 </style>
 
 </head>
@@ -234,8 +222,8 @@ HEALTH TAB
   <header id="header">
     <div id="header-inner">
       <span class="logo">Moe<span>'</span>s App</span>
-      <div class="hdr-right">
-        <span class="live-pill"><span class="pulse"></span>LIVE</span>
+      <div class="header-right">
+        <span class="hdr-badge hdr-live"><span class="pulse-dot"></span>LIVE</span>
         <span class="hdr-time" id="clock">--:--</span>
       </div>
     </div>
@@ -245,894 +233,920 @@ HEALTH TAB
     <div class="nav-inner">
       <button class="nav-btn active" id="nav-feed" onclick="switchTab('feed')">
         <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
-        <span class="nav-lbl">Feed</span>
+        <span class="nav-label">Feed</span>
       </button>
       <button class="nav-btn" id="nav-sports" onclick="switchTab('sports')">
         <span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8l4 4-4 4-4-4 4-4z"/></svg></span>
-        <span class="nav-lbl">Sports</span>
+        <span class="nav-label">Sports</span>
       </button>
       <button class="nav-btn" id="nav-health" onclick="switchTab('health')">
         <span class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
-        <span class="nav-lbl">Health</span>
+        <span class="nav-label">Health</span>
       </button>
     </div>
   </nav>
 
   <div id="scroll-wrap">
+    <div class="tab-panel active" id="panel-feed">
 
 ```
-<!-- ═══════════ FEED ═══════════ -->
-<div class="tab-panel active" id="panel-feed">
-  <div class="ticker-wrap" style="display:block;overflow:hidden;">
+  <!-- Ticker -->
+  <div class="ticker-wrap">
     <div class="ticker-track" id="ticker">
-      <span class="t-item">• Antonelli leads F1 heading into Canadian GP</span>
-      <span class="t-item">• Chelsea vs Spurs tonight — Euro spots at stake</span>
-      <span class="t-item">• Canadian GP race lights out Sunday May 24</span>
-      <span class="t-item">• Arsenal beat Burnley 1-0 — title push continues</span>
-      <span class="t-item">• Antonelli leads F1 heading into Canadian GP</span>
-      <span class="t-item">• Chelsea vs Spurs tonight — Euro spots at stake</span>
-      <span class="t-item">• Canadian GP race lights out Sunday May 24</span>
-      <span class="t-item">• Arsenal beat Burnley 1-0 — title push continues</span>
+      <span class="ticker-item"> EPL <span class="t-live">●</span> MAN CITY <span class="t-score">2–1</span> ARSENAL · 67'</span>
+      <span class="ticker-item">🏎 F1 MONACO <span class="t-live">●</span> LAP 43/78 · VER +0.0</span>
+      <span class="ticker-item"> EPL · CHELSEA <span class="t-score">0–0</span> SPURS · 23'</span>
+      <span class="ticker-item">🏆 UCL FINAL · REAL MAD <span class="t-score">FT 1–0</span> PSG</span>
+      <span class="ticker-item">🏎 HAM P4 +18.4s · NOR P2 +2.1s</span>
+      <span class="ticker-item">📸 IG · 847K reach · +12% vs yesterday</span>
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item"> EPL <span class="t-live">●</span> MAN CITY <span class="t-score">2–1</span> ARSENAL · 67'</span>
+      <span class="ticker-item">🏎 F1 MONACO <span class="t-live">●</span> LAP 43/78 · VER +0.0</span>
+      <span class="ticker-item"> EPL · CHELSEA <span class="t-score">0–0</span> SPURS · 23'</span>
+      <span class="ticker-item">🏆 UCL FINAL · REAL MAD <span class="t-score">FT 1–0</span> PSG</span>
+      <span class="ticker-item">🏎 HAM P4 +18.4s · NOR P2 +2.1s</span>
+      <span class="ticker-item">📸 IG · 847K reach · +12% vs yesterday</span>
     </div>
   </div>
-  <div class="filter-row">
-    <span class="fpill active" onclick="setFeedFilter('ALL',this)">All</span>
-    <span class="fpill" onclick="setFeedFilter('F1',this)">Formula 1</span>
-    <span class="fpill" onclick="setFeedFilter('FOOTBALL',this)">Football</span>
-    <span class="fpill" onclick="setFeedFilter('KSA',this)">KSA</span>
-    <button class="btn-refresh" style="margin-left:auto;" onclick="loadNewsFeed()">REFRESH</button>
-  </div>
-  <div class="sec-label">Breaking News</div>
-  <div id="feed-container" style="padding:0 14px 14px;">
-    <div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--ig-blue)"></div><span>Loading news...</span></div>
-  </div>
-</div>
 
-<!-- ═══════════ SPORTS ═══════════ -->
+  <!-- Stories -->
+  <div class="card" style="margin-bottom:12px; overflow:visible; background:transparent; border-color:transparent;">
+    <div class="stories-row">
+      <div class="story">
+        <div class="story-ring"><div class="story-avatar">🏎</div></div>
+        <span class="story-name">F1 App</span>
+      </div>
+      <div class="story">
+        <div class="story-ring"><div class="story-avatar">⚽</div></div>
+        <span class="story-name">FotMob</span>
+      </div>
+      <div class="story">
+        <div class="story-ring"><div class="story-avatar">VB</div></div>
+        <span class="story-name">Verstappen</span>
+      </div>
+      <div class="story">
+        <div class="story-ring"><div class="story-avatar">LN</div></div>
+        <span class="story-name">Lando N.</span>
+      </div>
+      <div class="story">
+        <div class="story-ring seen"><div class="story-avatar">MCA</div></div>
+        <span class="story-name">Man City</span>
+      </div>
+      <div class="story">
+        <div class="story-ring seen"><div class="story-avatar">CH</div></div>
+        <span class="story-name">Chelsea</span>
+      </div>
+      <div class="story">
+        <div class="story-ring"><div class="story-avatar">🏋️</div></div>
+        <span class="story-name">Training</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts -->
+  <div class="card" id="feed-posts">
+
+    <!-- POST 1 · F1 -->
+    <div class="post" id="post-1">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
+        <div class="post-avatar">
+          <div class="post-avatar-ring f1" style="width:44px;height:44px;position:relative;background:linear-gradient(135deg,#e8002d,#ff5f00);">
+            <div style="position:absolute;inset:2px;border-radius:50%;background:#13151f;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;">F1</div>
+          </div>
+        </div>
+      </div>
+      <div class="post-body">
+        <div class="post-meta">
+          <span class="post-name">Formula 1</span>
+          <span class="platform-badge badge-f1">F1</span>
+          <span class="post-time">2m ago</span>
+        </div>
+        <p class="post-text">🏁 LAP 43/78 — MONACO GP<br>VER leads by <strong>+4.2s</strong> over NOR. PIA closes on HAM for P3. Safety Car deployed — debris at Turn 8. PIT WINDOW OPEN.</p>
+        <div class="post-img">
+          <div class="post-img-gradient" style="background:linear-gradient(135deg,rgba(232,0,45,0.2),rgba(255,95,0,0.3),rgba(7,8,13,0.8));"></div>
+          <span class="post-img-label" style="color:var(--f1-red);">🏎 MONACO 🇲🇨</span>
+        </div>
+        <div class="post-actions">
+          <span class="post-action" onclick="toggleLike(this)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>14.2K</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>3.8K</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span>Share</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- POST 2 · IG -->
+    <div class="post" id="post-2">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
+        <div class="post-avatar" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">
+          <div style="position:absolute;inset:2px;border-radius:50%;background:#13151f;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;">LN</div>
+        </div>
+      </div>
+      <div class="post-body">
+        <div class="post-meta">
+          <span class="post-name">landonorris</span>
+          <span class="platform-badge badge-ig">IG</span>
+          <span class="post-time">12m ago</span>
+        </div>
+        <p class="post-text">Monaco prep ✅ Car feels unreal this weekend. The team have done an incredible job 🧡 Let's go get it 🏁</p>
+        <div class="post-img">
+          <div class="post-img-gradient" style="background:linear-gradient(135deg,rgba(255,135,0,0.25),rgba(255,95,0,0.15),rgba(7,8,13,0.6));"></div>
+          <span class="post-img-label" style="color:#ff8700;">MCL 60 🧡</span>
+        </div>
+        <div class="post-actions">
+          <span class="post-action liked" onclick="toggleLike(this)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>287K</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>4.1K</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span>Share</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- POST 3 · X -->
+    <div class="post" id="post-3">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
+        <div class="post-avatar" style="background:#1d9bf0;">
+          <div style="position:absolute;inset:2px;border-radius:50%;background:#13151f;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;">SA</div>
+        </div>
+      </div>
+      <div class="post-body">
+        <div class="post-meta">
+          <span class="post-name">SkyF1</span>
+          <span class="platform-badge badge-x">𝕏</span>
+          <span class="post-time">18m ago</span>
+        </div>
+        <p class="post-text">🚨 SAFETY CAR OUT 🚨<br>Debris on circuit at Turn 8. Verstappen +4.2s lead likely evaporates. This race just opened WIDE up. #MonacoGP #F1</p>
+        <div class="post-actions">
+          <span class="post-action" onclick="toggleLike(this)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>8.4K</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>2.1K RT</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>912</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- POST 4 · IG Football -->
+    <div class="post" id="post-4">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
+        <div class="post-avatar" style="background:linear-gradient(135deg,#6cabdd,#1f4996);">
+          <div style="position:absolute;inset:2px;border-radius:50%;background:#13151f;display:flex;align-items:center;justify-content:center;font-size:18px;">⚽</div>
+        </div>
+      </div>
+      <div class="post-body">
+        <div class="post-meta">
+          <span class="post-name">premierleague</span>
+          <span class="platform-badge badge-ig">IG</span>
+          <span class="post-time">34m ago</span>
+        </div>
+        <p class="post-text">GOAL ⚽ Erling Haaland makes it 2–1! Man City back ahead at the Etihad. Arsenal pushing for the equaliser — what a title race! 🔵 #MCIARI #PL</p>
+        <div class="post-actions">
+          <span class="post-action" onclick="toggleLike(this)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>193K</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>7.2K</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg><span>Share</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- POST 5 · X -->
+    <div class="post" id="post-5">
+      <div style="position:relative;width:40px;height:40px;flex-shrink:0;">
+        <div style="width:40px;height:40px;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.262 5.636L18.244 2.25z"/></svg>
+        </div>
+      </div>
+      <div class="post-body">
+        <div class="post-meta">
+          <span class="post-name">OptaJoe</span>
+          <span class="platform-badge badge-x">𝕏</span>
+          <span class="post-time">1h ago</span>
+        </div>
+        <p class="post-text">23 — Erling Haaland has now scored 23 Premier League goals this season — the most by any player in a single campaign in 2024/25. Relentless. #MCIARI</p>
+        <div class="post-actions">
+          <span class="post-action" onclick="toggleLike(this)"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>41K</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><span>11.3K RT</span></span>
+          <span class="post-action"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>3.4K</span></span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /feed-posts -->
+</div><!-- /panel-feed -->
+
 <div class="tab-panel" id="panel-sports">
 
-  <div class="sec-label">Next Race</div>
-  <div style="padding:0 14px 10px;">
-    <div class="cd-card">
-      <div class="cd-top">
-        <div>
-          <div class="cd-label"><span class="pulse"></span><span id="f1-next-track">Canadian Grand Prix</span></div>
-          <div class="cd-title" id="f1-next-location">Circuit Gilles Villeneuve</div>
-          <div class="cd-sub" id="f1-next-sub">Montreal · Round 5 · Sprint Weekend</div>
+  <p class="section-label">⚽ Football · Live & Recent</p>
+
+  <!-- Match 1 · EPL LIVE -->
+  <div class="card">
+    <div class="match-card">
+      <div class="match-header">
+        <span class="league-badge league-epl">EPL</span>
+        <span style="font-size:11px;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;">Matchday 36</span>
+        <div class="live-badge"><span class="pulse-dot"></span>Live 67'</div>
+      </div>
+      <div class="match-score-row">
+        <div class="match-team">
+          <span class="team-name">Man City</span>
+          <span class="team-stat">4th · 71 pts</span>
         </div>
-        <div style="text-align:right;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--f1-red);font-weight:700;margin-bottom:4px;">MAY 24</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--txt-muted);">20:00 UTC</div>
+        <div class="score-box">
+          <span class="score-num" style="color:var(--epl-green)">2</span>
+          <span class="score-sep">–</span>
+          <span class="score-num">1</span>
+        </div>
+        <div class="match-team away">
+          <span class="team-name">Arsenal</span>
+          <span class="team-stat">2nd · 74 pts</span>
         </div>
       </div>
-      <div class="cd-grid">
-        <div class="cd-seg"><div class="cd-num" id="cd-days">--</div><div class="cd-lbl">Days</div></div>
-        <div class="cd-seg"><div class="cd-num" id="cd-hours">--</div><div class="cd-lbl">Hrs</div></div>
-        <div class="cd-seg"><div class="cd-num" id="cd-mins">--</div><div class="cd-lbl">Min</div></div>
-        <div class="cd-seg"><div class="cd-num" id="cd-secs">--</div><div class="cd-lbl">Sec</div></div>
+      <div class="match-events">
+        <span class="event-chip"><span class="ev-icon">⚽</span> Haaland 42', 64'</span>
+        <span class="event-chip"><span class="ev-icon">⚽</span> Saka 51'</span>
+        <span class="event-chip"><span class="ev-icon">🟨</span> Rodri 38'</span>
       </div>
     </div>
   </div>
 
-  <div style="display:flex;align-items:center;padding:0 14px;">
-    <div class="sec-label" style="padding:14px 0 8px;flex:1;">Live Football</div>
-    <button class="btn-refresh" onclick="loadFootballScores()">REFRESH</button>
-  </div>
-  <div style="padding:0 14px 10px;">
-    <div id="football-scores-container">
-      <div class="match-grid">
-        <div class="match-card"><div class="f1-api-loading" style="padding:16px;"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div></div></div>
+  <!-- Match 2 · EPL LIVE -->
+  <div class="card">
+    <div class="match-card">
+      <div class="match-header">
+        <span class="league-badge league-epl">EPL</span>
+        <span style="font-size:11px;color:var(--txt-muted);font-family:'JetBrains Mono',monospace;">Matchday 36</span>
+        <div class="live-badge"><span class="pulse-dot"></span>Live 23'</div>
+      </div>
+      <div class="match-score-row">
+        <div class="match-team">
+          <span class="team-name">Chelsea</span>
+          <span class="team-stat">6th · 63 pts</span>
+        </div>
+        <div class="score-box">
+          <span class="score-num">0</span>
+          <span class="score-sep">–</span>
+          <span class="score-num">0</span>
+        </div>
+        <div class="match-team away">
+          <span class="team-name">Spurs</span>
+          <span class="team-stat">17th · 26 pts</span>
+        </div>
+      </div>
+      <div class="match-events">
+        <span class="event-chip" style="color:var(--txt-muted);font-size:11px;">No events yet</span>
       </div>
     </div>
   </div>
 
-  <div style="display:flex;align-items:center;padding:0 14px;">
-    <div class="sec-label" style="padding:14px 0 8px;flex:1;">F1 2026 Standings</div>
-    <button class="btn-refresh" onclick="loadF1Data()">REFRESH</button>
-  </div>
-  <div style="padding:0 14px 20px;">
-    <div class="s-card">
-      <div class="s-card-header">
-        <span class="s-card-title">Driver Championship</span>
-        <span id="f1-standings-round" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--txt-muted);">2026</span>
+  <!-- Match 3 · UCL FT -->
+  <div class="card">
+    <div class="match-card">
+      <div class="match-header">
+        <span class="league-badge league-ucl">UCL FINAL</span>
+        <span class="ft-badge">FT</span>
       </div>
-      <div id="f1-standings-body">
-        <div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--f1-red)"></div><span>Loading...</span></div>
+      <div class="match-score-row">
+        <div class="match-team">
+          <span class="team-name">Real Madrid</span>
+          <span class="team-stat">Winners 🏆</span>
+        </div>
+        <div class="score-box">
+          <span class="score-num" style="color:var(--gold)">1</span>
+          <span class="score-sep">–</span>
+          <span class="score-num">0</span>
+        </div>
+        <div class="match-team away">
+          <span class="team-name">PSG</span>
+          <span class="team-stat">Runners-up</span>
+        </div>
+      </div>
+      <div class="match-events">
+        <span class="event-chip"><span class="ev-icon">⚽</span> Vini Jr. 87'</span>
+        <span class="event-chip"><span class="ev-icon">🟥</span> Marquinhos 90+2'</span>
       </div>
     </div>
   </div>
 
-</div>
+  <!-- Match 4 · La Liga FT -->
+  <div class="card">
+    <div class="match-card">
+      <div class="match-header">
+        <span class="league-badge league-ll">LA LIGA</span>
+        <span class="ft-badge">FT</span>
+      </div>
+      <div class="match-score-row">
+        <div class="match-team">
+          <span class="team-name">Barça</span>
+          <span class="team-stat">3rd · 68 pts</span>
+        </div>
+        <div class="score-box">
+          <span class="score-num" style="color:var(--gold)">3</span>
+          <span class="score-sep">–</span>
+          <span class="score-num">1</span>
+        </div>
+        <div class="match-team away">
+          <span class="team-name">Getafe</span>
+          <span class="team-stat">12th · 41 pts</span>
+        </div>
+      </div>
+      <div class="match-events">
+        <span class="event-chip"><span class="ev-icon">⚽</span> Yamal 14', 71'</span>
+        <span class="event-chip"><span class="ev-icon">⚽</span> Lewandowski 56'</span>
+      </div>
+    </div>
+  </div>
 
-<!-- ═══════════ HEALTH ═══════════ -->
+  <!-- F1 LIVE DATA -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:24px;margin-bottom:10px;">
+    <p class="section-label" style="margin:0;">🏎 F1 · 2025 Season</p>
+    <button onclick="loadF1Data()" style="background:rgba(232,0,45,0.12);border:1px solid rgba(232,0,45,0.3);color:var(--f1-red);border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;">↻ REFRESH</button>
+  </div>
+
+  <!-- Last Race Result -->
+  <div class="card" style="overflow:hidden;">
+    <div class="card-header">
+      <span class="card-title">Last Race · Result</span>
+      <span id="f1-last-race-name" style="font-size:11px;color:var(--txt-secondary);font-family:'JetBrains Mono',monospace;">—</span>
+    </div>
+    <div id="f1-last-race-body">
+      <div class="f1-api-loading">
+        <div class="f1-spinner"></div>
+        <span>Fetching from Jolpica F1 API…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Driver Championship Standings -->
+  <div class="card" style="overflow:hidden;margin-top:12px;">
+    <div class="card-header">
+      <span class="card-title">Driver Championship · 2025</span>
+      <span id="f1-standings-round" style="font-size:11px;color:var(--txt-secondary);font-family:'JetBrains Mono',monospace;">—</span>
+    </div>
+    <div id="f1-standings-body">
+      <div class="f1-api-loading">
+        <div class="f1-spinner"></div>
+        <span>Fetching standings…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Constructor Standings -->
+  <div class="card" style="overflow:hidden;margin-top:12px;margin-bottom:4px;">
+    <div class="card-header">
+      <span class="card-title">Constructor Championship · 2025</span>
+    </div>
+    <div id="f1-constructors-body">
+      <div class="f1-api-loading">
+        <div class="f1-spinner"></div>
+        <span>Fetching constructors…</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /panel-sports -->
+
 <div class="tab-panel" id="panel-health">
 
-  <div class="sec-label">Nutrition · Today</div>
-  <div style="padding:0 14px 10px;">
-    <div class="ring-card">
-      <div class="ring-top">
-        <div class="ring-outer">
-          <svg viewBox="0 0 100 100">
-            <circle class="ring-track" cx="50" cy="50" r="40"/>
-            <circle id="cal-ring" class="ring-prog" cx="50" cy="50" r="40"
-              stroke="url(#cg)" stroke-dasharray="251" stroke-dashoffset="251"/>
-            <defs>
-              <linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#4f9cf9"/>
-                <stop offset="100%" stop-color="#a78bfa"/>
-              </linearGradient>
-            </defs>
-          </svg>
-          <div class="ring-center">
-            <span class="ring-val" id="cal-display">0</span>
-            <span class="ring-sub">/ 2500<br>kcal</span>
-          </div>
+  <!-- ── NUTRITION ── -->
+  <p class="section-label">🥗 Nutrition · Today</p>
+
+  <div class="card">
+    <div class="macro-ring-wrap">
+      <!-- Donut ring -->
+      <div class="ring-outer">
+        <svg viewBox="0 0 120 120">
+          <circle class="ring-track" cx="60" cy="60" r="50"/>
+          <circle class="ring-prog" id="cal-ring" cx="60" cy="60" r="50"
+            stroke="url(#calGrad)"
+            stroke-dasharray="314"
+            stroke-dashoffset="314"/>
+          <defs>
+            <linearGradient id="calGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#4f9cf9"/>
+              <stop offset="100%" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="ring-center">
+          <span class="ring-val" id="cal-display">0</span>
+          <span class="ring-sub">/ 2500 kcal</span>
         </div>
-        <div class="ring-macros">
-          <div class="macro-row">
-            <div class="macro-top"><span class="macro-name">Protein</span><span class="macro-val" id="prot-val" style="color:var(--ig-blue)">0g</span></div>
-            <div class="macro-bar"><div class="macro-fill" id="prot-bar" style="width:0%;background:var(--ig-blue)"></div></div>
+      </div>
+      <!-- Macros -->
+      <div class="macros-row">
+        <div class="macro-pill">
+          <div class="macro-pill-top">
+            <span class="macro-name">Protein</span>
+            <span class="macro-val" id="prot-val">0g</span>
           </div>
-          <div class="macro-row">
-            <div class="macro-top"><span class="macro-name">Carbs</span><span class="macro-val" id="carb-val" style="color:var(--epl-green)">0g</span></div>
-            <div class="macro-bar"><div class="macro-fill" id="carb-bar" style="width:0%;background:var(--epl-green)"></div></div>
-          </div>
-          <div class="macro-row">
-            <div class="macro-top"><span class="macro-name">Fat</span><span class="macro-val" id="fat-val" style="color:var(--gold)">0g</span></div>
-            <div class="macro-bar"><div class="macro-fill" id="fat-bar" style="width:0%;background:var(--gold)"></div></div>
-          </div>
+          <div class="macro-bar"><div class="macro-fill fill-protein" id="prot-bar" style="width:0%"></div></div>
+          <span style="font-size:10px;color:var(--txt-muted)" id="prot-target">/ 180g</span>
         </div>
+        <div class="macro-pill">
+          <div class="macro-pill-top">
+            <span class="macro-name">Carbs</span>
+            <span class="macro-val" id="carb-val">0g</span>
+          </div>
+          <div class="macro-bar"><div class="macro-fill fill-carbs" id="carb-bar" style="width:0%"></div></div>
+          <span style="font-size:10px;color:var(--txt-muted)" id="carb-target">/ 280g</span>
+        </div>
+        <div class="macro-pill">
+          <div class="macro-pill-top">
+            <span class="macro-name">Fat</span>
+            <span class="macro-val" id="fat-val">0g</span>
+          </div>
+          <div class="macro-bar"><div class="macro-fill fill-fat" id="fat-bar" style="width:0%"></div></div>
+          <span style="font-size:10px;color:var(--txt-muted)" id="fat-target">/ 70g</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Food Log -->
+    <div class="food-log-list" id="food-list"></div>
+
+    <!-- Add Food Form -->
+    <div class="log-form">
+      <input class="log-input" id="food-name" placeholder="Food item (e.g. Chicken Breast 200g)" type="text">
+      <div class="log-form-row">
+        <input class="log-input small" id="food-kcal" placeholder="kcal" type="number" min="0">
+        <input class="log-input small" id="food-prot" placeholder="P (g)" type="number" min="0">
+        <input class="log-input small" id="food-carb" placeholder="C (g)" type="number" min="0">
+        <input class="log-input small" id="food-fat"  placeholder="F (g)" type="number" min="0">
+        <button class="log-btn" onclick="addFood()">+ Add</button>
       </div>
     </div>
   </div>
 
-  <div style="padding:0 14px 10px;">
-    <div id="food-list"></div>
-    <div class="log-card">
-      <div class="log-card-title">Log Food</div>
-      <input class="log-input" id="food-name" placeholder="Food item...">
-      <div class="log-row">
-        <input class="log-input sm" id="food-kcal" placeholder="kcal" type="number">
-        <input class="log-input sm" id="food-prot" placeholder="P(g)" type="number">
-        <input class="log-input sm" id="food-carb" placeholder="C(g)" type="number">
-        <input class="log-input sm" id="food-fat"  placeholder="F(g)" type="number">
-        <button class="log-btn" onclick="addFood()">+ Log</button>
+  <!-- ── WORKOUT ── -->
+  <p class="section-label" style="margin-top:20px;">🏋️ Workout · Progressive Overload</p>
+
+  <div class="card">
+    <!-- Stats -->
+    <div class="workout-stats-row">
+      <div class="wk-stat">
+        <div class="wk-stat-val" id="wk-sets">0</div>
+        <div class="wk-stat-lbl">Sets</div>
+      </div>
+      <div class="wk-stat">
+        <div class="wk-stat-val" id="wk-vol" style="color:var(--cyan)">0</div>
+        <div class="wk-stat-lbl">Vol (kg)</div>
+      </div>
+      <div class="wk-stat">
+        <div class="wk-stat-val" id="wk-exs">0</div>
+        <div class="wk-stat-lbl">Exercises</div>
       </div>
     </div>
-  </div>
 
-  <div class="sec-label">Workout · Today</div>
-  <div style="padding:0 14px 10px;">
-    <div class="wk-grid">
-      <div class="wk-stat"><div class="wk-val" id="wk-sets">0</div><div class="wk-lbl">Sets</div></div>
-      <div class="wk-stat"><div class="wk-val" id="wk-vol" style="color:var(--cyan)">0</div><div class="wk-lbl">Vol kg</div></div>
-      <div class="wk-stat"><div class="wk-val" id="wk-exs">0</div><div class="wk-lbl">Exercises</div></div>
+    <!-- Set list -->
+    <div class="set-list" id="set-list">
+      <div class="empty-state" id="set-empty">
+        <span class="empty-icon">🏋️</span>
+        <span>No sets logged yet.<br>Add your first exercise below.</span>
+      </div>
     </div>
-  </div>
 
-  <div style="padding:0 14px 10px;">
-    <div id="set-list" class="set-grid"></div>
-  </div>
+    <div class="vol-total">
+      <span>Total Volume</span>
+      <strong id="vol-total-val">0 kg</strong>
+    </div>
 
-  <div style="padding:0 14px 24px;">
-    <div class="log-card">
-      <div class="log-card-title">Log Set</div>
-      <input class="log-input" id="set-exercise" placeholder="Exercise name...">
-      <div class="log-row">
-        <input class="log-input" id="set-weight" placeholder="Weight (kg)" type="number" step="0.5">
-        <input class="log-input" id="set-reps"   placeholder="Reps"        type="number">
+    <!-- Add Set Form -->
+    <div class="log-form">
+      <input class="log-input" id="set-exercise" placeholder="Exercise (e.g. Bench Press)" type="text">
+      <div class="log-form-row">
+        <input class="log-input" id="set-weight" placeholder="Weight (kg)" type="number" min="0" step="0.5">
+        <input class="log-input" id="set-reps"   placeholder="Reps" type="number" min="1">
         <button class="log-btn red" onclick="addSet()">+ Set</button>
       </div>
     </div>
   </div>
 
-</div>
+</div><!-- /panel-health -->
 ```
 
   </div>
+
 </div>
 <div id="toast"></div>
 <script>
+/* ═══════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════════ */
+const TARGETS = { kcal: 2500, prot: 180, carb: 280, fat: 70 };
+const LS_FOOD = 'nexus_food_v2';
+const LS_SETS = 'nexus_sets_v2';
 
-// ── CONSTANTS ──────────────────────────────────────────
-const RSS_API = ‘https://api.rss2json.com/v1/api.json?rss_url=’;
-const F1_BASE = ‘https://api.jolpi.ca/ergast/f1’;
-const CORS    = ‘https://corsproxy.io/?url=’;
+let foodLog = [];
+let setLog  = [];
 
-const MASTER_CHANNELS = [
-{ name:‘BBC F1’,       url:‘https://feeds.bbci.co.uk/sport/formula1/rss.xml’, cat:‘F1’       },
-{ name:‘BBC Football’, url:‘https://feeds.bbci.co.uk/sport/football/rss.xml’,  cat:‘FOOTBALL’ },
-{ name:‘Sky F1’,       url:‘https://www.skysports.com/rss/12040’,              cat:‘F1’       },
-{ name:‘Sky Football’, url:‘https://www.skysports.com/rss/11095’,              cat:‘FOOTBALL’ },
-{ name:‘TalkSport’,    url:‘https://talksport.com/feed/’,                      cat:‘FOOTBALL’ },
-{ name:‘Arab News’,    url:‘https://www.arabnews.com/cat/5/rss.xml’,           cat:‘KSA’      },
-];
-
-const KEY_ENTITIES = [
-‘Hamilton’,‘Verstappen’,‘Norris’,‘Leclerc’,‘Russell’,‘Antonelli’,‘Piastri’,‘Alonso’,
-‘Arsenal’,‘Man City’,‘Liverpool’,‘Chelsea’,‘Real Madrid’,‘Barcelona’,‘Bayern’,
-‘Al Nassr’,‘Al Hilal’,‘Ronaldo’,‘Saudi Pro League’,‘Grand Prix’,‘McLaren’,‘Ferrari’,‘Mercedes’
-];
-
-const TEAM_COLORS = {
-mercedes:’#00d2be’, ferrari:’#e8002d’, red_bull:’#3671c6’,
-mclaren:’#ff8700’, aston_martin:’#229971’, alpine:’#0093cc’,
-williams:’#64c4ff’, rb:’#6692ff’, kick_sauber:’#52e252’, haas:’#b6babd’
-};
-
-const NEXT_RACE = {
-title: ‘Canadian Grand Prix’,
-location: ‘Circuit Gilles Villeneuve, Montreal’,
-date: ‘2026-05-24T20:00:00Z’
-};
-
-const FALLBACK_NEWS = [
-{title:“Kimi Antonelli leads F1 standings with 20pt advantage into Canadian GP”,src:“BBC F1”,cat:“F1”,link:“https://www.bbc.com/sport/formula1”,date:“May 19”},
-{title:“Canadian GP Sprint weekend confirmed - Race lights out Sunday May 24”,src:“Sky F1”,cat:“F1”,link:“https://www.skysports.com/f1”,date:“May 19”},
-{title:“Arsenal beat Burnley 1-0 - Gunners go into final day level with Man City”,src:“BBC Sport”,cat:“FOOTBALL”,link:“https://www.bbc.com/sport/football”,date:“May 18”},
-{title:“McLaren bring major upgrade to Montreal - Norris targeting first 2026 win”,src:“Sky F1”,cat:“F1”,link:“https://www.skysports.com/f1”,date:“May 19”},
-{title:“Chelsea vs Tottenham - London derby to decide European qualification”,src:“Sky Sports”,cat:“FOOTBALL”,link:“https://www.skysports.com/football”,date:“May 19”},
-{title:“Al Hilal crowned Saudi Pro League champions 2026 - Mitrovic wins golden boot”,src:“Arab News”,cat:“KSA”,link:“https://www.arabnews.com/sport”,date:“May 18”},
-{title:“Leclerc and Hamilton both on 51 points - Ferrari internal battle intensifies”,src:“Sky F1”,cat:“F1”,link:“https://www.skysports.com/f1”,date:“May 18”},
-{title:“Man City vs Bournemouth - Guardiola says title race not over”,src:“BBC Sport”,cat:“FOOTBALL”,link:“https://www.bbc.com/sport/football”,date:“May 19”},
-{title:“Al Nassr miss out on Saudi title - Ronaldo vows to return stronger”,src:“Arab News”,cat:“KSA”,link:“https://www.arabnews.com/sport”,date:“May 18”},
-{title:“Russell hunting first win since Australia at Circuit Gilles Villeneuve”,src:“BBC F1”,cat:“F1”,link:“https://www.bbc.com/sport/formula1”,date:“May 19”},
-{title:“Newcastle beat West Ham 3-1 - Isak hat-trick fires Magpies into top four”,src:“BBC Sport”,cat:“FOOTBALL”,link:“https://www.bbc.com/sport/football”,date:“May 17”},
-{title:“Saudi Arabia 2034 World Cup infrastructure plans confirmed by FIFA”,src:“Arab News”,cat:“KSA”,link:“https://www.arabnews.com/sport”,date:“May 16”}
-];
-
-// ── INIT ───────────────────────────────────────────────
-document.addEventListener(‘DOMContentLoaded’, function() {
-try { foodLog = JSON.parse(localStorage.getItem(‘m_food’) || ‘[]’); } catch(e) { foodLog = []; }
-try { setLog  = JSON.parse(localStorage.getItem(‘m_sets’) || ‘[]’); } catch(e) { setLog  = []; }
+/* ═══════════════════════════════════════════════════════
+INIT
+════════════════════════════════════════════════════════ */
+(function init() {
+try { foodLog = JSON.parse(localStorage.getItem(LS_FOOD)) || []; } catch(e) { foodLog = []; }
+try { setLog  = JSON.parse(localStorage.getItem(LS_SETS))  || []; } catch(e) { setLog  = []; }
 renderFood();
 renderSets();
 startClock();
-startCountdown();
-loadNewsFeed();
-loadFootballScores();
-loadF1Data();
-});
+})();
 
-// ── CLOCK ──────────────────────────────────────────────
-function startClock() {
-var el = document.getElementById(‘clock’);
-function tick() {
-var d = new Date();
-if (el) el.textContent = String(d.getHours()).padStart(2,‘0’) + ‘:’ + String(d.getMinutes()).padStart(2,‘0’);
-}
-tick();
-setInterval(tick, 10000);
-}
-
-// ── TAB SWITCH ─────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════
+TAB SWITCH
+════════════════════════════════════════════════════════ */
 function switchTab(tab) {
-[‘feed’,‘sports’,‘health’].forEach(function(t) {
-var panel = document.getElementById(‘panel-’ + t);
-var btn   = document.getElementById(‘nav-’ + t);
-if (panel) panel.classList.toggle(‘active’, t === tab);
-if (btn)   btn.classList.toggle(‘active’,   t === tab);
+[‘feed’,‘sports’,‘health’].forEach(t => {
+document.getElementById(‘panel-’ + t).classList.toggle(‘active’, t === tab);
+document.getElementById(‘nav-’   + t).classList.toggle(‘active’, t === tab);
 });
 document.getElementById(‘scroll-wrap’).scrollTop = 0;
 }
 
-// ── COUNTDOWN ──────────────────────────────────────────
-function startCountdown() {
-var trackEl = document.getElementById(‘f1-next-track’);
-var sessEl  = document.getElementById(‘f1-next-session’);
-if (trackEl) trackEl.textContent = NEXT_RACE.title;
-if (sessEl)  sessEl.textContent  = NEXT_RACE.location;
-
-function tick() {
-var diff = Date.parse(NEXT_RACE.date) - Date.now();
-if (diff <= 0) {
-[‘cd-days’,‘cd-hours’,‘cd-mins’,‘cd-secs’].forEach(function(id) {
-var el = document.getElementById(id);
-if (el) el.textContent = ‘00’;
-});
-return;
-}
-var d = document.getElementById(‘cd-days’);
-var h = document.getElementById(‘cd-hours’);
-var m = document.getElementById(‘cd-mins’);
-var s = document.getElementById(‘cd-secs’);
-if (d) d.textContent = String(Math.floor(diff / 86400000)).padStart(2, ‘0’);
-if (h) h.textContent = String(Math.floor(diff % 86400000 / 3600000)).padStart(2, ‘0’);
-if (m) m.textContent = String(Math.floor(diff % 3600000 / 60000)).padStart(2, ‘0’);
-if (s) s.textContent = String(Math.floor(diff % 60000 / 1000)).padStart(2, ‘0’);
-}
-tick();
-setInterval(tick, 1000);
+/* ═══════════════════════════════════════════════════════
+LIKE TOGGLE
+════════════════════════════════════════════════════════ */
+function toggleLike(el) {
+el.classList.toggle(‘liked’);
+const span = el.querySelector(‘span’);
+let n = parseInt(span.textContent.replace(/[^\d]/g,’’)) || 0;
+if (el.classList.contains(‘liked’)) n++;
+else n = Math.max(0, n - 1);
+span.textContent = formatNum(n);
 }
 
-// ── TICKER (pure CSS driven, just set content) ─────────
-function setTickerContent(titles) {
-var track = document.getElementById(‘ticker’);
-if (!track || !titles.length) return;
-var items = titles.slice(0, 8).map(function(t) {
-return ‘<span class="ticker-item">• ’ + t.substring(0, 70) + ‘</span>’;
-}).join(’’);
-track.innerHTML = items + items;
+function formatNum(n) {
+if (n >= 1000) return (n/1000).toFixed(1).replace(/.0$/,’’) + ‘K’;
+return n.toString();
 }
 
-// ── F1 STANDINGS ───────────────────────────────────────
-async function loadF1Data() {
-var body    = document.getElementById(‘f1-standings-body’);
-var roundEl = document.getElementById(‘f1-standings-round’);
-if (!body) return;
-
-// Show real hardcoded data immediately — no spinner, no wait
-renderHardcodedStandings(body);
-if (roundEl) roundEl.textContent = ‘2026 · R4’;
-
-// Try to fetch live data in background and update if successful
-try {
-var controller = new AbortController();
-var timer = setTimeout(function() { controller.abort(); }, 5000);
-var url = F1_BASE + ‘/current/driverstandings.json?limit=20’;
-var res = await fetch(url, { signal: controller.signal });
-clearTimeout(timer);
-if (res.ok) {
-var data = await res.json();
-renderF1Standings(data, roundEl, body);
-}
-} catch(e) {
-// Hardcoded data already shown — no error needed
-}
-}
-
-// Real 2026 standings after Round 4 (Miami GP) — updated May 19 2026
-var F1_STANDINGS_2026 = [
-{ pos:1, num:12, name:‘Antonelli’, team:‘Mercedes’,     cid:‘mercedes’,     pts:100, wins:3 },
-{ pos:2, num:63, name:‘Russell’,   team:‘Mercedes’,     cid:‘mercedes’,     pts:80,  wins:1 },
-{ pos:3, num:16, name:‘Leclerc’,   team:‘Ferrari’,      cid:‘ferrari’,      pts:59,  wins:0 },
-{ pos:4, num:4,  name:‘Norris’,    team:‘McLaren’,      cid:‘mclaren’,      pts:51,  wins:0 },
-{ pos:5, num:44, name:‘Hamilton’,  team:‘Ferrari’,      cid:‘ferrari’,      pts:51,  wins:0 },
-{ pos:6, num:81, name:‘Piastri’,   team:‘McLaren’,      cid:‘mclaren’,      pts:43,  wins:0 },
-{ pos:7, num:14, name:‘Alonso’,    team:‘Aston Martin’, cid:‘aston_martin’, pts:24,  wins:0 },
-{ pos:8, num:18, name:‘Stroll’,    team:‘Aston Martin’, cid:‘aston_martin’, pts:12,  wins:0 },
-{ pos:9, num:10, name:‘Gasly’,     team:‘Alpine’,       cid:‘alpine’,       pts:10,  wins:0 },
-{ pos:10,num:55, name:‘Sainz’,     team:‘Williams’,     cid:‘williams’,     pts:9,   wins:0 },
-];
-
-function renderF1Standings(data, roundEl, body) {
-// Try to parse live API data first
-var drivers = null;
-var round = ‘4’;
-try {
-var sl = data && data.MRData && data.MRData.StandingsTable && data.MRData.StandingsTable.StandingsLists[0];
-if (sl && sl.DriverStandings && sl.DriverStandings.length) {
-drivers = sl.DriverStandings.slice(0, 10);
-round = sl.round;
-}
-} catch(e) {}
-
-if (roundEl) roundEl.textContent = ‘2026 · R’ + round;
-
-// Fall back to hardcoded if API gave nothing useful
-if (!drivers || !drivers.length) {
-renderHardcodedStandings(body);
-return;
-}
-
-var maxPts = parseFloat(drivers[0].points) || 1;
-var html = ‘<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>’;
-drivers.forEach(function(d) {
-var pos = parseInt(d.position);
-var cid = d.Constructors && d.Constructors[0] ? d.Constructors[0].constructorId : ‘default’;
-var col = TEAM_COLORS[cid] || ‘#8a8fa8’;
-var pts = parseFloat(d.points);
-var barW = Math.round((pts / maxPts) * 100);
-var posClass = pos === 1 ? ‘p1’ : pos === 2 ? ‘p2’ : pos === 3 ? ‘p3’ : ‘’;
-html += ‘<div class="f1-std-row">’
-+ ‘<span class="f1-pos ' + posClass + '">’ + pos + ‘</span>’
-+ ‘<span class="f1-num" style="background:' + col + '22;color:' + col + '">’ + d.Driver.permanentNumber + ‘</span>’
-+ ‘<div class="f1-driver-info">’
-+   ‘<span class="f1-driver-name">’ + d.Driver.familyName + ‘</span>’
-+   ‘<div class="f1-con-bar"><div class="f1-con-fill" style="width:' + barW + '%;background:' + col + '"></div></div>’
-+ ‘</div>’
-+ ‘<span class="f1-wins">’ + d.wins + ‘</span>’
-+ ‘<span class="f1-pts">’ + pts + ‘</span>’
-+ ‘</div>’;
-});
-var t = new Date().toLocaleTimeString([], {hour:‘2-digit’, minute:‘2-digit’});
-html += ’<div class="f1-last-updated">Live · Jolpica F1 API · ’ + t + ‘</div>’;
-body.innerHTML = html;
-}
-
-function renderHardcodedStandings(body) {
-var maxPts = F1_STANDINGS_2026[0].pts;
-var html = ‘<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>’;
-F1_STANDINGS_2026.forEach(function(d) {
-var col = TEAM_COLORS[d.cid] || ‘#8a8fa8’;
-var barW = Math.round((d.pts / maxPts) * 100);
-var posClass = d.pos === 1 ? ‘p1’ : d.pos === 2 ? ‘p2’ : d.pos === 3 ? ‘p3’ : ‘’;
-html += ‘<div class="f1-std-row">’
-+ ‘<span class="f1-pos ' + posClass + '">’ + d.pos + ‘</span>’
-+ ‘<span class="f1-num" style="background:' + col + '22;color:' + col + '">’ + d.num + ‘</span>’
-+ ‘<div class="f1-driver-info">’
-+   ‘<span class="f1-driver-name">’ + d.name + ‘</span>’
-+   ‘<div class="f1-con-bar"><div class="f1-con-fill" style="width:' + barW + '%;background:' + col + '"></div></div>’
-+ ‘</div>’
-+ ‘<span class="f1-wins">’ + d.wins + ‘</span>’
-+ ‘<span class="f1-pts">’ + d.pts + ‘</span>’
-+ ‘</div>’;
-});
-html += ‘<div class="f1-last-updated">After R4 Miami · Updated May 19 2026</div>’;
-body.innerHTML = html;
-}
-
-// ── FOOTBALL ───────────────────────────────────────────
-function loadFootballScores() {
-var container = document.getElementById(‘football-scores-container’);
-if (!container) return;
-container.innerHTML = ‘<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Loading matches…</span></div>’;
-
-setTimeout(function() {
-var matches = [
-{ league:‘PREMIER LEAGUE’, status:‘Today 21:30 AST’, isLive:false, t1:‘Bournemouth’, s1:null, t2:‘Man City’,    s2:null, events:‘Kick-off soon · City favoured 57.8%’ },
-{ league:‘PREMIER LEAGUE’, status:‘Today 22:15 AST’, isLive:false, t1:‘Chelsea’,     s1:null, t2:‘Tottenham’,   s2:null, events:‘London derby · CFC 49.6% win prob’ },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Mon 18’,     isLive:false, t1:‘Arsenal’,     s1:1,    t2:‘Burnley’,     s2:0,    events:‘Goal: Arsenal 1-0’ },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Sun 17’,     isLive:false, t1:‘Newcastle’,   s1:3,    t2:‘West Ham’,    s2:1,    events:‘Goals: Isak 2', Gordon 55', Guimaraes 78'’ },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Sun 17’,     isLive:false, t1:‘Man Utd’,     s1:3,    t2:‘Nott'm Forest’, s2:2, events:‘Goals: Rashford 12', 45', Hojlund 67'’ },
-{ league:‘LA LIGA’,        status:‘FT · Sun 17’,     isLive:false, t1:‘Real Madrid’, s1:1,    t2:‘Sevilla’,     s2:0,    events:‘Goal: Bellingham 34'’ },
-{ league:‘LA LIGA’,        status:‘FT · Sun 17’,     isLive:false, t1:‘Barcelona’,   s1:3,    t2:‘Real Betis’,  s2:1,    events:‘Goals: Yamal 22', Lewandowski 55', 78'’ },
-];
-
-```
-var html = '';
-matches.forEach(function(m) {
-  var s1 = m.s1 === null ? '' : m.s1;
-  var s2 = m.s2 === null ? '' : m.s2;
-  var scoreHtml = m.s1 === null
-    ? '<div style="font-size:11px;color:var(--txt-muted);font-family:\'JetBrains Mono\',monospace;padding:4px 0;">vs</div>'
-    : '<div style="display:flex;gap:16px;align-items:center;padding:4px 0;">'
-      + '<span class="live-team-score">' + s1 + '</span>'
-      + '<span style="color:var(--txt-muted)">–</span>'
-      + '<span class="live-team-score">' + s2 + '</span>'
-      + '</div>';
-
-  html += '<div class="live-match-box">'
-    + '<div class="live-meta-row">'
-    +   '<span class="league-badge">' + m.league + '</span>'
-    +   '<span class="live-status-pill ' + (m.isLive ? 'active-game' : 'ft-game') + '">' + m.status + '</span>'
-    + '</div>'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;">'
-    +   '<div><div class="live-team-name">' + m.t1 + '</div><div class="live-team-name" style="margin-top:4px;">' + m.t2 + '</div></div>'
-    +   scoreHtml
-    + '</div>'
-    + '<div class="live-match-events">' + m.events + '</div>'
-    + '</div>';
-});
-container.innerHTML = html;
-```
-
-}, 300);
-}
-
-// ── NEWS RSS ────────────────────────────────────────────
-async function fetchRSS(channel) {
-try {
-var controller = new AbortController();
-var timer = setTimeout(function() { controller.abort(); }, 7000);
-var res = await fetch(RSS_API + encodeURIComponent(channel.url) + ‘&count=8’, {
-signal: controller.signal
-});
-clearTimeout(timer);
-var d = await res.json();
-if (d.status === ‘ok’ && d.items && d.items.length) return d.items;
-} catch(e) {}
-return [];
-}
-
-async function loadNewsFeed() {
-var container = document.getElementById(‘critical-posts’);
-if (!container) return;
-container.innerHTML = ‘<div class="f1-api-loading"><div class="f1-spinner"></div><span>Loading news…</span></div>’;
-parsedStoriesCache = [];
-
-for (var i = 0; i < MASTER_CHANNELS.length; i++) {
-var ch = MASTER_CHANNELS[i];
-try {
-var items = await fetchRSS(ch);
-for (var j = 0; j < items.length; j++) {
-var item = items[j];
-if (!item.title) continue;
-parsedStoriesCache.push({
-title: item.title.replace(/[\r\n]+/g, ’ ’).trim(),
-link:  item.link || ‘#’,
-time:  item.pubDate ? Date.parse(item.pubDate) : Date.now(),
-cat:   ch.cat,
-src:   ch.name
-});
-}
-} catch(e) {}
-}
-
-parsedStoriesCache.sort(function(a, b) { return b.time - a.time; });
-renderNewsFeed();
-}
-
-function setFeedFilter(cat, el) {
-currentFilter = cat;
-document.querySelectorAll(’.fpill’).forEach(function(p) { p.classList.remove(‘active’); });
-if (el) el.classList.add(‘active’);
-renderNewsFeed();
-}
-
-function timeAgo(ms) {
-if (!ms || isNaN(ms)) return ‘’;
-var diff = (Date.now() - ms) / 1000;
-if (diff < 60)    return ‘just now’;
-if (diff < 3600)  return Math.floor(diff / 60) + ‘m ago’;
-if (diff < 86400) return Math.floor(diff / 3600) + ‘h ago’;
-return Math.floor(diff / 86400) + ‘d ago’;
-}
-
-function boldEntities(text) {
-KEY_ENTITIES.forEach(function(ent) {
-text = text.replace(new RegExp(’\b’ + ent + ‘\b’, ‘gi’), ‘<strong>$&</strong>’);
-});
-return text;
-}
-
-function makeWireItem(title, src, timeMs, link) {
-return ‘<div class="wire-item" onclick="window.open(\'' + link + '\',\'_blank\')">’
-+ ‘<span class="wire-bullet">•</span>’
-+ ‘<div class="wire-content">’
-+   ‘<p class="wire-headline">’ + boldEntities(title) + ‘</p>’
-+   ‘<div class="wire-meta">’
-+     ‘<span class="wire-source">’ + src + ‘</span>’
-+     ‘<span class="wire-time">’ + timeAgo(timeMs) + ‘</span>’
-+   ‘</div>’
-+ ‘</div>’
-+ ‘</div>’;
-}
-
-function _oldRenderNewsFeed() {
-var container = document.getElementById(‘critical-posts’);
-if (!container) return;
-
-var filtered = currentFilter === ‘ALL’
-? parsedStoriesCache
-: parsedStoriesCache.filter(function(s) { return s.cat === currentFilter; });
-
-var shown = filtered.slice(0, 20);
-
-if (!shown.length) {
-// Show real fallback headlines
-var fbFiltered = currentFilter === ‘ALL’
-? FALLBACK_NEWS
-: FALLBACK_NEWS.filter(function(s) { return s.cat === currentFilter; });
-
-```
-var fbHtml = '';
-fbFiltered.forEach(function(s) {
-  fbHtml += makeWireItem(s.title, s.src, Date.now() - s.ago, s.link);
-});
-container.innerHTML = fbHtml || '<div class="empty-state">No headlines — tap REFRESH</div>';
-setTickerContent(fbFiltered.map(function(s) { return s.title; }));
-return;
-```
-
-}
-
-var html = ‘’;
-shown.forEach(function(story) {
-html += makeWireItem(story.title, story.src, story.time, story.link);
-});
-container.innerHTML = html;
-setTickerContent(shown.map(function(s) { return s.title; }));
-}
-
-// ── NUTRITION ──────────────────────────────────────────
-var TARGETS = { kcal:2500, prot:180, carb:280, fat:70 };
-
+/* ═══════════════════════════════════════════════════════
+NUTRITION
+════════════════════════════════════════════════════════ */
 function addFood() {
-var name = document.getElementById(‘food-name’).value.trim();
-var kcal = parseFloat(document.getElementById(‘food-kcal’).value) || 0;
-var prot = parseFloat(document.getElementById(‘food-prot’).value) || 0;
-var carb = parseFloat(document.getElementById(‘food-carb’).value) || 0;
-var fat  = parseFloat(document.getElementById(‘food-fat’).value)  || 0;
-if (!name) return;
-foodLog.push({ id: Date.now(), name: name, kcal: kcal, prot: prot, carb: carb, fat: fat });
-localStorage.setItem(‘m_food’, JSON.stringify(foodLog));
+const name = document.getElementById(‘food-name’).value.trim();
+const kcal = parseFloat(document.getElementById(‘food-kcal’).value) || 0;
+const prot = parseFloat(document.getElementById(‘food-prot’).value) || 0;
+const carb = parseFloat(document.getElementById(‘food-carb’).value) || 0;
+const fat  = parseFloat(document.getElementById(‘food-fat’).value)  || 0;
+if (!name) { toast(‘Enter a food name’); return; }
+if (!kcal && !prot && !carb && !fat) { toast(‘Enter at least one value’); return; }
+foodLog.push({ id: Date.now(), name, kcal, prot, carb, fat });
+saveFood();
 renderFood();
-[‘food-name’,‘food-kcal’,‘food-prot’,‘food-carb’,‘food-fat’].forEach(function(id) {
-document.getElementById(id).value = ‘’;
-});
+clearInputs([‘food-name’,‘food-kcal’,‘food-prot’,‘food-carb’,‘food-fat’]);
+toast(‘✅ ’ + name + ’ logged’);
 }
 
 function deleteFood(id) {
-foodLog = foodLog.filter(function(f) { return f.id !== id; });
-localStorage.setItem(‘m_food’, JSON.stringify(foodLog));
+foodLog = foodLog.filter(f => f.id !== id);
+saveFood();
 renderFood();
 }
 
+function saveFood() { localStorage.setItem(LS_FOOD, JSON.stringify(foodLog)); }
+
 function renderFood() {
-var totals = foodLog.reduce(function(a, b) {
-return { kcal: a.kcal+b.kcal, prot: a.prot+b.prot, carb: a.carb+b.carb, fat: a.fat+b.fat };
+const totals = foodLog.reduce((acc, f) => {
+acc.kcal += f.kcal; acc.prot += f.prot;
+acc.carb += f.carb; acc.fat  += f.fat;
+return acc;
 }, { kcal:0, prot:0, carb:0, fat:0 });
 
-var pct  = Math.min(totals.kcal / TARGETS.kcal, 1);
-var ring = document.getElementById(‘cal-ring’);
-if (ring) { ring.style.strokeDasharray = ‘314’; ring.style.strokeDashoffset = 314 * (1 - pct); }
+// Ring
+const calPct = Math.min(totals.kcal / TARGETS.kcal, 1);
+const circumference = 2 * Math.PI * 50;
+const offset = circumference * (1 - calPct);
+const ring = document.getElementById(‘cal-ring’);
+ring.style.strokeDasharray  = circumference;
+ring.style.strokeDashoffset = offset;
+document.getElementById(‘cal-display’).textContent = Math.round(totals.kcal);
 
-var calEl = document.getElementById(‘cal-display’);
-if (calEl) calEl.textContent = Math.round(totals.kcal);
+// Macros
+document.getElementById(‘prot-val’).textContent = Math.round(totals.prot) + ‘g’;
+document.getElementById(‘carb-val’).textContent = Math.round(totals.carb) + ‘g’;
+document.getElementById(‘fat-val’).textContent  = Math.round(totals.fat)  + ‘g’;
+document.getElementById(‘prot-bar’).style.width = Math.min(totals.prot/TARGETS.prot*100,100) + ‘%’;
+document.getElementById(‘carb-bar’).style.width = Math.min(totals.carb/TARGETS.carb*100,100) + ‘%’;
+document.getElementById(‘fat-bar’).style.width  = Math.min(totals.fat /TARGETS.fat *100,100) + ‘%’;
 
-var setBar = function(valId, barId, val, target) {
-var ve = document.getElementById(valId);
-var be = document.getElementById(barId);
-if (ve) ve.textContent = Math.round(val) + ‘g’;
-if (be) be.style.width = Math.min(val / target * 100, 100) + ‘%’;
-};
-setBar(‘prot-val’, ‘prot-bar’, totals.prot, TARGETS.prot);
-setBar(‘carb-val’, ‘carb-bar’, totals.carb, TARGETS.carb);
-setBar(‘fat-val’,  ‘fat-bar’,  totals.fat,  TARGETS.fat);
-
-var list = document.getElementById(‘food-list’);
-if (!list) return;
-if (!foodLog.length) { list.innerHTML = ‘<div class="empty-state">No foods logged yet.</div>’; return; }
-list.innerHTML = foodLog.map(function(f) {
-return ‘<div class="food-item">’
-+ ‘<span class="food-item-name">’ + f.name + ‘</span>’
-+ ‘<span class="food-item-kcal">’ + f.kcal + ’ kcal</span>’
-+ ‘<button class="food-del" onclick="deleteFood(' + f.id + ')">×</button>’
-+ ‘</div>’;
-}).join(’’);
+// Food list
+const list = document.getElementById(‘food-list’);
+if (foodLog.length === 0) {
+list.innerHTML = ‘<div class="empty-state" style="padding:20px;"><span class="empty-icon">🍽️</span><span>No foods logged yet</span></div>’;
+return;
+}
+list.innerHTML = foodLog.map(f => `<div class="food-item"> <span class="food-item-name">${esc(f.name)}</span> <span class="food-item-kcal">${f.kcal} kcal</span> <span class="food-item-p">${f.prot}P</span> <button class="food-del" onclick="deleteFood(${f.id})">×</button> </div>`).join(’’);
 }
 
-// ── WORKOUT ────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════════
+WORKOUT
+════════════════════════════════════════════════════════ */
 function addSet() {
-var ex = document.getElementById(‘set-exercise’).value.trim();
-var wt = parseFloat(document.getElementById(‘set-weight’).value) || 0;
-var rp = parseInt(document.getElementById(‘set-reps’).value)     || 0;
-if (!ex || !rp) return;
-setLog.push({ id: Date.now(), exercise: ex, weight: wt, reps: rp });
-localStorage.setItem(‘m_sets’, JSON.stringify(setLog));
+const exercise = document.getElementById(‘set-exercise’).value.trim();
+const weight   = parseFloat(document.getElementById(‘set-weight’).value) || 0;
+const reps     = parseInt(document.getElementById(‘set-reps’).value) || 0;
+if (!exercise) { toast(‘Enter an exercise name’); return; }
+if (!reps)     { toast(‘Enter number of reps’); return; }
+setLog.push({ id: Date.now(), exercise, weight, reps });
+saveSets();
 renderSets();
-[‘set-weight’,‘set-reps’].forEach(function(id) { document.getElementById(id).value = ‘’; });
+clearInputs([‘set-weight’,‘set-reps’]);
+document.getElementById(‘set-exercise’).focus();
+toast(’💪 ’ + exercise + ’ — ’ + weight + ’kg × ’ + reps);
 }
 
 function deleteSet(id) {
-setLog = setLog.filter(function(s) { return s.id !== id; });
-localStorage.setItem(‘m_sets’, JSON.stringify(setLog));
+setLog = setLog.filter(s => s.id !== id);
+saveSets();
 renderSets();
 }
 
+function saveSets() { localStorage.setItem(LS_SETS, JSON.stringify(setLog)); }
+
 function renderSets() {
-var totalVol = setLog.reduce(function(a, b) { return a + b.weight * b.reps; }, 0);
-var uniqueEx = new Set(setLog.map(function(s) { return s.exercise.toLowerCase(); })).size;
+const list  = document.getElementById(‘set-list’);
+const empty = document.getElementById(‘set-empty’);
+const totalVol = setLog.reduce((acc, s) => acc + s.weight * s.reps, 0);
+const uniqueEx = […new Set(setLog.map(s => s.exercise.toLowerCase()))].length;
 
-var setsEl  = document.getElementById(‘wk-sets’);
-var volEl   = document.getElementById(‘wk-vol’);
-var exsEl   = document.getElementById(‘wk-exs’);
-var totalEl = document.getElementById(‘vol-total-val’);
-if (setsEl)  setsEl.textContent  = setLog.length;
-if (volEl)   volEl.textContent   = totalVol;
-if (exsEl)   exsEl.textContent   = uniqueEx;
-if (totalEl) totalEl.textContent = totalVol + ’ kg’;
+document.getElementById(‘wk-sets’).textContent = setLog.length;
+document.getElementById(‘wk-vol’).textContent  = totalVol.toLocaleString();
+document.getElementById(‘wk-exs’).textContent  = uniqueEx;
+document.getElementById(‘vol-total-val’).textContent = totalVol.toLocaleString() + ’ kg’;
 
-var list = document.getElementById(‘set-list’);
-if (!list) return;
-if (!setLog.length) { list.innerHTML = ‘<div class="empty-state">No sets logged yet.</div>’; return; }
-list.innerHTML = setLog.map(function(s) {
-return ‘<div class="set-row">’
-+ ‘<span class="set-exercise">’ + s.exercise + ‘</span>’
-+ ‘<span class="food-item-kcal">’ + s.weight + ‘kg x ’ + s.reps + ’ = ’ + (s.weight * s.reps) + ‘kg</span>’
-+ ‘<button class="set-del" onclick="deleteSet(' + s.id + ')">×</button>’
-+ ‘</div>’;
-}).join(’’);
-}
-
-// ── OVERRIDE renderNewsFeed to use grid layout ──────────
-function renderNewsFeed() {
-var container = document.getElementById(‘feed-container’);
-if (!container) return;
-
-var filtered = currentFilter === ‘ALL’
-? parsedStoriesCache
-: parsedStoriesCache.filter(function(s) { return s.cat === currentFilter; });
-
-var shown = filtered.slice(0, 20);
-
-if (!shown.length) {
-var fbFiltered = currentFilter === ‘ALL’
-? FALLBACK_NEWS
-: FALLBACK_NEWS.filter(function(s) { return s.cat === currentFilter; });
-
-```
-renderGridFeed(fbFiltered.map(function(s) {
-  return { title:s.title, src:s.src, time:s.date || '', cat:s.cat, link:s.link };
-}));
-setTickerContent(fbFiltered.map(function(s) { return s.title; }));
-return;
-```
-
-}
-
-renderGridFeed(shown);
-setTickerContent(shown.slice(0,8).map(function(s) { return s.title; }));
-}
-
-function catColor(cat) {
-if (cat === ‘F1’)       return { bg:‘rgba(232,0,45,0.1)’,   txt:‘var(–f1-red)’,    icon:‘🏎’ };
-if (cat === ‘FOOTBALL’) return { bg:‘rgba(56,211,106,0.1)’, txt:‘var(–epl-green)’, icon:‘⚽’ };
-if (cat === ‘KSA’)      return { bg:‘rgba(34,211,238,0.1)’, txt:‘var(–cyan)’,       icon:‘🌙’ };
-return { bg:‘rgba(167,139,250,0.1)’, txt:‘var(–purple)’, icon:‘📰’ };
-}
-
-// Store links globally so onclick can reference by index
-var _feedLinks = [];
-
-function renderGridFeed(items) {
-var container = document.getElementById(‘feed-container’);
-if (!container || !items.length) return;
-_feedLinks = items.map(function(i){ return i.link || ‘#’; });
-
-var html = ‘’;
-var hero = items[0];
-var c = catColor(hero.cat);
-
-html += ‘<div class="grid-hero" onclick="openFeedLink(0)">’
-+ ‘<div class="grid-hero-icon" style="background:' + c.bg + '">’ + c.icon + ‘</div>’
-+ ‘<div>’
-+ ‘<div class="grid-hero-cat" style="color:' + c.txt + '">’ + hero.src + ’ · ’ + (typeof hero.time === ‘string’ ? hero.time : timeAgo(hero.time)) + ‘</div>’
-+ ‘<div class="grid-hero-headline">’ + boldEntities(hero.title) + ‘</div>’
-+ ‘</div></div>’;
-
-if (items.length > 1) {
-html += ‘<div class="grid-2col" style="margin-top:10px;">’;
-items.slice(1).forEach(function(story, idx) {
-var sc = catColor(story.cat);
-html += ‘<div class="grid-card" onclick="openFeedLink(' + (idx+1) + ')">’
-+ ‘<span class="grid-cat" style="background:' + sc.bg + ';color:' + sc.txt + '">’ + story.cat + ‘</span>’
-+ ‘<p class="grid-headline">’ + boldEntities(story.title) + ‘</p>’
-+ ‘<span class="grid-meta">’ + story.src + ’ · ’ + (typeof story.time === ‘string’ ? story.time : timeAgo(story.time)) + ‘</span>’
-+ ‘</div>’;
-});
-html += ‘</div>’;
-}
-
-container.innerHTML = html;
-}
-
-function openFeedLink(idx) {
-var link = _feedLinks[idx];
-if (link && link !== ‘#’) window.open(link, ‘_blank’);
-}
-
-// ── OVERRIDE renderSets to use set-grid ────────────────
-function renderSets() {
-var totalVol = setLog.reduce(function(a,b){ return a + b.weight*b.reps; }, 0);
-var uniqueEx = new Set(setLog.map(function(s){ return s.exercise.toLowerCase(); })).size;
-var se = document.getElementById(‘wk-sets’);   if(se) se.textContent = setLog.length;
-var ve = document.getElementById(‘wk-vol’);    if(ve) ve.textContent = totalVol;
-var xe = document.getElementById(‘wk-exs’);    if(xe) xe.textContent = uniqueEx;
-var list = document.getElementById(‘set-list’);
-if (!list) return;
-if (!setLog.length) {
-list.innerHTML = ‘<div class="empty-state" style="grid-column:1/-1;">No sets logged yet.</div>’;
+if (setLog.length === 0) {
+if (empty) empty.style.display = ‘flex’;
+// remove all set-row elements
+list.querySelectorAll(’.set-row’).forEach(e => e.remove());
 return;
 }
-list.innerHTML = setLog.map(function(s) {
-var vol = s.weight * s.reps;
-return ‘<div class="set-card">’
-+ ‘<div class="set-ex">’ + s.exercise + ‘</div>’
-+ ‘<div class="set-vol">’ + s.weight + ‘kg × ’ + s.reps + ‘</div>’
-+ ‘<div style="display:flex;align-items:center;justify-content:space-between;">’
-+   ‘<div class="set-sub">’ + vol + ‘kg vol</div>’
-+   ‘<button class="set-del" onclick="deleteSet(' + s.id + ')">×</button>’
-+ ‘</div>’
-+ ‘</div>’;
-}).join(’’);
-}
+if (empty) empty.style.display = ‘none’;
 
-// ── OVERRIDE renderFood for new layout ─────────────────
-function renderFood() {
-var TARGETS = { kcal:2500, prot:180, carb:280, fat:70 };
-var totals = foodLog.reduce(function(a,b){
-return { kcal:a.kcal+b.kcal, prot:a.prot+b.prot, carb:a.carb+b.carb, fat:a.fat+b.fat };
-}, {kcal:0,prot:0,carb:0,fat:0});
-
-var pct = Math.min(totals.kcal/TARGETS.kcal,1);
-var ring = document.getElementById(‘cal-ring’);
-if (ring) { ring.style.strokeDasharray=‘251’; ring.style.strokeDashoffset=251*(1-pct); }
-var cd = document.getElementById(‘cal-display’); if(cd) cd.textContent = Math.round(totals.kcal);
-
-var setMacro = function(vid,bid,val,tgt) {
-var ve=document.getElementById(vid); if(ve) ve.textContent=Math.round(val)+‘g’;
-var be=document.getElementById(bid); if(be) be.style.width=Math.min(val/tgt*100,100)+’%’;
-};
-setMacro(‘prot-val’,‘prot-bar’,totals.prot,TARGETS.prot);
-setMacro(‘carb-val’,‘carb-bar’,totals.carb,TARGETS.carb);
-setMacro(‘fat-val’, ‘fat-bar’, totals.fat, TARGETS.fat);
-
-var list = document.getElementById(‘food-list’);
-if (!list) return;
-list.innerHTML = foodLog.map(function(f) {
-return ‘<div class="food-item">’
-+ ‘<span class="food-item-name">’ + f.name + ‘</span>’
-+ ‘<span class="food-item-kcal">’ + f.kcal + ’ kcal</span>’
-+ ‘<button class="food-del" onclick="deleteFood(' + f.id + ')">×</button>’
-+ ‘</div>’;
-}).join(’’);
-}
-
-// ── OVERRIDE football scores for match grid ─────────────
-loadFootballScores = function() {
-var container = document.getElementById(‘football-scores-container’);
-if (!container) return;
-container.innerHTML = ‘<div class="f1-api-loading"><div class="f1-spinner" style="border-top-color:var(--epl-green)"></div><span>Loading…</span></div>’;
-
-setTimeout(function() {
-var matches = [
-{ league:‘PREMIER LEAGUE’, status:‘21:30 AST’, statusType:‘soon’, t1:‘Bournemouth’, s1:null, t2:‘Man City’,       s2:null },
-{ league:‘PREMIER LEAGUE’, status:‘22:15 AST’, statusType:‘soon’, t1:‘Chelsea’,     s1:null, t2:‘Tottenham’,      s2:null },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Mon’,  statusType:‘ft’,   t1:‘Arsenal’,     s1:1,    t2:‘Burnley’,        s2:0    },
-{ league:‘PREMIER LEAGUE’, status:‘FT · Sun’,  statusType:‘ft’,   t1:‘Newcastle’,   s1:3,    t2:‘West Ham’,       s2:1    },
-{ league:‘LA LIGA’,        status:‘FT · Sun’,  statusType:‘ft’,   t1:‘Real Madrid’, s1:1,    t2:‘Sevilla’,        s2:0    },
-{ league:‘LA LIGA’,        status:‘FT · Sun’,  statusType:‘ft’,   t1:‘Barcelona’,   s1:3,    t2:‘Real Betis’,     s2:1    },
-];
-
-```
-var html = '<div class="match-grid">';
-matches.forEach(function(m) {
-  var sc = m.s1 === null ? '<span class="match-score dash">–</span>' : '<span class="match-score">' + m.s1 + '</span>';
-  var sc2 = m.s2 === null ? '<span class="match-score dash">–</span>' : '<span class="match-score">' + m.s2 + '</span>';
-  html += '<div class="match-card">'
-    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">'
-    +   '<span class="match-league">' + m.league + '</span>'
-    +   '<span class="match-status status-' + m.statusType + '">' + m.status + '</span>'
-    + '</div>'
-    + '<div class="match-teams">'
-    +   '<div class="match-team-row"><span class="match-team-name">' + m.t1 + '</span>' + sc  + '</div>'
-    +   '<div class="match-team-row"><span class="match-team-name">' + m.t2 + '</span>' + sc2 + '</div>'
-    + '</div>'
-    + '</div>';
+// Group by exercise for display
+const grouped = {};
+setLog.forEach(s => {
+const k = s.exercise.toLowerCase();
+if (!grouped[k]) grouped[k] = { name: s.exercise, sets: [] };
+grouped[k].sets.push(s);
 });
-html += '</div>';
-container.innerHTML = html;
-```
 
-}, 300);
+let html = ‘’;
+Object.values(grouped).forEach(g => {
+g.sets.forEach((s, i) => {
+const vol = (s.weight * s.reps).toFixed(0);
+html += ` <div class="set-row" id="set-${s.id}"> <span class="set-exercise">${esc(s.exercise)} <span style="color:var(--txt-muted);font-size:11px;">#${i+1}</span></span> <span class="set-vol">${s.weight}kg × ${s.reps} = <strong>${vol}kg</strong></span> <button class="set-del" onclick="deleteSet(${s.id})">×</button> </div>`;
+});
+});
+
+list.innerHTML = html;
+if (empty) list.prepend(empty);
+}
+
+/* ═══════════════════════════════════════════════════════
+UTILITIES
+════════════════════════════════════════════════════════ */
+function esc(s) {
+return s.replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);
+}
+
+function clearInputs(ids) { ids.forEach(id => { document.getElementById(id).value = ‘’; }); }
+
+let toastTimer;
+function toast(msg) {
+const el = document.getElementById(‘toast’);
+el.textContent = msg;
+el.classList.add(‘show’);
+clearTimeout(toastTimer);
+toastTimer = setTimeout(() => el.classList.remove(‘show’), 2400);
+}
+
+function startClock() {
+function update() {
+const now = new Date();
+const h = String(now.getHours()).padStart(2,‘0’);
+const m = String(now.getMinutes()).padStart(2,‘0’);
+document.getElementById(‘clock’).textContent = h + ‘:’ + m;
+}
+update();
+setInterval(update, 10000);
+}
+
+/* ═══════════════════════════════════════════════════════
+F1 LIVE API · Jolpica (api.jolpi.ca)
+════════════════════════════════════════════════════════ */
+const F1_BASE = ‘https://api.jolpi.ca/ergast/f1’;
+const CORS_PROXY = ‘https://corsproxy.io/?url=’;
+
+const TEAM_COLORS = {
+‘red_bull’:       ‘#3671c6’,
+‘mclaren’:        ‘#ff8700’,
+‘ferrari’:        ‘#e8002d’,
+‘mercedes’:       ‘#00d2be’,
+‘aston_martin’:   ‘#229971’,
+‘alpine’:         ‘#0093cc’,
+‘williams’:       ‘#64c4ff’,
+‘rb’:             ‘#6692ff’,
+‘kick_sauber’:    ‘#52e252’,
+‘haas’:           ‘#b6babd’,
+‘default’:        ‘#8a8fa8’
 };
 
-// ── OVERRIDE renderF1Standings for new layout ──────────
-function renderHardcodedStandings(body) {
-var F1_DATA = [
-{ pos:1, num:12, name:‘Antonelli’, cid:‘mercedes’, pts:100, wins:3 },
-{ pos:2, num:63, name:‘Russell’,   cid:‘mercedes’, pts:80,  wins:1 },
-{ pos:3, num:16, name:‘Leclerc’,   cid:‘ferrari’,  pts:59,  wins:0 },
-{ pos:4, num:4,  name:‘Norris’,    cid:‘mclaren’,  pts:51,  wins:0 },
-{ pos:5, num:44, name:‘Hamilton’,  cid:‘ferrari’,  pts:51,  wins:0 },
-{ pos:6, num:81, name:‘Piastri’,   cid:‘mclaren’,  pts:43,  wins:0 },
-{ pos:7, num:14, name:‘Alonso’,    cid:‘aston_martin’, pts:24, wins:0 },
-{ pos:8, num:18, name:‘Stroll’,    cid:‘aston_martin’, pts:12, wins:0 },
-{ pos:9, num:10, name:‘Gasly’,     cid:‘alpine’,   pts:10,  wins:0 },
-{ pos:10,num:55, name:‘Sainz’,     cid:‘williams’, pts:9,   wins:0 },
-];
-var maxPts = F1_DATA[0].pts;
-var html = ‘<div class="f1-hdr"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>’;
-F1_DATA.forEach(function(d) {
-var col = TEAM_COLORS[d.cid] || ‘#8a8fa8’;
-var barW = Math.round((d.pts/maxPts)*100);
-var posClass = d.pos===1?‘p1’:d.pos===2?‘p2’:d.pos===3?‘p3’:’’;
-html += ‘<div class="f1-row">’
-+ ‘<span class="f1-pos ' + posClass + '">’ + d.pos + ‘</span>’
-+ ‘<span class="f1-num" style="background:' + col + '22;color:' + col + '">’ + d.num + ‘</span>’
-+ ‘<div class="f1-info"><div class="f1-name">’ + d.name + ‘</div>’
-+   ‘<div class="f1-bar-wrap"><div class="f1-bar" style="width:' + barW + '%;background:' + col + '"></div></div>’
-+ ‘</div>’
-+ ‘<span class="f1-wins">’ + d.wins + ‘</span>’
-+ ‘<span class="f1-pts">’ + d.pts + ‘</span>’
-+ ‘</div>’;
-});
-html += ‘<div class="f1-updated">After R4 Miami · Auto-updated every 6h</div>’;
-body.innerHTML = html;
+function teamColor(constructorId) {
+return TEAM_COLORS[constructorId] || TEAM_COLORS[‘default’];
 }
+
+function posClass(p) {
+if (p === 1) return ‘p1’;
+if (p === 2) return ‘p2’;
+if (p === 3) return ‘p3’;
+return ‘’;
+}
+
+async function f1Fetch(endpoint) {
+const url = F1_BASE + endpoint + ‘.json?limit=20’;
+// Try direct first, fall back to CORS proxy
+let res;
+try {
+res = await fetch(url, { mode: ‘cors’ });
+if (!res.ok) throw new Error(’direct ’ + res.status);
+} catch(e) {
+res = await fetch(CORS_PROXY + encodeURIComponent(url));
+if (!res.ok) throw new Error(’HTTP ’ + res.status);
+}
+return res.json();
+}
+
+function setLoading(id) {
+document.getElementById(id).innerHTML =
+‘<div class="f1-api-loading"><div class="f1-spinner"></div><span>Loading…</span></div>’;
+}
+
+function setError(id, msg) {
+document.getElementById(id).innerHTML =
+’<div class="f1-api-error">⚠️ ’ + msg + ‘</div>’;
+}
+
+async function loadF1LastRace() {
+setLoading(‘f1-last-race-body’);
+try {
+const data = await f1Fetch(’/2025/last/results’);
+const race = data.MRData.RaceTable.Races[0];
+if (!race) throw new Error(‘No race data yet’);
+
+```
+document.getElementById('f1-last-race-name').textContent =
+  'R' + race.round + ' · ' + race.raceName.replace(' Grand Prix','').toUpperCase() + ' GP';
+
+const results = race.Results.slice(0, 10);
+const leaderTime = results[0]?.Time?.time || '';
+
+let html = '<div class="f1-result-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">TEAM</span><span style="text-align:right">TIME/GAP</span></div>';
+
+results.forEach(r => {
+  const pos = parseInt(r.position);
+  const cid = r.Constructor.constructorId;
+  const col = teamColor(cid);
+  const driverName = r.Driver.familyName;
+  const teamShort = r.Constructor.name.replace('Formula One','F1');
+  const gap = pos === 1
+    ? (leaderTime || 'Winner')
+    : (r.Time ? r.Time.time : (r.status || 'DNF'));
+
+  html += `
+    <div class="f1-result-row">
+      <span class="f1-pos ${posClass(pos)}">${pos}</span>
+      <span class="f1-num" style="background:${col}22;color:${col}">${r.Driver.permanentNumber}</span>
+      <div class="f1-driver-info">
+        <span class="f1-driver-name">${driverName}</span>
+        <span class="f1-team-name">${esc(teamShort)}</span>
+      </div>
+      <span class="f1-time-gap" style="font-size:10px;min-width:80px;">${esc(teamShort.substring(0,10))}</span>
+      <span class="f1-time-gap">${esc(gap)}</span>
+    </div>`;
+});
+
+const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
+document.getElementById('f1-last-race-body').innerHTML = html;
+```
+
+} catch(e) {
+setError(‘f1-last-race-body’, ’Could not load race results. ’ + e.message);
+}
+}
+
+async function loadF1DriverStandings() {
+setLoading(‘f1-standings-body’);
+try {
+const data = await f1Fetch(’/2025/driverstandings’);
+const sl = data.MRData.StandingsTable.StandingsLists[0];
+if (!sl) throw new Error(‘No standings yet’);
+
+```
+document.getElementById('f1-standings-round').textContent = 'After R' + sl.round;
+
+const drivers = sl.DriverStandings.slice(0, 12);
+const maxPts = parseFloat(drivers[0]?.points || 1);
+
+let html = '<div class="f1-std-header"><span>POS</span><span>NO</span><span>DRIVER</span><span style="text-align:right">W</span><span style="text-align:right">PTS</span></div>';
+
+drivers.forEach(d => {
+  const pos = parseInt(d.position);
+  const cid = d.Constructors[0]?.constructorId || 'default';
+  const col = teamColor(cid);
+  const pts = parseFloat(d.points);
+  const barW = Math.round((pts / maxPts) * 100);
+
+  html += `
+    <div class="f1-std-row">
+      <span class="f1-pos ${posClass(pos)}">${pos}</span>
+      <span class="f1-num" style="background:${col}22;color:${col}">${d.Driver.permanentNumber}</span>
+      <div class="f1-driver-info">
+        <span class="f1-driver-name">${d.Driver.familyName}</span>
+        <div class="f1-con-bar" style="margin-top:4px;"><div class="f1-con-fill" style="width:${barW}%;background:${col};"></div></div>
+      </div>
+      <span class="f1-wins">${d.wins}</span>
+      <span class="f1-pts" style="color:${pos<=3?col:'var(--txt-primary)'}">${pts}</span>
+    </div>`;
+});
+
+const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
+document.getElementById('f1-standings-body').innerHTML = html;
+```
+
+} catch(e) {
+setError(‘f1-standings-body’, ’Could not load driver standings. ’ + e.message);
+}
+}
+
+async function loadF1ConstructorStandings() {
+setLoading(‘f1-constructors-body’);
+try {
+const data = await f1Fetch(’/2025/constructorstandings’);
+const sl = data.MRData.StandingsTable.StandingsLists[0];
+if (!sl) throw new Error(‘No constructor standings yet’);
+
+```
+const constructors = sl.ConstructorStandings;
+const maxPts = parseFloat(constructors[0]?.points || 1);
+
+let html = '';
+constructors.forEach(c => {
+  const pos = parseInt(c.position);
+  const cid = c.Constructor.constructorId;
+  const col = teamColor(cid);
+  const pts = parseFloat(c.points);
+  const barW = Math.round((pts / maxPts) * 100);
+
+  html += `
+    <div class="f1-con-row">
+      <span class="f1-pos ${posClass(pos)}">${pos}</span>
+      <div>
+        <span style="font-weight:600;font-size:14px;">${esc(c.Constructor.name)}</span>
+        <div class="f1-con-bar"><div class="f1-con-fill" style="width:${barW}%;background:${col};"></div></div>
+      </div>
+      <span class="f1-pts" style="color:${pos<=3?col:'var(--txt-primary)'}">${pts}</span>
+    </div>`;
+});
+
+const updated = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+html += '<div class="f1-last-updated">Updated ' + updated + ' · Jolpica F1 API</div>';
+document.getElementById('f1-constructors-body').innerHTML = html;
+```
+
+} catch(e) {
+setError(‘f1-constructors-body’, ’Could not load constructor standings. ’ + e.message);
+}
+}
+
+function loadF1Data() {
+loadF1LastRace();
+loadF1DriverStandings();
+loadF1ConstructorStandings();
+}
+
+// Auto-load when Sports tab is first opened
+const _origSwitch = switchTab;
+let f1Loaded = false;
+switchTab = function(tab) {
+_origSwitch(tab);
+if (tab === ‘sports’ && !f1Loaded) {
+f1Loaded = true;
+loadF1Data();
+}
+};
+
+/* ═══════════════════════════════════════════════════════
+KEYBOARD dismiss on mobile
+════════════════════════════════════════════════════════ */
+document.querySelectorAll(’.log-input’).forEach(inp => {
+inp.addEventListener(‘keydown’, e => {
+if (e.key === ‘Enter’) {
+const panel = inp.closest(’.tab-panel’);
+if (panel.id === ‘panel-health’) {
+// determine which form
+if (inp.id.startsWith(‘food-’)) addFood();
+else if (inp.id.startsWith(‘set-’)) addSet();
+}
+}
+});
+});
+
 </script>
-
 </body>
 </html>
