@@ -1,90 +1,77 @@
+name: Update News Headlines
+on:
+schedule:
+- cron: ‘0 * * * *’
+workflow_dispatch:
+jobs:
+update:
+runs-on: ubuntu-latest
+permissions:
+contents: write
 steps:
-  - name: Checkout repo
-    uses: actions/checkout@v4
-
-  - name: Fetch RSS feeds and update headlines
-    run: |
-      python3 << 'PYEOF'
-      import urllib.request, xml.etree.ElementTree as ET, re, sys
-      from datetime import datetime, timezone
-
-      FEEDS = [
-        { 'url': 'https://feeds.bbci.co.uk/sport/formula1/rss.xml',  'src': 'BBC F1',     'cat': 'F1'       },
-        { 'url': 'https://feeds.bbci.co.uk/sport/football/rss.xml',   'src': 'BBC Sport',  'cat': 'FOOTBALL' },
-        { 'url': 'https://www.skysports.com/rss/12040',               'src': 'Sky F1',     'cat': 'F1'       },
-        { 'url': 'https://www.skysports.com/rss/11095',               'src': 'Sky Sports', 'cat': 'FOOTBALL' },
-        { 'url': 'https://talksport.com/feed/',                       'src': 'TalkSport',  'cat': 'FOOTBALL' },
-        { 'url': 'https://www.arabnews.com/cat/5/rss.xml',            'src': 'Arab News',  'cat': 'KSA'      },
-      ]
-
-      JUNK = re.compile(r'gossip|rumour|rumor|transfer column|paper talk|eyeing|ponder|plots|plotting', re.I)
-      all_items = []
-
-      for feed in FEEDS:
-        try:
-          req = urllib.request.Request(feed['url'], headers={'User-Agent': 'Mozilla/5.0'})
-          with urllib.request.urlopen(req, timeout=10) as r:
-            xml_data = r.read()
-          import xml.etree.ElementTree as ET
-          root = ET.fromstring(xml_data)
-          channel = root.find('channel')
-          if channel is None:
-            channel = root
-          items = channel.findall('item')
-          count = 0
-          for item in items:
-            if count >= 4:
-              break
-            title = item.findtext('title', '').strip()
-            link  = item.findtext('link',  '').strip()
-            pub   = item.findtext('pubDate', '').strip()
-            if not title or JUNK.search(title):
-              continue
-            try:
-              from email.utils import parsedate_to_datetime
-              dt = parsedate_to_datetime(pub)
-              date_str = dt.strftime('%b %-d')
-            except:
-              date_str = datetime.now(timezone.utc).strftime('%b %-d')
-            all_items.append({ 'title': title, 'src': feed['src'], 'cat': feed['cat'], 'link': link, 'date': date_str })
-            count += 1
-          print(f"OK: {feed['src']} — {count} items")
-        except Exception as e:
-          print(f"SKIP: {feed['src']} — {e}")
-
-      if not all_items:
-        print("No items — skipping")
-        sys.exit(0)
-
-      lines = []
-      for item in all_items:
-        safe_title = item['title'].replace("'", "\\'")
-        safe_link  = item['link'].replace("'", "%27")
-        lines.append(f"  {{ title:'{safe_title}', src:'{item['src']}', cat:'{item['cat']}', link:'{safe_link}', date:'{item['date']}' }},")
-
-      now = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
-      new_block = "FALLBACK_NEWS = [\n" + "\n".join(lines) + "\n]"
-
-      with open('index.html', 'r') as f:
-        content = f.read()
-
-      pattern = r'FALLBACK_NEWS = \[.*?\]'
-      updated = re.sub(pattern, new_block, content, flags=re.DOTALL)
-
-      if updated == content:
-        print("Pattern not found — skipping")
-        sys.exit(0)
-
-      with open('index.html', 'w') as f:
-        f.write(updated)
-
-      print(f"Done — {len(all_items)} headlines at {now}")
-      PYEOF
-
-  - name: Commit if changed
-    run: |
-      git config user.name "github-actions[bot]"
-      git config user.email "github-actions[bot]@users.noreply.github.com"
-      git add index.html
-      git diff --staged --quiet || git commit -m "Auto-update news headlines [skip ci]"
-      git push​​​​​​​​​​​​​​​​
+- name: Checkout repo
+uses: actions/checkout@v4
+- name: Write script
+run: |
+cat > fetch_news.py << ‘PYEOF’
+import urllib.request, xml.etree.ElementTree as ET, re, sys
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
+FEEDS = [
+{‘url’:‘https://feeds.bbci.co.uk/sport/formula1/rss.xml’,‘src’:‘BBC F1’,‘cat’:‘F1’},
+{‘url’:‘https://feeds.bbci.co.uk/sport/football/rss.xml’,‘src’:‘BBC Sport’,‘cat’:‘FOOTBALL’},
+{‘url’:‘https://www.skysports.com/rss/12040’,‘src’:‘Sky F1’,‘cat’:‘F1’},
+{‘url’:‘https://www.skysports.com/rss/11095’,‘src’:‘Sky Sports’,‘cat’:‘FOOTBALL’},
+{‘url’:‘https://talksport.com/feed/’,‘src’:‘TalkSport’,‘cat’:‘FOOTBALL’},
+{‘url’:‘https://www.arabnews.com/cat/5/rss.xml’,‘src’:‘Arab News’,‘cat’:‘KSA’},
+]
+JUNK = re.compile(r’gossip|rumour|rumor|transfer column|paper talk’, re.I)
+all_items = []
+for feed in FEEDS:
+try:
+req = urllib.request.Request(feed[‘url’], headers={‘User-Agent’:‘Mozilla/5.0’})
+with urllib.request.urlopen(req, timeout=10) as r:
+root = ET.fromstring(r.read())
+channel = root.find(‘channel’) or root
+count = 0
+for item in channel.findall(‘item’):
+if count >= 4: break
+title = item.findtext(‘title’,’’).strip()
+link  = item.findtext(‘link’,’’).strip()
+pub   = item.findtext(‘pubDate’,’’).strip()
+if not title or JUNK.search(title): continue
+try: date_str = parsedate_to_datetime(pub).strftime(’%b %-d’)
+except: date_str = datetime.now(timezone.utc).strftime(’%b %-d’)
+all_items.append({‘title’:title,‘src’:feed[‘src’],‘cat’:feed[‘cat’],‘link’:link,‘date’:date_str})
+count += 1
+print(f”OK {feed[‘src’]}: {count}”)
+except Exception as e:
+print(f”SKIP {feed[‘src’]}: {e}”)
+if not all_items:
+print(“No items”)
+sys.exit(0)
+lines = []
+for item in all_items:
+t = item[‘title’].replace(”’”,”\’”)
+l = item[‘link’].replace(”’”,”%27”)
+lines.append(f”  {{title:’{t}’,src:’{item[‘src’]}’,cat:’{item[‘cat’]}’,link:’{l}’,date:’{item[‘date’]}’}},”)
+new_block = “FALLBACK_NEWS = [\n” + “\n”.join(lines) + “\n]”
+with open(‘index.html’,‘r’) as f:
+content = f.read()
+updated = re.sub(r’FALLBACK_NEWS = [.*?]’, new_block, content, flags=re.DOTALL)
+if updated == content:
+print(“Pattern not found”)
+sys.exit(0)
+with open(‘index.html’,‘w’) as f:
+f.write(updated)
+print(f”Done: {len(all_items)} items”)
+PYEOF
+- name: Run script
+run: python3 fetch_news.py
+- name: Commit if changed
+run: |
+git config user.name “github-actions[bot]”
+git config user.email “github-actions[bot]@users.noreply.github.com”
+git add index.html
+git diff –staged –quiet || git commit -m “Auto-update news [skip ci]”
+git push​​​​​​​​​​​​​​​​
